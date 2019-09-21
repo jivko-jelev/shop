@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
     <!-- Daterange picker -->
     <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ URL::to('css/lobibox.min.css') }}"/>
     <link rel="stylesheet" href="{{ URL::to('css/global.css') }}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -530,6 +531,15 @@
 <script src="{{ URL::to('dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ URL::to('dist/js/demo.js') }}"></script>
+
+<!--Lobibox - Free responsive jQuery messagebox and notification plugin available for commercial and non-commercial usages.-->
+<script src="{{ URL::to('js/lobibox.js') }}"></script>
+<script>
+    function showError($parent, $error) {
+        $("span").addClass('error').html("Some appended text.").insertAfter('#name');
+    }
+    // showError(1, 'asdsad');
+</script>
 @stack('js')
 </body>
 </html>

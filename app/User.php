@@ -40,4 +40,24 @@ class User extends Authenticatable
     {
         return $this->first_name . ' ' . $this->last_name;
     }
+
+    public function getShortNameAttribute()
+    {
+        if($this->first_name && $this->last_name) {
+            return mb_substr($this->first_name, 0, 1) . '. ' . $this->last_name;
+        }else{
+            return $this->getFullNameAttribute;
+        }
+    }
+
+    // Ако е записан пол на потребителя връща г-н или г-жо плюс фамилията
+    // а ако не е записан връща г-н/г-жа плюс фамилията
+    public function getRespectfulNameAttribute()
+    {
+        if($this->sex) {
+            return ($this->sex == 'Male' ? 'г-н' : 'г-жа') . ' ' . $this->last_name;
+        }else{
+            return 'г-н/г-жа' . ' ' . $this->last_name;
+        }
+    }
 }
