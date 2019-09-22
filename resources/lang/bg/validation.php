@@ -141,6 +141,7 @@ return [
         "recaptcha_response_field" => "Рекапча",
         "subject"                  => "Заглавие",
         "message"                  => "Съобщение",
+        "password_confirmation"    => "Повтори Паролата",
     ],
 
 ];

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\User;
+use Carbon\Carbon;
 use http\Env\Response;
 use Illuminate\Http\Request;
 
@@ -12,8 +13,7 @@ class UserController extends Controller
 
     public function ajax(Request $request)
     {
-        $users = User::select(['name', 'first_name', 'last_name', 'sex', 'email', 'id']);
-
+        $users           = User::select(['id', 'name', 'first_name', 'last_name', 'email', 'created_at', 'sex']);
         $recordsTotal    = User::all()->count();
         $recordsFiltered = $recordsTotal;
 
@@ -23,19 +23,26 @@ class UserController extends Controller
             2 => 'last_name',
             3 => 'sex',
             4 => 'email',
+            5 => 'created_at',
         ];
+
+
+        $users->when($request->get('search')['value'], function ($query) use ($request) {
+            $query->where(function ($query) use ($request) {
+                $query->where('first_name', 'like', "%{$request->get('search')['value']}%")
+                      ->orWhere('last_name', 'like', "%{$request->get('search')['value']}%")
+                      ->orWhere('name', 'like', "%{$request->get('search')['value']}%")
+                      ->orWhere('sex', 'like', "%{$request->get('search')['value']}%")
+                      ->orWhere('email', 'like', "%{$request->get('search')['value']}%");
+            });
+        });
 
         $orderState = $request->get('order');
         foreach ($orderState as $singleOrderState) {
             $users->orderBy($ajaxGridColumnNames[$singleOrderState['column']], $singleOrderState['dir']);
         }
 
-        if ($request->input('start') > 0) {
-            $users->skip($request->input('start'));
-        }
-        if ($request->input('length') > 0) {
-            $users->take($request->input('length'));
-        }
+        $users->skip($request->input('start'))->take($request->input('length'));
 
         $users = $users->get();
 
@@ -97,10 +104,11 @@ class UserController extends Controller
      *
      * @param User $user
      * @return \Illuminate\Http\Response
+     * @throws \Throwable
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', ['title' => __('Редактиране на Потребител'), 'user' => $user]);
+        return view('admin.users.modal.user', ['user' => $user])->render();
     }
 
     /**
@@ -113,24 +121,27 @@ class UserController extends Controller
      */
     public function update(User $user, Request $request, UserRequest $userRequest)
     {
-        $user->name = $request->get('name');
+        $user->name  = $request->get('name');
         $user->email = $request->get('email');
-        if($request->get('password')) {
+
+        if ($request->get('password')) {
             $user->password = bcrypt($request->get('name'));
         }
 
-        if($request->get('first_name')) {
-            $user->first_name = $request->get('first_name');
-        }
-        if($request->get('last_name')) {
-            $user->last_name = $request->get('last_name');
-        }
+        $user->first_name = $request->get('first_name') ?? null;
+        $user->last_name  = $request->get('last_name') ?? null;
+        $user->sex        = $request->get('sex') ?? null;
 
         $user->save();
 
-        if($request->ajax()){
-            return response()->json('{"message": "Потребителят беше успешно редактиран."}');
+        if ($request->ajax()) {
+            return response()->json('{"message": "Потребителят: <strong>' .
+                                    $user->name .
+                                    '</strong><br>' .
+                                    'Име: <strong>' . $user->full_name . '</strong>' .
+                                    '<br> беше успешно редактиран."}');
         }
+
         return redirect()->back()->with('message', 'Потребителят беше успешно редактиран.');
     }
 

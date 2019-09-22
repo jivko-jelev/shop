@@ -24,11 +24,12 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'       => "required|min:4|unique:users,name,{$this->user->id}",
-            'email'      => 'required|email|max:255',
-            'password'   => 'nullable|min:6|confirmed',
-            'first_name' => 'nullable|min:3|max:30|name',
-            'last_name'  => 'nullable|min:3|max:30|name',
+            'name'                  => "required|min:4|unique:users,name,{$this->user->id}",
+            'email'                 => 'required|email|max:255',
+            'password'              => 'nullable|bail|required_with:password_confirmation|min:6|confirmed',
+            'password_confirmation' => 'nullable|bail|required_with:password|min:6',
+            'first_name'            => 'nullable|min:3|max:30|name',
+            'last_name'             => 'nullable|min:3|max:30|name',
         ];
     }
 

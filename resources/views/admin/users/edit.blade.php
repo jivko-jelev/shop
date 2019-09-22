@@ -40,10 +40,7 @@
                                     <input type="text" class="form-control" name="name" id="name"
                                            placeholder="Потребителско Име"
                                            value="{{ old('name', $user->name) }}" autocomplete="off">
-                                    @error('name')
-                                    <span class="error" id="error-name">{{ $message }}</span>
-                                    @enderror
-                                    <span class="error-javascript" id="name-error"></span>
+                                    <span class="error" id="name-error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -52,10 +49,7 @@
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" name="email" placeholder="Имейл"
                                            value="{{ old('email', $user->email) }}">
-                                    @error('email')
-                                    <span class="error">{{ $message }}</span>
-                                    @enderror
-                                    <span class="error-javascript" id="email-error"></span>
+                                    <span class="error" id="email-error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -63,10 +57,7 @@
 
                                 <div class="col-sm-8">
                                     <input type="password" class="form-control" name="password" placeholder="Парола">
-                                    @error('password')
-                                    <span class="error">{{ $message }}</span>
-                                    @enderror
-                                    <span class="error-javascript" id="password-error"></span>
+                                    <span class="error" id="password-error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -76,7 +67,7 @@
                                 <div class="col-sm-8">
                                     <input type="password" class="form-control" name="password_confirmation"
                                            placeholder="Повтори Паролата">
-                                    <span class="error-javascript" id="password_confirmation-error"></span>
+                                    <span class="error" id="password_confirmation-error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -85,10 +76,7 @@
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" name="first_name" placeholder="Име"
                                            value="{{ old('first_name', $user->first_name) }}">
-                                    @error('first_name')
-                                    <span class="error">{{ $message }}</span>
-                                    @enderror
-                                    <span class="error-javascript" id="first_name-error"></span>
+                                    <span class="error" id="first_name-error"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -97,10 +85,7 @@
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" name="last_name" placeholder="Фамилия"
                                            value="{{ old('last_name', $user->last_name) }}">
-                                    @error('last_name')
-                                    <span class="error">{{ $message }}</span>
-                                    @enderror
-                                    <span class="error-javascript" id="last_name-error"></span>
+                                    <span class="error" id="last_name-error"></span>
                                 </div>
                             </div>
                         </div>
@@ -123,37 +108,30 @@
     <script src="{{ URL::to('bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ URL::to('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
-        $('.error').parent().find('input').css({'border': '1px solid red'});
         $('#submit').click(function (e) {
             e.preventDefault();
             var form = $("#form-edit-user");
-            $('.error-javascript').html('');
-            $('.error-javascript').parent().find('input').focus(function() {
-                $(this).css({'border-color': '#66afe9'});
-            });
-            $('.error-javascript').parent().find('input').css({'border-color': '#d2d6de'});
             $.ajax({
                 url: "{{ route('users.update', $user) }}",
                 context: document.body,
                 data: form.serialize(),
                 method: 'post',
                 success: function (data) {
+                    $('.error').html('');
                     Lobibox.notify('success', {
                         showClass: 'rollIn',
                         hideClass: 'rollOut',
-                        sound: true,
                         msg: JSON.parse(data).message
                     });
                 },
                 error: function (data) {
-                    for (let i = 0; i < Object.keys(data.responseJSON.errors).length; i++) {
-                        $('#' + Object.keys(data.responseJSON.errors)[i] + '-error').html(data.responseJSON.errors[Object.keys(data.responseJSON.errors)[i]]);
-                        $('#' + Object.keys(data.responseJSON.errors)[i] + '-error').parent().find('input').css({'border': '1px solid red'});
+                    for (let i = 0; i < $('.error').length; i++) {
+                        let key = Object.keys(data.responseJSON.errors)[i];
+                        $('#' + key + '-error').html(data.responseJSON.errors[key]);
                     }
                     Lobibox.notify('error', {
                         showClass: 'rollIn',
                         hideClass: 'rollOut',
-                        sound: true,
                         msg: 'Възникна някаква грешка при опита за промяна на данните на потребителя'
                     });
                 }

@@ -6,6 +6,7 @@
 @endsection
 
 @section('content')
+    {{--    {{ dd(env('DATE')) }}--}}
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
@@ -30,24 +31,26 @@
                         <table id="users" class="table table-bordered table-hover">
                             <thead>
                             <tr role="row" class="heading">
-                                <th>Username</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Sex</th>
-                                <th>Email</th>
-                                <th>Action</th>
+                                <th>Потребител</th>
+                                <th>Име</th>
+                                <th>Фамилия</th>
+                                <th>Пол</th>
+                                <th>Имейл</th>
+                                <th>Създаден</th>
+                                <th>Действие</th>
                             </tr>
                             </thead>
                             <tbody>
                             </tbody>
                             <tfoot>
                             <tr>
-                                <th>Username</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Sex</th>
-                                <th>Email</th>
-                                <th>Action</th>
+                                <th>Потребител</th>
+                                <th>Име</th>
+                                <th>Фамилия</th>
+                                <th>Пол</th>
+                                <th>Имейл</th>
+                                <th>Създаден</th>
+                                <th>Действие</th>
                             </tr>
                             </tfoot>
                         </table>
@@ -56,6 +59,10 @@
             </div>
         </div>
     </section>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+    </div>
+
 @endsection
 
 @push('js')
@@ -64,16 +71,17 @@
     <script src="{{ URL::to('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
         $(function () {
-            $('#users').DataTable({
+            var table = $('#users').DataTable({
                 'paging': true,
                 'lengthChange': true,
-                'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "Всички"]],
                 'searching': true,
                 'ordering': true,
                 'info': true,
                 'autoWidth': false,
                 'processing': true,
                 'serverSide': true,
+                "order": [5, "desc"],
                 ajax: '{{ route('users.ajax') }}',
                 columns: [
                     {data: 'name'},
@@ -81,8 +89,26 @@
                     {data: 'last_name'},
                     {data: 'sex'},
                     {data: 'email'},
+                    {data: 'created_at'},
                     {data: 'actions'},
-                ]
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    $('a').click(function (e) {
+                        e.preventDefault();
+                        let link = $(this).attr('href');
+                        $.ajax({
+                            url: link,
+                            context: document.body,
+                            data: null,
+                            method: 'get',
+                            success: function (data) {
+                                $('#myModal').html(data).on('hidden.bs.modal', function () {
+                                    table.ajax.reload()
+                                })
+                            }
+                        })
+                    })
+                }
             });
         });
     </script>

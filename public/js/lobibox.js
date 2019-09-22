@@ -1,8 +1,8 @@
 //Author      : @arboshiki
 //create lobibox object
 var Lobibox = Lobibox || {};
+var snd = document.createElement('audio');
 (function () {
-
     Lobibox.counter = 0;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -1445,7 +1445,8 @@ var Lobibox = Lobibox || {};
 
             me.$el = $notify;
             if (me.$options.sound) {
-                var snd = new Audio(me.$options.sound); // buffers automatically when created
+                // var snd = new Audio(me.$options.sound); // buffers automatically when created
+                snd.src=me.$options.sound;
                 snd.play();
             }
             if (me.$options.rounded) {

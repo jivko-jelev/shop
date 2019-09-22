@@ -20,7 +20,8 @@
     <!-- jvectormap -->
     <link rel="stylesheet" href="{{ URL::to('bower_components/jvectormap/jquery-jvectormap.css') }}">
     <!-- Date Picker -->
-    <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ URL::to('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
     <!-- Daterange picker -->
     <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ URL::to('css/lobibox.min.css') }}"/>
@@ -34,7 +35,8 @@
     <![endif]-->
 
     <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
     @yield('styles')
 </head>
@@ -72,7 +74,8 @@
                                     <li><!-- start message -->
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::to('dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+                                                <img src="{{ URL::to('dist/img/user2-160x160.jpg') }}"
+                                                     class="img-circle" alt="User Image">
                                             </div>
                                             <h4>
                                                 Support Team
@@ -85,7 +88,8 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::to('dist/img/user3-128x128.jpg') }}" class="img-circle" alt="User Image">
+                                                <img src="{{ URL::to('dist/img/user3-128x128.jpg') }}"
+                                                     class="img-circle" alt="User Image">
                                             </div>
                                             <h4>
                                                 AdminLTE Design Team
@@ -97,7 +101,8 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::to('dist/img/user4-128x128.jpg') }}" class="img-circle" alt="User Image">
+                                                <img src="{{ URL::to('dist/img/user4-128x128.jpg') }}"
+                                                     class="img-circle" alt="User Image">
                                             </div>
                                             <h4>
                                                 Developers
@@ -109,7 +114,8 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::to('dist/img/user3-128x128.jpg') }}" class="img-circle" alt="User Image">
+                                                <img src="{{ URL::to('dist/img/user3-128x128.jpg') }}"
+                                                     class="img-circle" alt="User Image">
                                             </div>
                                             <h4>
                                                 Sales Department
@@ -121,7 +127,8 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::to('dist/img/user4-128x128.jpg') }}" class="img-circle" alt="User Image">
+                                                <img src="{{ URL::to('dist/img/user4-128x128.jpg') }}"
+                                                     class="img-circle" alt="User Image">
                                             </div>
                                             <h4>
                                                 Reviewers
@@ -153,7 +160,8 @@
                                     </li>
                                     <li>
                                         <a href="#">
-                                            <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
+                                            <i class="fa fa-warning text-yellow"></i> Very long description here that
+                                            may not fit into the
                                             page and may cause design problems
                                         </a>
                                     </li>
@@ -195,7 +203,8 @@
                                                 <small class="pull-right">20%</small>
                                             </h3>
                                             <div class="progress xs">
-                                                <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar"
+                                                <div class="progress-bar progress-bar-aqua" style="width: 20%"
+                                                     role="progressbar"
                                                      aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                                                     <span class="sr-only">20% Complete</span>
                                                 </div>
@@ -210,7 +219,8 @@
                                                 <small class="pull-right">40%</small>
                                             </h3>
                                             <div class="progress xs">
-                                                <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar"
+                                                <div class="progress-bar progress-bar-green" style="width: 40%"
+                                                     role="progressbar"
                                                      aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                                                     <span class="sr-only">40% Complete</span>
                                                 </div>
@@ -225,7 +235,8 @@
                                                 <small class="pull-right">60%</small>
                                             </h3>
                                             <div class="progress xs">
-                                                <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar"
+                                                <div class="progress-bar progress-bar-red" style="width: 60%"
+                                                     role="progressbar"
                                                      aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                                                     <span class="sr-only">60% Complete</span>
                                                 </div>
@@ -240,7 +251,8 @@
                                                 <small class="pull-right">80%</small>
                                             </h3>
                                             <div class="progress xs">
-                                                <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar"
+                                                <div class="progress-bar progress-bar-yellow" style="width: 80%"
+                                                     role="progressbar"
                                                      aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                                                     <span class="sr-only">80% Complete</span>
                                                 </div>
@@ -264,7 +276,8 @@
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="{{ URL::to('dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+                                <img src="{{ URL::to('dist/img/user2-160x160.jpg') }}" class="img-circle"
+                                     alt="User Image">
 
                                 <p>
                                     Alexander Pierce - Web Developer
@@ -306,9 +319,9 @@
         </nav>
     </header>
 
-    @include('admin.layouts.left-sidebar')
+@include('admin.layouts.left-sidebar')
 
-    <!-- Content Wrapper. Contains page content -->
+<!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         @yield('content')
     </div>
@@ -531,15 +544,8 @@
 <script src="{{ URL::to('dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ URL::to('dist/js/demo.js') }}"></script>
-
 <!--Lobibox - Free responsive jQuery messagebox and notification plugin available for commercial and non-commercial usages.-->
 <script src="{{ URL::to('js/lobibox.js') }}"></script>
-<script>
-    function showError($parent, $error) {
-        $("span").addClass('error').html("Some appended text.").insertAfter('#name');
-    }
-    // showError(1, 'asdsad');
-</script>
 @stack('js')
 </body>
 </html>
