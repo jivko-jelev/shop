@@ -26,6 +26,12 @@
                     <span>Потребители</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('categories') }}">
+                    <i class="fa fa-list"></i>
+                    <span>Категории</span>
+                </a>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->

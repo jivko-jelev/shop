@@ -11,18 +11,28 @@
 |
 */
 
+
 Route::prefix('admin')
      ->middleware(['auth', 'admin'])
      ->group(function () {
-         Route::get('/', function () {
+         Route::get('', function () {
              return view('admin.dashboard', ['title' => 'Табло']);
          })->name('dashboard');
 
-         Route::get('/users', 'UserController@index')->name('users');
-         Route::get('/users/ajax', 'UserController@ajax')->name('users.ajax');
-         Route::get('/users/{user}/edit', 'UserController@edit')->name('users.edit');
-         Route::put('/users/{user}/update', 'UserController@update')->name('users.update');
-         Route::delete('/users/{user}/delete', 'UserController@destroy')->name('users.destroy');
+         // Потребители
+         Route::get('users', 'UserController@index')->name('users');
+         Route::get('users/ajax', 'UserController@ajax')->name('users.ajax');
+         Route::get('users/{user}/edit', 'UserController@edit')->name('users.edit');
+         Route::put('users/{user}/update', 'UserController@update')->name('users.update');
+         Route::delete('users/{user}/delete', 'UserController@destroy')->name('users.destroy');
+
+         // Категории
+         Route::get('categories', 'CategoryController@index')->name('categories');
+         Route::get('categories/{category}/edit', 'CategoryController@edit')->name('categories.edit');
+         Route::post('categories', 'CategoryController@store')->name('categories.store');
+         Route::post('categories/ajax', 'CategoryController@ajax')->name('categories.ajax');
+         Route::put('categories/{category}/update', 'CategoryController@update')->name('categories.update');
+         Route::delete('categories/{category}', 'CategoryController@destroy')->name('categories.destroy');
      });
 
 Auth::routes();

@@ -15,7 +15,6 @@ class UserController extends Controller
     {
         $users           = User::select(['id', 'name', 'first_name', 'last_name', 'email', 'created_at', 'sex']);
         $recordsTotal    = User::all()->count();
-        $recordsFiltered = $recordsTotal;
 
         $ajaxGridColumnNames = [
             0 => 'name',
@@ -27,23 +26,25 @@ class UserController extends Controller
         ];
 
 
-        $users->when($request->get('search')['value'], function ($query) use ($request) {
-            $query->where(function ($query) use ($request) {
-                $query->where('first_name', 'like', "%{$request->get('search')['value']}%")
-                      ->orWhere('last_name', 'like', "%{$request->get('search')['value']}%")
-                      ->orWhere(function($query) use ($request) {
-                          if(strpos($request->get('search')['value'], ' ')>0) {
-                              $first_name = explode(' ', $request->get('search')['value'])[0];
-                              $last_name  = explode(' ', $request->get('search')['value'])[1];
+        $filter = $request->get('search')['value'];
+        $users->when($filter, function ($query) use ($filter) {
+            $query->where(function ($query) use ($filter) {
+                $query->where('first_name', 'like', "%{$filter}%")
+                      ->orWhere('last_name', 'like', "%{$filter}%")
+                      ->orWhere(function ($query) use ($filter) {
+                          if (strpos($filter, ' ') > 0) {
+                              $first_name = explode(' ', $filter)[0];
+                              $last_name  = explode(' ', $filter)[1];
                               $query->where('first_name', 'like', "%{$first_name}%")
                                     ->where('last_name', 'like', "%{$last_name}%");
                           }
                       })
-                      ->orWhere('name', 'like', "%{$request->get('search')['value']}%")
-                      ->orWhere('sex', 'like', "%{$request->get('search')['value']}%")
-                      ->orWhere('email', 'like', "%{$request->get('search')['value']}%");
+                      ->orWhere('name', 'like', "%{$filter}%")
+                      ->orWhere('sex', 'like', "%{$filter}%")
+                      ->orWhere('email', 'like', "%{$filter}%");
             });
         });
+
 
         $orderState = $request->get('order');
         foreach ($orderState as $singleOrderState) {
@@ -59,7 +60,9 @@ class UserController extends Controller
 
         $users = $users->get();
 
-        foreach ($users as $key => $user) {
+        $recordsFiltered = $users->count();
+
+        foreach ($users as $user) {
             $user->actions = view('admin.users.layouts.users-actions')->with('user', $user)->render();
         }
 

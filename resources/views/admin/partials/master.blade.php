@@ -7,6 +7,8 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ URL::to('bower_components/select2/dist/css/select2.min.css') }}">
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
     <!-- Font Awesome -->
@@ -36,8 +38,7 @@
     <![endif]-->
 
     <!-- Google Font -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
     @yield('styles')
 </head>
@@ -324,7 +325,17 @@
 
 <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        @yield('content')
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                {{ $title }}
+                <small>Контролен Панел</small>
+            </h1>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            @yield('content')
+        </section>
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
@@ -552,6 +563,14 @@
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
+    });
+</script>
+<!-- Select2 -->
+<script src="{{ URL::to('bower_components/select2/dist/js/select2.full.min.js') }}"></script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
     });
 </script>
 @stack('js')
