@@ -12,18 +12,18 @@
 */
 
 Route::prefix('admin')
-    ->middleware(['auth', 'admin'])
-    ->group(function () {
-        Route::get('/', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+     ->middleware(['auth', 'admin'])
+     ->group(function () {
+         Route::get('/', function () {
+             return view('admin.dashboard', ['title' => 'Табло']);
+         })->name('dashboard');
 
-        Route::get('/users', 'UserController@index')->name('users');
-        Route::get('/users/ajax', 'UserController@ajax')->name('users.ajax');
-        Route::get('/users/{user}/edit', 'UserController@edit')->name('users.edit');
-        Route::put('/users/{user}/update', 'UserController@update')->name('users.update');
-        Route::get('/users/test', 'UserController@test')->name('test');
-    });
+         Route::get('/users', 'UserController@index')->name('users');
+         Route::get('/users/ajax', 'UserController@ajax')->name('users.ajax');
+         Route::get('/users/{user}/edit', 'UserController@edit')->name('users.edit');
+         Route::put('/users/{user}/update', 'UserController@update')->name('users.update');
+         Route::delete('/users/{user}/delete', 'UserController@destroy')->name('users.destroy');
+     });
 
 Auth::routes();
 

@@ -31,6 +31,14 @@ class UserController extends Controller
             $query->where(function ($query) use ($request) {
                 $query->where('first_name', 'like', "%{$request->get('search')['value']}%")
                       ->orWhere('last_name', 'like', "%{$request->get('search')['value']}%")
+                      ->orWhere(function($query) use ($request) {
+                          if(strpos($request->get('search')['value'], ' ')>0) {
+                              $first_name = explode(' ', $request->get('search')['value'])[0];
+                              $last_name  = explode(' ', $request->get('search')['value'])[1];
+                              $query->where('first_name', 'like', "%{$first_name}%")
+                                    ->where('last_name', 'like', "%{$last_name}%");
+                          }
+                      })
                       ->orWhere('name', 'like', "%{$request->get('search')['value']}%")
                       ->orWhere('sex', 'like', "%{$request->get('search')['value']}%")
                       ->orWhere('email', 'like', "%{$request->get('search')['value']}%");
@@ -42,7 +50,12 @@ class UserController extends Controller
             $users->orderBy($ajaxGridColumnNames[$singleOrderState['column']], $singleOrderState['dir']);
         }
 
-        $users->skip($request->input('start'))->take($request->input('length'));
+        if ($request->input('start') > 0) {
+            $users->skip($request->input('start'));
+        }
+        if ($request->input('length') > 0) {
+            $users->take($request->input('length'));
+        }
 
         $users = $users->get();
 
@@ -64,39 +77,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('admin.users.users');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        return view('admin.users.users', ['title' => 'Потребители']);
     }
 
     /**
@@ -148,11 +129,12 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return void
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
     }
 }

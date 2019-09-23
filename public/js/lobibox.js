@@ -557,17 +557,17 @@ var snd = document.createElement('audio');
             },
             cancel: {
                 'class': 'lobibox-btn lobibox-btn-cancel',
-                text: 'Cancel',
+                text: 'Отказ',
                 closeOnClick: true
             },
             yes: {
                 'class': 'lobibox-btn lobibox-btn-yes',
-                text: 'Yes',
+                text: 'Да',
                 closeOnClick: true
             },
             no: {
                 'class': 'lobibox-btn lobibox-btn-no',
-                text: 'No',
+                text: 'Не',
                 closeOnClick: true
             }
         },
@@ -786,7 +786,7 @@ var snd = document.createElement('audio');
     });
 
     Lobibox.confirm.DEFAULTS = {
-        title: 'Question',
+        title: 'Въпрос',
         width: 500
     };
 //------------------------------------------------------------------------------

@@ -31,12 +31,98 @@ class CreateUsersTable extends Migration
 
         User::insert([
             'name' => 'admin',
-            'first_name' => 'John',
-            'last_name' => 'Doe',
+            'first_name' => 'Джон',
+            'last_name' => 'Доу',
             'sex' => 1,
             'email' => 'admin@domain.com',
             'password' => bcrypt('complexpassword123'),
             'is_admin' => true,
+        ]);
+        User::insert([
+            'name' => 'givko',
+            'first_name' => 'Живко',
+            'last_name' => 'Желев',
+            'sex' => 1,
+            'email' => 'givko@domain.com',
+            'password' => bcrypt('complexpassword123'),
+            'is_admin' => false,
+        ]);
+        User::insert([
+            'name' => 'john',
+            'first_name' => 'Джон',
+            'sex' => 1,
+            'email' => 'john@abv.bg',
+            'password' => bcrypt('complexpassword123'),
+            'is_admin' => false,
+        ]);
+        User::insert([
+            'name' => 'jane',
+            'first_name' => 'Джейн',
+            'last_name' => 'Доу',
+            'sex' => 2,
+            'email' => 'jane@domain.com',
+            'password' => bcrypt('complexpassword123'),
+        ]);
+        User::insert([
+            'name' => 'geri',
+            'first_name' => 'Гергана',
+            'last_name' => 'Иванова',
+            'email' => 'geri@gmail.com',
+            'password' => bcrypt('complexpassword123'),
+        ]);
+        User::insert([
+            'name' => 'dimo',
+            'first_name' => 'Димо',
+            'sex' => 1,
+            'email' => 'dimo@abv.bg',
+            'password' => bcrypt('complexpassword123'),
+            'is_admin' => false,
+        ]);
+        User::insert([
+            'name' => 'petar',
+            'first_name' => 'Петър',
+            'last_name' => 'Вълев',
+            'sex' => 1,
+            'email' => 'petar@domain.com',
+            'password' => bcrypt('complexpassword123'),
+        ]);
+        User::insert([
+            'name' => 'iliana',
+            'first_name' => 'Илияна',
+            'last_name' => 'Димова',
+            'sex' => 2,
+            'email' => 'iliana@domain.com',
+            'password' => bcrypt('complexpassword123'),
+        ]);
+        User::insert([
+            'name' => 'georgi',
+            'first_name' => 'Георги',
+            'last_name' => 'Николов',
+            'sex' => 1,
+            'email' => 'georgi@abv.bg',
+            'password' => bcrypt('complexpassword123'),
+        ]);
+        User::insert([
+            'name' => 'neo',
+            'first_name' => 'Нео',
+            'sex' => 1,
+            'email' => 'neo@matrix.com',
+            'password' => bcrypt('complexpassword123'),
+            'is_admin' => true,
+        ]);
+        User::insert([
+            'name' => 'trinity',
+            'first_name' => 'Тринити',
+            'sex' => 2,
+            'email' => 'trinity@matrix.com',
+            'password' => bcrypt('complexpassword123'),
+        ]);
+        User::insert([
+            'name' => 'morpheus',
+            'first_name' => 'Морфей',
+            'sex' => 1,
+            'email' => 'morpeus@matrix.com',
+            'password' => bcrypt('complexpassword123'),
         ]);
     }
 

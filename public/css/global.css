@@ -5,6 +5,46 @@
     font-size: 12px;
 }
 
-.control-label{
+.control-label {
     color: darkslategrey;
+}
+
+.dataTable th {
+    /*background: #bed2e6;*/
+}
+
+.dataTable td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+table.dataTable thead .sorting_asc {
+    background-image: url(/images/sort_asc.png);
+}
+
+table.dataTable thead .sorting_desc {
+    background-image: url(/images/sort_desc.png);
+}
+
+table.dataTable thead .sorting {
+    background-image: url(/images/sort_both.png);
+}
+
+table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc_disabled {
+    cursor: pointer;
+    *cursor: hand;
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
+table.dataTable thead .sorting_asc:after {
+    content: none !important;
+}
+
+table.dataTable thead .sorting_desc:after {
+    content: none !important;
+}
+
+table.dataTable thead .sorting:after {
+    content: none !important;
 }

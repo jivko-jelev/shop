@@ -6,12 +6,11 @@
 @endsection
 
 @section('content')
-    {{--    {{ dd(env('DATE')) }}--}}
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
             {{ __('Потребители') }}
-            <small>Control panel</small>
+            <small>Контролен Панел</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -28,7 +27,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="users" class="table table-bordered table-hover">
+                        <table id="users" class="table table-bordered table-hover dataTable">
                             <thead>
                             <tr role="row" class="heading">
                                 <th>Потребител</th>
@@ -70,8 +69,9 @@
     <script src="{{ URL::to('bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ URL::to('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
+        let table;
         $(function () {
-            var table = $('#users').DataTable({
+            table = $('#users').DataTable({
                 'paging': true,
                 'lengthChange': true,
                 'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "Всички"]],
@@ -82,6 +82,10 @@
                 'processing': true,
                 'serverSide': true,
                 "order": [5, "desc"],
+                "columnDefs": [{
+                    "orderable": false,
+                    "targets": [6]
+                }],
                 ajax: '{{ route('users.ajax') }}',
                 columns: [
                     {data: 'name'},
@@ -93,17 +97,15 @@
                     {data: 'actions'},
                 ],
                 "fnDrawCallback": function (oSettings) {
-                    $('a').click(function (e) {
+                    $('.a-action').click(function (e) {
                         e.preventDefault();
                         let link = $(this).attr('href');
                         $.ajax({
                             url: link,
-                            context: document.body,
-                            data: null,
                             method: 'get',
                             success: function (data) {
                                 $('#myModal').html(data).on('hidden.bs.modal', function () {
-                                    table.ajax.reload()
+                                    table.ajax.reload(null, false);
                                 })
                             }
                         })

@@ -6,6 +6,7 @@
     <title>{{ isset($title) ? $title . ' | ' : ''  }} Контролен Панел</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
     <!-- Font Awesome -->
@@ -74,7 +75,7 @@
                                     <li><!-- start message -->
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::to('dist/img/user2-160x160.jpg') }}"
+                                                <img src="{{ URL::to('dist/img/user2-160x160.png') }}"
                                                      class="img-circle" alt="User Image">
                                             </div>
                                             <h4>
@@ -270,13 +271,13 @@
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="{{ URL::to('dist/img/user2-160x160.jpg') }}" class="user-image" alt="User Image">
+                            <img src="{{ URL::to('dist/img/user2-160x160.png') }}" class="user-image" alt="User Image">
                             <span class="hidden-xs">Alexander Pierce</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="{{ URL::to('dist/img/user2-160x160.jpg') }}" class="img-circle"
+                                <img src="{{ URL::to('dist/img/user2-160x160.png') }}" class="img-circle"
                                      alt="User Image">
 
                                 <p>
@@ -546,6 +547,13 @@
 <script src="{{ URL::to('dist/js/demo.js') }}"></script>
 <!--Lobibox - Free responsive jQuery messagebox and notification plugin available for commercial and non-commercial usages.-->
 <script src="{{ URL::to('js/lobibox.js') }}"></script>
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+</script>
 @stack('js')
 </body>
 </html>

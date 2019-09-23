@@ -24,7 +24,7 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                  => "required|min:4|unique:users,name,{$this->user->id}",
+            'name'                  => "required|min:3|max:16|regex:/^[A-Za-z][A-Za-z0-9]{3,16}$/|unique:users,name,{$this->user->id}",
             'email'                 => 'required|email|max:255',
             'password'              => 'nullable|bail|required_with:password_confirmation|min:6|confirmed',
             'password_confirmation' => 'nullable|bail|required_with:password|min:6',
