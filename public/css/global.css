@@ -13,10 +13,6 @@
     /*background: #bed2e6;*/
 }
 
-.dataTable td:last-child {
-    width: 1%;
-    white-space: nowrap;
-}
 
 table.dataTable thead .sorting_asc {
     background-image: url(/images/sort_asc.png);
@@ -47,4 +43,8 @@ table.dataTable thead .sorting_desc:after {
 
 table.dataTable thead .sorting:after {
     content: none !important;
+}
+
+.filter input {
+    width: 100% !important;
 }

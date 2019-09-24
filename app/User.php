@@ -2,13 +2,14 @@
 
 namespace App;
 
+use App\Scopes\CommonFilterScopes;
 use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, CommonFilterScopes;
 
     /**
      * The attributes that are mass assignable.

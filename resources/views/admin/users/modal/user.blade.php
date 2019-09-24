@@ -5,7 +5,7 @@
             <h4 class="modal-title">Редакция</h4>
         </div>
         <!-- form start -->
-        <form class="form-horizontal" id="form-edit-user" autocomplete="off" method="get" action="{{ route('users.update', $user) }}">
+        <form class="form-horizontal" id="form-edit-user" autocomplete="off" method="post" action="{{ route('users.update', $user) }}">
             <div class="modal-body">
                 <div class="box-body">
                     <div class="form-group">

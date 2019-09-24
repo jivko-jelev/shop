@@ -27,6 +27,9 @@ class UserController extends Controller
 
 
         $filter = $request->get('search')['value'];
+
+//        $users->whereIf($)
+
         $users->when($filter, function ($query) use ($filter) {
             $query->where(function ($query) use ($filter) {
                 $query->where('first_name', 'like', "%{$filter}%")
