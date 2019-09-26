@@ -25,13 +25,10 @@ class UserController extends Controller
             5 => 'created_at',
         ];
 
-
-        $filter = $request->get('search')['value'];
-
         $users->whereLikeIf('name', $request->get('name'))
               ->whereLikeIf('first_name', $request->get('first_name'))
               ->whereLikeIf('last_name', $request->get('last_name'))
-              ->whereLikeIf('sex', $request->get('sex'))
+              ->whereIf('sex', $request->get('sex'))
               ->whereLikeIf('email', $request->get('email'))
               ->whereLikeIf('created_at', $request->get('created_at'));
 
@@ -48,7 +45,6 @@ class UserController extends Controller
         }
 
         $recordsFiltered = $users->count();
-
         $users = $users->get();
 
         foreach ($users as $user) {

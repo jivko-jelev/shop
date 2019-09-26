@@ -30,7 +30,7 @@
                                 <th><input type="text" class="form-control form-filter" name="filter[name]"></th>
                                 <th><input type="text" class="form-control form-filter" name="filter[first_name]"></th>
                                 <th><input type="text" class="form-control form-filter" name="filter[last_name]"></th>
-                                <th><select class="form-control form-filter" name="filter[sex]">
+                                <th><select class="form-control" name="filter[sex]">
                                         <option value="">избери</option>
                                         <option value="Мъж">Мъж</option>
                                         <option value="Жена">Жена</option>
@@ -82,7 +82,6 @@
                 $('#myModal').modal('hide');
             }
         });
-
         let table;
         $(function () {
             table = $('#users').DataTable({
@@ -91,7 +90,10 @@
                 searching: false,
                 orderCellsTop: true,
                 order: [5, "desc"],
-                columnDefs: [{
+                'lengthChange': true,
+                'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "Всички"]],
+                pageLength: localStorage.getItem('usersResultsPerPare'),
+            columnDefs: [{
                     orderable: false,
                     targets: [6]
                 }],
@@ -102,7 +104,7 @@
                         d.name       = $('input[name="filter[name]"]').val();
                         d.first_name = $('input[name="filter[first_name]"]').val();
                         d.last_name  = $('input[name="filter[last_name]"]').val();
-                        d.sex        = $('input[name="filter[sex]"]').val();
+                        d.sex        = $('select[name="filter[sex]"]').val();
                         d.email      = $('input[name="filter[email]"]').val();
                         d.created_at = $('input[name="filter[created_at]"]').val();
                     }
@@ -145,7 +147,13 @@
                 $('select[name="filter[sex]"]').val('');
                 $('input[name="filter[email]"]').val('');
                 $('input[name="filter[created_at]"]').val('');
-            })
+                table.ajax.reload(null, false);
+            });
+
+
+            $('select[name="users_length"]').change(function () {
+                localStorage.setItem('usersResultsPerPare', $('select[name="users_length"]').val());
+            });
         });
     </script>
 @endpush
