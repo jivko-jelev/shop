@@ -13,8 +13,8 @@ class UserController extends Controller
 
     public function ajax(Request $request)
     {
-        $users           = User::select(['id', 'name', 'first_name', 'last_name', 'email', 'created_at', 'sex']);
-        $recordsTotal    = User::all()->count();
+        $users        = User::select(['id', 'name', 'first_name', 'last_name', 'email', 'created_at', 'sex']);
+        $recordsTotal = User::all()->count();
 
         $ajaxGridColumnNames = [
             0 => 'name',
@@ -28,26 +28,12 @@ class UserController extends Controller
 
         $filter = $request->get('search')['value'];
 
-//        $users->whereIf($)
-
-        $users->when($filter, function ($query) use ($filter) {
-            $query->where(function ($query) use ($filter) {
-                $query->where('first_name', 'like', "%{$filter}%")
-                      ->orWhere('last_name', 'like', "%{$filter}%")
-                      ->orWhere(function ($query) use ($filter) {
-                          if (strpos($filter, ' ') > 0) {
-                              $first_name = explode(' ', $filter)[0];
-                              $last_name  = explode(' ', $filter)[1];
-                              $query->where('first_name', 'like', "%{$first_name}%")
-                                    ->where('last_name', 'like', "%{$last_name}%");
-                          }
-                      })
-                      ->orWhere('name', 'like', "%{$filter}%")
-                      ->orWhere('sex', 'like', "%{$filter}%")
-                      ->orWhere('email', 'like', "%{$filter}%");
-            });
-        });
-
+        $users->whereLikeIf('name', $request->get('name'))
+              ->whereLikeIf('first_name', $request->get('first_name'))
+              ->whereLikeIf('last_name', $request->get('last_name'))
+              ->whereLikeIf('sex', $request->get('sex'))
+              ->whereLikeIf('email', $request->get('email'))
+              ->whereLikeIf('created_at', $request->get('created_at'));
 
         $orderState = $request->get('order');
         foreach ($orderState as $singleOrderState) {
@@ -61,9 +47,9 @@ class UserController extends Controller
             $users->take($request->input('length'));
         }
 
-        $users = $users->get();
-
         $recordsFiltered = $users->count();
+
+        $users = $users->get();
 
         foreach ($users as $user) {
             $user->actions = view('admin.users.layouts.users-actions')->with('user', $user)->render();

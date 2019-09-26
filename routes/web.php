@@ -21,7 +21,7 @@ Route::prefix('admin')
 
          // Потребители
          Route::get('users', 'UserController@index')->name('users');
-         Route::get('users/ajax', 'UserController@ajax')->name('users.ajax');
+         Route::post('users/ajax', 'UserController@ajax')->name('users.ajax');
          Route::get('users/{user}/edit', 'UserController@edit')->name('users.edit');
          Route::put('users/{user}/update', 'UserController@update')->name('users.update');
          Route::delete('users/{user}/delete', 'UserController@destroy')->name('users.destroy');

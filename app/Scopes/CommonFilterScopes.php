@@ -15,4 +15,13 @@ trait CommonFilterScopes
 
         return $query;
     }
+
+    public function scopeWhereLikeIf($query, $field, $value)
+    {
+        if ($value) {
+            $query->where($field, 'like', "%$value%");
+        }
+
+        return $query;
+    }
 }

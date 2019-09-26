@@ -102,6 +102,7 @@
                     msg: JSON.parse(data).message
                 });
                 $('#myModal').modal('hide');
+                table.ajax.reload(null, false);
             },
             error: function (data) {
                 $('.error').html('');

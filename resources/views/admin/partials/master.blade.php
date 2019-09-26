@@ -90,7 +90,7 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::to('dist/img/user3-128x128.jpg') }}"
+                                                <img src="{{ URL::to('dist/img/user2-160x160.png') }}"
                                                      class="img-circle" alt="User Image">
                                             </div>
                                             <h4>
@@ -103,7 +103,7 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::to('dist/img/user4-128x128.jpg') }}"
+                                                <img src="{{ URL::to('dist/img/user2-160x160.png') }}"
                                                      class="img-circle" alt="User Image">
                                             </div>
                                             <h4>
@@ -116,7 +116,7 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::to('dist/img/user3-128x128.jpg') }}"
+                                                <img src="{{ URL::to('dist/img/user2-160x160.png') }}"
                                                      class="img-circle" alt="User Image">
                                             </div>
                                             <h4>
@@ -129,7 +129,7 @@
                                     <li>
                                         <a href="#">
                                             <div class="pull-left">
-                                                <img src="{{ URL::to('dist/img/user4-128x128.jpg') }}"
+                                                <img src="{{ URL::to('dist/img/user2-160x160.png') }}"
                                                      class="img-circle" alt="User Image">
                                             </div>
                                             <h4>

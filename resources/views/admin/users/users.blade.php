@@ -26,25 +26,27 @@
                             <th>Действие</th>
                         </tr>
                         <tr class="filter">
-                            <th><input type="text" class="form-control" name="filter[name]"></th>
-                            <th><input type="text" class="form-control" name="filter[first_name]"></th>
-                            <th><input type="text" class="form-control" name="filter[last_name]"></th>
-                            <th><select class="form-control" name="filter[sex]">
-                                    <option value="">избери</option>
-                                    <option value="Мъж">Мъж</option>
-                                    <option value="Жена">Жена</option>
-                                </select>
-                            </th>
-                            <th><input type="text" class="form-control" name="filter[email]"></th>
-                            <th><input type="text" class="form-control" name="filter[created_at]"></th>
-                            <th>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="submit" name="submit" id="submit" class="btn btn-primary btn-secondary" title="Търси"><i
-                                            class="fa fa-search"></i></button>
-                                    <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary" title="Изчисти филтъра"><i
-                                            class="fa fa-times"></i></button>
-                                </div>
-                            </th>
+                            <form id="form-filter">
+                                <th><input type="text" class="form-control form-filter" name="filter[name]"></th>
+                                <th><input type="text" class="form-control form-filter" name="filter[first_name]"></th>
+                                <th><input type="text" class="form-control form-filter" name="filter[last_name]"></th>
+                                <th><select class="form-control form-filter" name="filter[sex]">
+                                        <option value="">избери</option>
+                                        <option value="Мъж">Мъж</option>
+                                        <option value="Жена">Жена</option>
+                                    </select>
+                                </th>
+                                <th><input type="text" class="form-control form-filter" name="filter[email]"></th>
+                                <th><input type="text" class="form-control form-filter" name="filter[created_at]"></th>
+                                <th>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary" title="Търси"><i
+                                                class="fa fa-search"></i></button>
+                                        <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary" title="Изчисти филтъра"><i
+                                                class="fa fa-times"></i></button>
+                                    </div>
+                                </th>
+                            </form>
                         </tr>
                         </thead>
                         <tbody>
@@ -65,7 +67,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal fade center" id="myModal" role="dialog">
         </div>
     </div>
 @endsection
@@ -75,25 +77,36 @@
     <script src="{{ URL::to('bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ URL::to('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
+        $(document).keyup(function (e) {
+            if (e.key === "Escape") {
+                $('#myModal').modal('hide');
+            }
+        });
+
         let table;
         $(function () {
             table = $('#users').DataTable({
-                'paging': true,
-                'lengthChange': true,
-                'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "Всички"]],
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': false,
-                'processing': true,
-                'serverSide': true,
-                'orderCellsTop': true,
-                "order": [5, "desc"],
-                "columnDefs": [{
-                    "orderable": false,
-                    "targets": [6]
+                processing: true,
+                serverSide: true,
+                searching: false,
+                orderCellsTop: true,
+                order: [5, "desc"],
+                columnDefs: [{
+                    orderable: false,
+                    targets: [6]
                 }],
-                ajax: '{{ route('users.ajax') }}',
+                ajax: {
+                    url: '{{ route('users.ajax') }}',
+                    type: 'post',
+                    data: function (d) {
+                        d.name       = $('input[name="filter[name]"]').val();
+                        d.first_name = $('input[name="filter[first_name]"]').val();
+                        d.last_name  = $('input[name="filter[last_name]"]').val();
+                        d.sex        = $('input[name="filter[sex]"]').val();
+                        d.email      = $('input[name="filter[email]"]').val();
+                        d.created_at = $('input[name="filter[created_at]"]').val();
+                    }
+                },
                 columns: [
                     {data: 'name'},
                     {data: 'first_name'},
@@ -111,14 +124,28 @@
                             url: link,
                             method: 'get',
                             success: function (data) {
-                                $('#myModal').html(data).on('hidden.bs.modal', function () {
-                                    table.ajax.reload(null, false);
-                                })
+                                $('#myModal').html(data);
                             }
                         })
                     })
                 }
             });
+            $('#filter').click(function () {
+                table.ajax.reload(null, false);
+            });
+            $('.form-filter').keypress(function (e) {
+                if(e.which == 13) {
+                    table.ajax.reload(null, false);
+                }
+            });
+            $('#clear').click(function () {
+                $('input[name="filter[name]"]').val('');
+                $('input[name="filter[first_name]"]').val('');
+                $('input[name="filter[last_name]"]').val('');
+                $('select[name="filter[sex]"]').val('');
+                $('input[name="filter[email]"]').val('');
+                $('input[name="filter[created_at]"]').val('');
+            })
         });
     </script>
 @endpush
