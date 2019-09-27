@@ -93,7 +93,7 @@
                 'lengthChange': true,
                 'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "Всички"]],
                 pageLength: localStorage.getItem('usersResultsPerPare'),
-            columnDefs: [{
+                columnDefs: [{
                     orderable: false,
                     targets: [6]
                 }],
@@ -136,17 +136,12 @@
                 table.ajax.reload(null, false);
             });
             $('.form-filter').keypress(function (e) {
-                if(e.which == 13) {
+                if (e.which == 13) {
                     table.ajax.reload(null, false);
                 }
             });
             $('#clear').click(function () {
-                $('input[name="filter[name]"]').val('');
-                $('input[name="filter[first_name]"]').val('');
-                $('input[name="filter[last_name]"]').val('');
-                $('select[name="filter[sex]"]').val('');
-                $('input[name="filter[email]"]').val('');
-                $('input[name="filter[created_at]"]').val('');
+                $('[name^="filter"]').val('');
                 table.ajax.reload(null, false);
             });
 

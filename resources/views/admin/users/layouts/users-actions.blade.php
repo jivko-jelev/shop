@@ -7,7 +7,7 @@
 <script>
     $('#delete-user-{{ $user->id }}').click(function () {
         Lobibox.confirm({
-            msg: "Наистина ли искате да изтриете потребителя: <strong>{{ $user->name }}</strong>?",
+            msg: "Наистина ли искате да изтриете: <strong>{{ $user->name }}</strong> ?",
             callback: function ($this, type) {
                 if (type === 'yes') {
                     $.ajax({
