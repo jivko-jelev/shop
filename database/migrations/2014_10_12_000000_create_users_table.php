@@ -33,7 +33,7 @@ class CreateUsersTable extends Migration
             'name' => 'admin',
             'first_name' => 'Джон',
             'last_name' => 'Доу',
-            'sex' => 1,
+            'sex' => 'Мъж',
             'email' => 'admin@domain.com',
             'password' => bcrypt('complexpassword123'),
             'is_admin' => true,
@@ -42,7 +42,7 @@ class CreateUsersTable extends Migration
             'name' => 'givko',
             'first_name' => 'Живко',
             'last_name' => 'Желев',
-            'sex' => 1,
+            'sex' => 'Мъж',
             'email' => 'givko@domain.com',
             'password' => bcrypt('complexpassword123'),
             'is_admin' => false,
@@ -50,7 +50,7 @@ class CreateUsersTable extends Migration
         User::insert([
             'name' => 'john',
             'first_name' => 'Джон',
-            'sex' => 1,
+            'sex' => 'Мъж',
             'email' => 'john@abv.bg',
             'password' => bcrypt('complexpassword123'),
             'is_admin' => false,
@@ -59,7 +59,7 @@ class CreateUsersTable extends Migration
             'name' => 'jane',
             'first_name' => 'Джейн',
             'last_name' => 'Доу',
-            'sex' => 2,
+            'sex' => 'Жена',
             'email' => 'jane@domain.com',
             'password' => bcrypt('complexpassword123'),
         ]);
@@ -73,7 +73,7 @@ class CreateUsersTable extends Migration
         User::insert([
             'name' => 'dimo',
             'first_name' => 'Димо',
-            'sex' => 1,
+            'sex' => 'Мъж',
             'email' => 'dimo@abv.bg',
             'password' => bcrypt('complexpassword123'),
             'is_admin' => false,
@@ -82,7 +82,7 @@ class CreateUsersTable extends Migration
             'name' => 'petar',
             'first_name' => 'Петър',
             'last_name' => 'Вълев',
-            'sex' => 1,
+            'sex' => 'Мъж',
             'email' => 'petar@domain.com',
             'password' => bcrypt('complexpassword123'),
         ]);
@@ -90,7 +90,7 @@ class CreateUsersTable extends Migration
             'name' => 'iliana',
             'first_name' => 'Илияна',
             'last_name' => 'Димова',
-            'sex' => 2,
+            'sex' => 'Жена',
             'email' => 'iliana@domain.com',
             'password' => bcrypt('complexpassword123'),
         ]);
@@ -98,14 +98,14 @@ class CreateUsersTable extends Migration
             'name' => 'georgi',
             'first_name' => 'Георги',
             'last_name' => 'Николов',
-            'sex' => 1,
+            'sex' => 'Мъж',
             'email' => 'georgi@abv.bg',
             'password' => bcrypt('complexpassword123'),
         ]);
         User::insert([
             'name' => 'neo',
             'first_name' => 'Нео',
-            'sex' => 1,
+            'sex' => 'Мъж',
             'email' => 'neo@matrix.com',
             'password' => bcrypt('complexpassword123'),
             'is_admin' => true,
@@ -113,14 +113,14 @@ class CreateUsersTable extends Migration
         User::insert([
             'name' => 'trinity',
             'first_name' => 'Тринити',
-            'sex' => 2,
+            'sex' => 'Жена',
             'email' => 'trinity@matrix.com',
             'password' => bcrypt('complexpassword123'),
         ]);
         User::insert([
             'name' => 'morpheus',
             'first_name' => 'Морфей',
-            'sex' => 1,
+            'sex' => 'Мъж',
             'email' => 'morpeus@matrix.com',
             'password' => bcrypt('complexpassword123'),
         ]);

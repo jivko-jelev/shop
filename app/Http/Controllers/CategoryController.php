@@ -39,12 +39,11 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $category)
     {
-//        $category = new Category();
         Category::create([
             'title' => $category->title,
             'alias' => $category->title,
         ]);
-//        return redirect()->back();
+        return response()->json();
     }
 
     /**

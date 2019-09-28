@@ -14,6 +14,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
+                    <div class="col-sm-12">
                     <table id="users" class="table table-bordered table-hover dataTable">
                         <thead>
                         <tr role="row" class="heading">
@@ -63,6 +64,7 @@
                         </tr>
                         </tfoot>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -82,17 +84,18 @@
                 $('#myModal').modal('hide');
             }
         });
-        let table;
+        var table;
         $(function () {
             table = $('#users').DataTable({
                 processing: true,
+                paging: true,
                 serverSide: true,
                 searching: false,
                 orderCellsTop: true,
                 order: [5, "desc"],
-                'lengthChange': true,
-                'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "Всички"]],
-                pageLength: localStorage.getItem('usersResultsPerPare'),
+                lengthChange: true,
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Всички"]],
+                pageLength: parseInt(localStorage.getItem('usersResultsPerPare')),
                 columnDefs: [{
                     orderable: false,
                     targets: [6]
@@ -119,6 +122,28 @@
                     {data: 'actions'},
                 ],
                 "fnDrawCallback": function (oSettings) {
+                    $('.delete-user').click(function () {
+                        let username = $(this).data('username');
+                        let userId = $(this).data('userId');
+                        Lobibox.confirm({
+                            msg: `Наистина ли искате да изтриете: <strong>${username}</strong> ?`,
+                            callback: function ($this, type) {
+                                if (type === 'yes') {
+                                    $.ajax({
+                                        url: `/admin/users/${userId}/delete`,
+                                        method: 'delete',
+                                        success: function (data) {
+                                            Lobibox.notify('success', {
+                                                msg: `Потребителят <strong>${username}</strong> беше успешно изтрит.`
+                                            });
+                                            table.ajax.reload()
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    });
+
                     $('.a-action').click(function (e) {
                         e.preventDefault();
                         let link = $(this).attr('href');
@@ -133,11 +158,11 @@
                 }
             });
             $('#filter').click(function () {
-                table.ajax.reload(null, false);
+                table.ajax.reload(null, true);
             });
             $('.form-filter').keypress(function (e) {
                 if (e.which == 13) {
-                    table.ajax.reload(null, false);
+                    table.ajax.reload(null, true);
                 }
             });
             $('#clear').click(function () {

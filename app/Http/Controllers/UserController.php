@@ -15,6 +15,7 @@ class UserController extends Controller
     {
         $users        = User::select(['id', 'name', 'first_name', 'last_name', 'email', 'created_at', 'sex']);
         $recordsTotal = User::all()->count();
+        $recordsFiltered = $users->count();
 
         $ajaxGridColumnNames = [
             0 => 'name',
@@ -44,7 +45,6 @@ class UserController extends Controller
             $users->take($request->input('length'));
         }
 
-        $recordsFiltered = $users->count();
         $users = $users->get();
 
         foreach ($users as $user) {
@@ -104,9 +104,7 @@ class UserController extends Controller
         $user->save();
 
         if ($request->ajax()) {
-            return response()->json('{"message": "Потребителят: <strong>' .
-                                    $user->name .
-                                    '</strong><br>' .
+            return response()->json('{"message": "Потребителят: <strong>' . $user->name . '</strong><br>' .
                                     'Име: <strong>' . $user->full_name . '</strong>' .
                                     '<br> беше успешно редактиран."}');
         }

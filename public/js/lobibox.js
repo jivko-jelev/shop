@@ -257,7 +257,6 @@ var snd = document.createElement('audio');
 
         _calculateHeight: function (height) {
             var me = this;
-            console.log(me.$options.height);
             height = Math.min(Math.max(height, me.$options.height), $(window).outerHeight());
             if (height === $(window).outerHeight()) {
                 height -= 2 * me.$options.verticalOffset;

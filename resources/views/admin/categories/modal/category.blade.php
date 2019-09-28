@@ -25,7 +25,7 @@
                             <select class="form-control select2" id="parent_id" name="parent_id">
                                 <option value="">Без</option>
                                 @foreach($categories as $category)
-                                    @if($category->id != $current_category->parent_id)
+                                    @if($category->id != $current_category->id)
                                         <option value="{{ $category->id }}">{{ $category->title }}</option>
                                     @endif
                                 @endforeach

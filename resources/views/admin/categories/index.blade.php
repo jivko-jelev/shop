@@ -103,7 +103,7 @@
                     {data: 'actions'},
                 ],
                 "fnDrawCallback": function (oSettings) {
-                    $('#select-categories').innerHTML = '';
+                    $('#select-categories').html('');
                     let categoriesData                = table.rows().data().sort();
                     let o                             = new Option("Без", '');
                     $(o).html('Без');
