@@ -111,6 +111,7 @@ return [
 
     "attributes" => [
         "name"                     => "Потребител",
+        "alias"                    => "Псевдоним",
         "username"                 => "Потребителско име",
         "email"                    => "E-mail",
         "first_name"               => "Име",

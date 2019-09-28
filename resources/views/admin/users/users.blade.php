@@ -15,55 +15,56 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="col-sm-12">
-                    <table id="users" class="table table-bordered table-hover dataTable">
-                        <thead>
-                        <tr role="row" class="heading">
-                            <th>Потребител</th>
-                            <th>Име</th>
-                            <th>Фамилия</th>
-                            <th>Пол</th>
-                            <th>Имейл</th>
-                            <th>Създаден</th>
-                            <th>Действие</th>
-                        </tr>
-                        <tr class="filter">
-                            <form id="form-filter">
-                                <th><input type="text" class="form-control form-filter" name="filter[name]"></th>
-                                <th><input type="text" class="form-control form-filter" name="filter[first_name]"></th>
-                                <th><input type="text" class="form-control form-filter" name="filter[last_name]"></th>
-                                <th><select class="form-control" name="filter[sex]">
-                                        <option value="">избери</option>
-                                        <option value="Мъж">Мъж</option>
-                                        <option value="Жена">Жена</option>
-                                    </select>
-                                </th>
-                                <th><input type="text" class="form-control form-filter" name="filter[email]"></th>
-                                <th><input type="text" class="form-control form-filter" name="filter[created_at]"></th>
-                                <th>
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary" title="Търси"><i
-                                                class="fa fa-search"></i></button>
-                                        <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary" title="Изчисти филтъра"><i
-                                                class="fa fa-times"></i></button>
-                                    </div>
-                                </th>
-                            </form>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <th>Потребител</th>
-                            <th>Име</th>
-                            <th>Фамилия</th>
-                            <th>Пол</th>
-                            <th>Имейл</th>
-                            <th>Създаден</th>
-                            <th>Действие</th>
-                        </tr>
-                        </tfoot>
-                    </table>
+                        <table id="users" class="table table-bordered table-hover dataTable">
+                            <thead>
+                            <tr role="row" class="heading">
+                                <th>Потребител</th>
+                                <th>Име</th>
+                                <th>Фамилия</th>
+                                <th>Пол</th>
+                                <th>Имейл</th>
+                                <th>Създаден</th>
+                                <th>Действие</th>
+                            </tr>
+                            <tr class="filter">
+                                <form id="form-filter">
+                                    <th><input type="text" class="form-control form-filter" name="filter[name]"></th>
+                                    <th><input type="text" class="form-control form-filter" name="filter[first_name]"></th>
+                                    <th><input type="text" class="form-control form-filter" name="filter[last_name]"></th>
+                                    <th><select class="form-control" name="filter[sex]">
+                                            <option value="">избери</option>
+                                            <option value="Мъж">Мъж</option>
+                                            <option value="Жена">Жена</option>
+                                        </select>
+                                    </th>
+                                    <th><input type="text" class="form-control form-filter" name="filter[email]"></th>
+                                    <th><input type="text" class="form-control form-filter" name="filter[created_at]"></th>
+                                    <th>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary" title="Търси"><i
+                                                    class="fa fa-search"></i></button>
+                                            <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary"
+                                                    title="Изчисти филтъра"><i
+                                                    class="fa fa-times"></i></button>
+                                        </div>
+                                    </th>
+                                </form>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>Потребител</th>
+                                <th>Име</th>
+                                <th>Фамилия</th>
+                                <th>Пол</th>
+                                <th>Имейл</th>
+                                <th>Създаден</th>
+                                <th>Действие</th>
+                            </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -124,7 +125,7 @@
                 "fnDrawCallback": function (oSettings) {
                     $('.delete-user').click(function () {
                         let username = $(this).data('username');
-                        let userId = $(this).data('userId');
+                        let userId   = $(this).data('userId');
                         Lobibox.confirm({
                             msg: `Наистина ли искате да изтриете: <strong>${username}</strong> ?`,
                             callback: function ($this, type) {

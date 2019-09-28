@@ -14,17 +14,22 @@
                 <div class="box-body">
                     <!-- form start -->
                     <form class="form-horizontal" id="form-create-category" autocomplete="off" method="post" action="{{ route('categories.store') }}">
-                        @csrf
                         <div class="form-group">
                             <label for="title" class="col-sm-1 control-label">Име</label>
                             <div class="col-sm-2">
-                                <input type="text" class="form-control" name="title" id="title" placeholder="Име" value="{{ old('title') }}">
-                                <span class="error" id="name-error"></span>
+                                <input type="text" class="form-control" name="title" id="title" placeholder="Име">
+                                <span class="error" id="title-error"></span>
+                            </div>
+
+                            <label for="alias" class="col-sm-1 control-label">Псевдоним</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control" name="alias" id="alias" placeholder="Псевдоним">
+                                <span class="error" id="alias-error"></span>
                             </div>
 
                             <label for="name" class="col-sm-1 control-label">Категория</label>
                             <div class="col-sm-2">
-                                <select class="form-control select2" id="select-categories" style="width: 100%;">
+                                <select class="form-control select2" name="parent_id" id="parent_id" style="width: 100%;">
                                 </select>
                             </div>
 
@@ -78,13 +83,34 @@
                     method: 'post',
                     success: function (data) {
                         table.ajax.reload(null, false);
+                        Lobibox.notify('success', {
+                            showClass: 'rollIn',
+                            hideClass: 'rollOut',
+                            msg: `Категорията <strong>${$('[name="title"]').val()}</strong> беше създадена успешно`
+                        });
+                        $('.error').html('');
+                        $('[name="title"]').val('');
+                        $('[name="alias"]').val('');
+                    },
+                    error: function (data) {
+                        $('.error').html('');
+                        for (let i = 0; i < Object.keys(data.responseJSON.errors).length; i++) {
+                            if (Object.keys(data.responseJSON.errors)[i] !== undefined) {
+                                let key = Object.keys(data.responseJSON.errors)[i];
+                                $('#' + key + '-error').html(data.responseJSON.errors[key]);
+                            }
+                        }
+                        Lobibox.notify('error', {
+                            showClass: 'rollIn',
+                            hideClass: 'rollOut',
+                            msg: 'Възникна някаква грешка при опита за промяна на данните на потребителя'
+                        });
                     }
                 });
             })
             table = $('#categories').DataTable({
                 'paging': false,
                 'lengthChange': false,
-                'lengthMenu': [[-1], ["Всички"]],
                 'searching': true,
                 'ordering': true,
                 'info': true,
@@ -103,15 +129,15 @@
                     {data: 'actions'},
                 ],
                 "fnDrawCallback": function (oSettings) {
-                    $('#select-categories').html('');
-                    let categoriesData                = table.rows().data().sort();
-                    let o                             = new Option("Без", '');
+                    $('#parent_id').html('');
+                    let categoriesData = table.rows().data().sort();
+                    let o              = new Option("Без", '');
                     $(o).html('Без');
-                    $('#select-categories').append(o);
+                    $('#parent_id').append(o);
                     for (let i = 0; i < categoriesData.length; i++) {
-                        let o = new Option(categoriesData[i]['title'], categoriesData[i]['id']);
-                        $(o).html(categoriesData[i]['title']);
-                        $('#select-categories').append(o);
+                        let o = new Option(`${categoriesData[i]['title']} (${categoriesData[i]['alias']})` , categoriesData[i]['id']);
+                        $(o).html(`${categoriesData[i]['title']} (${categoriesData[i]['alias']})`);
+                        $('#parent_id').append(o);
                     }
 
                     $('.a-action').click(function (e) {
@@ -121,14 +147,15 @@
                             url: link,
                             method: 'get',
                             success: function (data) {
-                                $('#myModal').html(data).on('hidden.bs.modal', function () {
-                                    table.ajax.reload(null, false);
-                                })
+                                $('#myModal').html(data);
                             }
                         })
                     })
                 }
             });
         });
+        $('#title').on('input', function () {
+            $('#alias').val($(this).val());
+        })
     </script>
 @endpush

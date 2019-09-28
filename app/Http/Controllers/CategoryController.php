@@ -39,10 +39,13 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $category)
     {
+
         Category::create([
-            'title' => $category->title,
-            'alias' => $category->title,
+            'title'     => $category->title,
+            'alias'     => $category->alias,
+            'parent_id' => $category->parent_id,
         ]);
+
         return response()->json();
     }
 
@@ -65,6 +68,7 @@ class CategoryController extends Controller
         $ajaxGridColumnNames = [
             0 => 'title',
             1 => 'alias',
+            2 => 'parent_id',
         ];
 
 

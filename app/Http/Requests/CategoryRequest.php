@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CategoryRequest extends FormRequest
 {
@@ -24,7 +25,18 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
+            'title' => ['required', Rule::unique('categories')->where(function ($query) {
+                return $query->where('title', $this->request->get('title'))
+                             ->where('parent_id', $this->request->get('parent_id'));
+            }),],
+            'alias' => 'required|unique:categories,alias',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            "title.unique" => "Вече съществува такава Категория",
         ];
     }
 }

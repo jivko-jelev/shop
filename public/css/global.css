@@ -9,11 +9,6 @@
     color: darkslategrey;
 }
 
-.dataTable th {
-    /*background: #bed2e6;*/
-}
-
-
 table.dataTable thead .sorting_asc {
     background-image: url(/images/sort_asc.png);
 }
@@ -76,4 +71,12 @@ table.dataTable thead .sorting:after {
 
 .sorting_1{
     background-color: #f9f9f9;
+}
+
+.dataTable thead tr th:last-child {
+    min-width: 75px !important;
+}
+.dataTable thead .filter th:last-child{
+    width:1%;
+    white-space:nowrap;
 }
