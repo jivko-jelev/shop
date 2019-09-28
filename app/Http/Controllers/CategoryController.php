@@ -39,12 +39,13 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $category)
     {
+        $cat             = new Category;
+        $cat->title      = $category->title;
+        $cat->alias      = $category->alias;
+        $cat->parent_id  = $category->parent_id;
+        $cat->updated_at = null;
 
-        Category::create([
-            'title'     => $category->title,
-            'alias'     => $category->alias,
-            'parent_id' => $category->parent_id,
-        ]);
+        $cat->save();
 
         return response()->json();
     }
@@ -74,7 +75,7 @@ class CategoryController extends Controller
 
         $categories->whereLikeIf('title', $request->get('title'))
                    ->whereLikeIf('alias', $request->get('alias'));
-        $categories->when($request->get('parent'), function ($query) use ($request){
+        $categories->when($request->get('parent'), function ($query) use ($request) {
             $query->join('categories as c2', 'c2.parent_id', 'categories.id');
         });
 
