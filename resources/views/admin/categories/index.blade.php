@@ -1,6 +1,8 @@
 @extends('admin.partials.master')
 
 @section('styles')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ URL::to('bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
 @endsection
 
 @section('content')
@@ -45,6 +47,21 @@
                                 <th>Псевдоним</th>
                                 <th>Родителска категория</th>
                                 <th>Действие</th>
+                            </tr>
+                            <tr class="filter">
+                                <form id="form-filter">
+                                    <th><input type="text" class="form-control form-filter" name="filter[title]"></th>
+                                    <th><input type="text" class="form-control form-filter" name="filter[alias]"></th>
+                                    <th><input type="text" class="form-control form-filter" name="filter[parent]"></th><th>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary" title="Търси"><i
+                                                    class="fa fa-search"></i></button>
+                                            <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary"
+                                                    title="Изчисти филтъра"><i
+                                                    class="fa fa-times"></i></button>
+                                        </div>
+                                    </th>
+                                </form>
                             </tr>
                             </thead>
                             <tbody>
@@ -109,18 +126,28 @@
                 });
             })
             table = $('#categories').DataTable({
-                'paging': false,
-                'lengthChange': false,
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': false,
-                'processing': true,
-                'serverSide': true,
-                "order": [0, "asc"],
-                "ajax": {
+                paging: false,
+                lengthChange: false,
+                searching: false,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                processing: true,
+                serverSide: true,
+                orderCellsTop: true,
+                order: [0, "asc"],
+                columnDefs: [{
+                    orderable: false,
+                    targets: [3],
+                }],
+                ajax: {
                     "url": '{{ route('categories.ajax') }}',
-                    "type": "POST"
+                    "type": "POST",
+                    data: function (d) {
+                        d.title       = $('input[name="filter[title]"]').val();
+                        d.alias = $('input[name="filter[alias]"]').val();
+                        d.parent  = $('input[name="filter[parent]"]').val();
+                    }
                 },
                 columns: [
                     {data: 'title'},
@@ -135,7 +162,7 @@
                     $(o).html('Без');
                     $('#parent_id').append(o);
                     for (let i = 0; i < categoriesData.length; i++) {
-                        let o = new Option(`${categoriesData[i]['title']} (${categoriesData[i]['alias']})` , categoriesData[i]['id']);
+                        let o = new Option(`${categoriesData[i]['title']} (${categoriesData[i]['alias']})`, categoriesData[i]['id']);
                         $(o).html(`${categoriesData[i]['title']} (${categoriesData[i]['alias']})`);
                         $('#parent_id').append(o);
                     }
@@ -152,6 +179,18 @@
                         })
                     })
                 }
+            });
+            $('#filter').click(function () {
+                table.ajax.reload(null, true);
+            });
+            $('.form-filter').keypress(function (e) {
+                if (e.which == 13) {
+                    table.ajax.reload(null, true);
+                }
+            });
+            $('#clear').click(function () {
+                $('[name^="filter"]').val('');
+                table.ajax.reload(null, false);
             });
         });
         $('#title').on('input', function () {

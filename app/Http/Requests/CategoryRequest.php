@@ -28,15 +28,17 @@ class CategoryRequest extends FormRequest
             'title' => ['required', Rule::unique('categories')->where(function ($query) {
                 return $query->where('title', $this->request->get('title'))
                              ->where('parent_id', $this->request->get('parent_id'));
-            }),],
-            'alias' => 'required|unique:categories,alias',
+            })->ignore($this->category),],
+            'alias' => ['required', Rule::unique('categories')->where(function ($query) {
+                return $query->where('alias', $this->request->get('alias'));
+            })->ignore($this->category),],
         ];
     }
 
     public function messages()
     {
         return [
-            "title.unique" => "Вече съществува такава Категория",
+            "title.unique" => "Вече съществува такава Категория със същата Главна Категория",
         ];
     }
 }

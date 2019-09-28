@@ -46,7 +46,7 @@ table.dataTable thead .sorting:after {
 
 .modal {
     text-align: center;
-    padding: 0!important;
+    padding: 0 !important;
 }
 
 .modal:before {
@@ -65,18 +65,23 @@ table.dataTable thead .sorting:after {
 
 .modal-content {
     border-radius: 6px;
-    -webkit-box-shadow: 0 0 35px rgba(0,0,0,1);
-    box-shadow: 0 0 35px rgba(0,0,0,1);
+    -webkit-box-shadow: 0 0 35px rgba(0, 0, 0, 1);
+    box-shadow: 0 0 35px rgba(0, 0, 0, 1);
 }
 
-.sorting_1{
+.sorting_1 {
     background-color: #f9f9f9;
 }
 
 .dataTable thead tr th:last-child {
     min-width: 75px !important;
 }
-.dataTable thead .filter th:last-child{
-    width:1%;
-    white-space:nowrap;
+
+.dataTable thead .filter th:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.filter th .select2{
+    width: 100% !important;
 }

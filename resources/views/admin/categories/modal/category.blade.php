@@ -13,9 +13,19 @@
                         <label for="title" class="col-sm-4 control-label">Име</label>
 
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="title" id="title" placeholder="Категория"
+                            <input type="text" class="form-control" name="title" id="title" placeholder="Име"
                                    value="{{ $current_category->title }}">
-                            <span class="error" id="title-error"></span>
+                            <span class="error" id="title-error-modal"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alias" class="col-sm-4 control-label">Псевдоним</label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="alias" id="alias" placeholder="Псевдоним"
+                                   value="{{ $current_category->title }}">
+                            <span class="error" id="alias-error-modal"></span>
                         </div>
                     </div>
 
@@ -26,7 +36,7 @@
                                 <option value="">Без</option>
                                 @foreach($categories as $category)
                                     @if($category->id != $current_category->id)
-                                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                                        <option value="{{ $category->id }}">{{ $category->title }} ({{ $category->alias }})</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -68,7 +78,7 @@
                 for (let i = 0; i < Object.keys(data.responseJSON.errors).length; i++) {
                     if (Object.keys(data.responseJSON.errors)[i] !== undefined) {
                         let key = Object.keys(data.responseJSON.errors)[i];
-                        $('#' + key + '-error').html(data.responseJSON.errors[key]);
+                        $(`#${key}-error-modal`).html(data.responseJSON.errors[key]);
                     }
                 }
                 Lobibox.notify('error', {

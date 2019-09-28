@@ -63,7 +63,7 @@ class CategoryController extends Controller
 
     public function ajax(Request $request)
     {
-        $categories = Category::select('id', 'title', 'parent_id', 'alias');
+        $categories = Category::select('categories.id', 'categories.title', 'categories.parent_id', 'categories.alias');
 
         $ajaxGridColumnNames = [
             0 => 'title',
@@ -72,14 +72,11 @@ class CategoryController extends Controller
         ];
 
 
-        $filter = $request->get('search')['value'];
-        $categories->when($filter, function ($query) use ($filter) {
-            $query->where(function ($query) use ($filter) {
-                $query->where('title', 'like', "%{$filter}%")
-                      ->orWhere('alias', 'like', "%{$filter}%");
-            });
+        $categories->whereLikeIf('title', $request->get('title'))
+                   ->whereLikeIf('alias', $request->get('alias'));
+        $categories->when($request->get('parent'), function ($query) use ($request){
+            $query->join('categories as c2', 'c2.parent_id', 'categories.id');
         });
-
 
         $orderState = $request->get('order');
         foreach ($orderState as $singleOrderState) {
@@ -130,6 +127,7 @@ class CategoryController extends Controller
     public function update(Category $category, Request $request, CategoryRequest $categoryRequest)
     {
         $category->title     = $request->get('title');
+        $category->alias     = $request->get('alias');
         $category->parent_id = $request->get('parent_id') ?? null;
 
         $category->save();
