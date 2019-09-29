@@ -85,11 +85,3 @@ table.dataTable thead .sorting:after {
 .filter th .select2{
     width: 100% !important;
 }
-
-#editor{
-    min-height: 500px;
-}
-
-.ck-editor__editable_inline {
-    min-height: 400px;
-}
