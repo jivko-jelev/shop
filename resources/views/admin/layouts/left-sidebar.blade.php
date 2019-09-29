@@ -32,6 +32,12 @@
                     <span>Категории</span>
                 </a>
             </li>
+            <li @if(request()->routeIs('products')) class="active" @endif>
+                <a href="{{ route('products') }}">
+                    <i class="fa fa-product-hunt"></i>
+                    <span>Продукти</span>
+                </a>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->
