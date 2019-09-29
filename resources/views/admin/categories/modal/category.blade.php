@@ -24,7 +24,7 @@
 
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="alias" id="alias" placeholder="Псевдоним"
-                                   value="{{ $current_category->title }}">
+                                   value="{{ $current_category->alias }}">
                             <span class="error" id="alias-error-modal"></span>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                                 <option value="">Без</option>
                                 @foreach($categories as $category)
                                     @if($category->id != $current_category->id)
-                                        <option value="{{ $category->id }}">{{ $category->title }} ({{ $category->alias }})</option>
+                                        <option value="{{ $category->id }}"@if($current_category->parent_id==$category->id) selected @endif>{{ $category->title }} ({{ $category->alias }})</option>
                                     @endif
                                 @endforeach
                             </select>

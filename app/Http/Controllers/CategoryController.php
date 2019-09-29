@@ -64,7 +64,7 @@ class CategoryController extends Controller
 
     public function ajax(Request $request)
     {
-        $categories = Category::select('categories.id', 'categories.title', 'categories.parent_id', 'categories.alias');
+        $categories = Category::select('id', 'title', 'parent_id', 'alias');
 
         $ajaxGridColumnNames = [
             0 => 'title',
@@ -72,11 +72,11 @@ class CategoryController extends Controller
             2 => 'parent_id',
         ];
 
-
         $categories->whereLikeIf('title', $request->get('title'))
                    ->whereLikeIf('alias', $request->get('alias'));
         $categories->when($request->get('parent'), function ($query) use ($request) {
-            $query->join('categories as c2', 'c2.parent_id', 'categories.id');
+            $parentCategories = Category::where('title', 'like', "%{$request->get('parent')}%")->pluck('id');
+            $query->whereIn('parent_id', $parentCategories);
         });
 
         $orderState = $request->get('order');
