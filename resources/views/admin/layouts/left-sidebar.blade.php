@@ -14,19 +14,19 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
-            <li>
+            <li @if(request()->routeIs('dashboard')) class="active" @endif>
                 <a href="{{ route('dashboard') }}">
                     <i class="fa fa-dashboard"></i>
                     <span>Табло</span>
                 </a>
             </li>
-            <li>
+            <li @if(request()->routeIs('users')) class="active" @endif>
                 <a href="{{ route('users') }}">
                     <i class="fa fa-users"></i>
                     <span>Потребители</span>
                 </a>
             </li>
-            <li>
+            <li @if(request()->routeIs('categories')) class="active" @endif>
                 <a href="{{ route('categories') }}">
                     <i class="fa fa-list"></i>
                     <span>Категории</span>

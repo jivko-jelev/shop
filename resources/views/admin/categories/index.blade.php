@@ -196,5 +196,10 @@
         $('#title').on('input', function () {
             $('#alias').val($(this).val());
         })
+        $(document).keyup(function (e) {
+            if (e.key === "Escape") {
+                $('#myModal').modal('hide');
+            }
+        });
     </script>
 @endpush
