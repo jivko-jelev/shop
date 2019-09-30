@@ -5,41 +5,63 @@
 
 @section('content')
     <div class="row">
-        <div class="col-xs-10">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">{{ $title }}</h3>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <form action="" class="form-horizontal">
+        <form action="" class="form-horizontal">
+            <div class="col-xs-10">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">{{ $title }}</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="title" class="col-sm-2 control-label">Име</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="title" id="title" placeholder="Име">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="title" id="title" placeholder="Име">
+                                        <span class="input-group-btn">
+                                    <button class="btn btn-default">Запази</button>
+                                        </span>
+                                    </div>
                                     <span class="error" id="title-error"></span>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="title" class="col-sm-2 control-label">Име</label>
+                                <label for="category" class="col-sm-2 control-label">Категория</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="title" id="title" placeholder="Име">
-                                    <span class="error" id="title-error"></span>
+                                    <select class="form-control select2" id="category" name="category">
+                                        <option value="">Без</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->title }}
+                                                ({{ $category->alias }})
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-
                             <div class="form-group">
-                                <textarea name="editor" id="editor"></textarea>
+                                <div class="col-sm-12">
+                                    <textarea name="editor" id="editor"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="col-md-2">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Снимка на продукта</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                    </div>
+                </div>
+            </div>
+        </form>
         <!-- Modal -->
         <div class="modal fade center" id="myModal" role="dialog">
         </div>
@@ -50,9 +72,9 @@
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script type="text/javascript">
         var editor_config = {
-            path_absolute : "{{ URL::to('/') }}/",
+            path_absolute: "{{ URL::to('/') }}/",
             selector: "#editor",
-            height: 400,
+            height: 500,
             fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
             plugins: [
                 "advlist autolink lists link image charmap print preview hr anchor pagebreak",
@@ -60,7 +82,7 @@
                 "insertdatetime media nonbreaking save table contextmenu directionality",
                 "emoticons template paste textcolor colorpicker textpattern codesample"
             ],
-            toolbar: "insertfile undo redo | styleselect | bold italic | fontselect | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | code",
+            toolbar: "insertfile undo redo | styleselect | bold italic underline | fontselect | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | code",
             codesample_languages: [
                 {text: 'PHP', value: 'php'},
                 {text: 'HTML/XML', value: 'markup'},
@@ -69,9 +91,9 @@
                 {text: 'MySQL', value: 'sql'},
             ],
             relative_urls: false,
-            file_browser_callback : function(field_name, url, type, win) {
+            file_browser_callback: function (field_name, url, type, win) {
                 var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-                var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+                var y = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
 
                 var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
                 if (type == 'image') {
@@ -81,12 +103,12 @@
                 }
 
                 tinyMCE.activeEditor.windowManager.open({
-                    file : cmsURL,
-                    title : 'Filemanager',
-                    width : x * 0.8,
-                    height : y * 0.8,
-                    resizable : "yes",
-                    close_previous : "no"
+                    file: cmsURL,
+                    title: 'Filemanager',
+                    width: x * 0.8,
+                    height: y * 0.8,
+                    resizable: "yes",
+                    close_previous: "no"
                 });
             }
         };

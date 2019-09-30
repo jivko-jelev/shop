@@ -73,11 +73,11 @@ class CategoryController extends Controller
         ];
 
         $categories->whereLikeIf('title', $request->get('title'))
-                   ->whereLikeIf('alias', $request->get('alias'));
-        $categories->when($request->get('parent'), function ($query) use ($request) {
-            $parentCategories = Category::where('title', 'like', "%{$request->get('parent')}%")->pluck('id');
-            $query->whereIn('parent_id', $parentCategories);
-        });
+                   ->whereLikeIf('alias', $request->get('alias'))
+                   ->when($request->get('parent'), function ($query) use ($request) {
+                       $parentCategories = Category::where('title', 'like', "%{$request->get('parent')}%")->pluck('id');
+                       $query->whereIn('parent_id', $parentCategories);
+                   });
 
         $orderState = $request->get('order');
         foreach ($orderState as $singleOrderState) {
