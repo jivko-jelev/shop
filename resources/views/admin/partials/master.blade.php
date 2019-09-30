@@ -24,9 +24,6 @@
     <link rel="stylesheet" href="{{ URL::to('bower_components/jvectormap/jquery-jvectormap.css') }}">
     <!-- Date Picker -->
     <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
-    <!-- CKEditor 5 -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/12.4.0/classic/ckeditor.js"></script>
-    <script src="https://example.com/ckfinder/ckfinder.js"></script>
     <!-- Daterange picker -->
     <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ URL::to('css/lobibox.min.css') }}"/>
