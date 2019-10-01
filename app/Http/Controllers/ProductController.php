@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Http\Requests\ProductRequest;
 use App\Product;
 use Illuminate\Http\Request;
 
@@ -37,11 +38,18 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
+     * @param ProductRequest           $productRequest
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $productRequest)
     {
-        //
+        $product = Product::create([
+            'name'        => $productRequest->title,
+            'category_id' => $productRequest->category,
+            'description' => $productRequest->description,
+        ]);
+
+        return response()->json(['url' => route('products.edit', ['product' => $product])]);
     }
 
     /**
@@ -63,8 +71,13 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return view('admin.products.edit', [
+            'product'    => $product,
+            'title'      => 'Създаване на продукт',
+            'categories' => Category::all(),
+        ]);
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -73,9 +86,9 @@ class ProductController extends Controller
      * @param \App\Product             $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductRequest $productRequest)
     {
-        //
+
     }
 
     /**

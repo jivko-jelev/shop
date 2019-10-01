@@ -272,7 +272,7 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="{{ URL::to('dist/img/user2-160x160.png') }}" class="user-image" alt="User Image">
-                            <span class="hidden-xs">Alexander Pierce</span>
+                            <span class="hidden-xs">{{ Auth::user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
@@ -564,11 +564,11 @@
         }
     });
 </script>
+<script src="{{ URL::to('js/internal.js') }}"></script>
 <!-- Select2 -->
 <script src="{{ URL::to('bower_components/select2/dist/js/select2.full.min.js') }}"></script>
 <script>
     $(function () {
-        //Initialize Select2 Elements
         $('.select2').select2()
     });
 </script>

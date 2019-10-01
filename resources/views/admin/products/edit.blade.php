@@ -19,7 +19,8 @@
 
                                 <div class="col-sm-10">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="title" id="title" placeholder="Име">
+                                        <input type="text" class="form-control" name="title" id="title" placeholder="Име"
+                                               value="{{ $product->name }}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default">Запази</button>
                                         </span>
@@ -33,9 +34,9 @@
 
                                 <div class="col-sm-10">
                                     <select class="form-control select2" id="category" name="category">
-                                        <option value="">избери</option>
                                         @foreach($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->title }}
+                                            <option value="{{ $category->id }}"
+                                                    @if($category->id==$product->category_id) selected @endif>{{ $category->title }}
                                                 ({{ $category->alias }})
                                             </option>
                                         @endforeach
@@ -45,7 +46,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <textarea name="description" id="description"></textarea>
+                                    <textarea name="description" id="description">{{ $product->description }}</textarea>
                                     <span class="error" id="description-error"></span>
                                 </div>
                             </div>
@@ -130,12 +131,13 @@
             $("textarea[name=description]").val(tinyMCE.activeEditor.getContent())
             let form = $(this);
             $.ajax({
-                url: "{{ route('products.store') }}",
+                url: "{{ route('products.update', ['product'=>$product]) }}",
                 data: form.serialize(),
-                method: 'post',
+                method: 'put',
                 success: function (data) {
-                    window.location.replace(data['url']);
-                },
+                    Lobibox.notify('success', {
+                        msg: 'Продуктът беше обновен успешно'
+                    });                },
                 error: function (data) {
                     showErrors(data);
                 }

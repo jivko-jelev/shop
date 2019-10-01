@@ -35,7 +35,10 @@ Route::prefix('admin')
          Route::delete('categories/{category}', 'CategoryController@destroy')->name('categories.destroy');
 
          // Категории
-         Route::get('products', 'ProductController@create')->name('products');
+         Route::get('products/create', 'ProductController@create')->name('products.create');
+         Route::post('products/store', 'ProductController@store')->name('products.store');
+         Route::get('products/{product}/edit', 'ProductController@edit')->name('products.edit');
+         Route::put('products/{product}', 'ProductController@update')->name('products.update');
      });
 
 Auth::routes();

@@ -143,6 +143,7 @@ return [
         "subject"                  => "Заглавие",
         "message"                  => "Съобщение",
         "password_confirmation"    => "Повтори Паролата",
+        "category"                 => "Категория",
     ],
 
 ];
