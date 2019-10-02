@@ -88,9 +88,9 @@ class ProductController extends Controller
      */
     public function update(Product $product, ProductRequest $productRequest)
     {
-        $product->name=$productRequest->title;
-        $product->category_id=$productRequest->category;
-        $product->description=$productRequest->description;
+        $product->name        = $productRequest->title;
+        $product->category_id = $productRequest->category;
+        $product->description = $productRequest->description;
         $product->update();
     }
 

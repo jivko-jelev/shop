@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="row">
-        <form action="" class="form-horizontal" id="create-product">
+        <form action="" class="form-horizontal" id="update-product">
             <div class="col-xs-9">
                 <div class="box">
                     <div class="box-header">
@@ -126,7 +126,7 @@
 
         tinyMCE.init(editor_config);
 
-        $('#create-product').submit(function (e) {
+        $('#update-product').submit(function (e) {
             e.preventDefault();
             $("textarea[name=description]").val(tinyMCE.activeEditor.getContent())
             let form = $(this);
@@ -137,7 +137,8 @@
                 success: function (data) {
                     Lobibox.notify('success', {
                         msg: 'Продуктът беше обновен успешно'
-                    });                },
+                    });
+                },
                 error: function (data) {
                     showErrors(data);
                 }
