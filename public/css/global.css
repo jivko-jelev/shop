@@ -82,6 +82,18 @@ table.dataTable thead .sorting:after {
     white-space: nowrap;
 }
 
-.filter th .select2{
+.filter th .select2 {
     width: 100% !important;
+}
+
+.filter-date-from {
+    padding-left: 0;
+}
+
+.filter-date-to {
+    padding-right: 0;
+}
+
+.filter-date{
+    max-width: 100px !important;
 }

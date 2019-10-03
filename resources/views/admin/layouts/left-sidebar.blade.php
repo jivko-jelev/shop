@@ -35,7 +35,13 @@
             <li @if(request()->routeIs('products.create')) class="active" @endif>
                 <a href="{{ route('products.create') }}">
                     <i class="fa fa-product-hunt"></i>
-                    <span>Продукти</span>
+                    <span>Създай Продукти</span>
+                </a>
+            </li>
+            <li @if(request()->routeIs('products.index')) class="active" @endif>
+                <a href="{{ route('products.index') }}">
+                    <i class="fa fa-product-hunt"></i>
+                    <span>Списък на продуктите</span>
                 </a>
             </li>
         </ul>

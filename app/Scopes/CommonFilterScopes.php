@@ -4,6 +4,8 @@
 namespace App\Scopes;
 
 
+use Carbon\Carbon;
+
 trait CommonFilterScopes
 {
 
@@ -24,4 +26,27 @@ trait CommonFilterScopes
 
         return $query;
     }
+
+    public function scopeWhereDateLessIf($query, $field, $value)
+    {
+        if ($value) {
+            $query->where($field, '<=', Carbon::createFromFormat('d-m-Y H:i:s', $value . ' 23:59:59'));
+        }
+
+        return $query;
+    }
+
+    public function scopeWhereDateGreaterIf($query, $field, $value)
+    {
+        if ($value) {
+            $query->where($field, '>=', Carbon::createFromFormat('d-m-Y H:i:s', $value . ' 00:00:00'));
+        }
+
+        return $query;
+    }
+
+    public function getCreatedAtAttribute($timestamp) {
+        return Carbon::parse($timestamp)->format('d-m-Y H:i:s');
+    }
+
 }

@@ -547,6 +547,8 @@
 <script src="{{ URL::to('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{ URL::to('bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+<script src="{{ URL::to('bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ URL::to('bower_components/moment/min/moment.min.js') }}"></script>
 <!-- Slimscroll -->
 <script src="{{ URL::to('bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
 <!-- FastClick -->

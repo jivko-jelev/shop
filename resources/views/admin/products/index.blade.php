@@ -1,145 +1,184 @@
 @extends('admin.partials.master')
 
 @section('styles')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ URL::to('bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
 @endsection
 
 @section('content')
     <div class="row">
-        <form action="" class="form-horizontal" id="create-product">
-            <div class="col-xs-9">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">{{ $title }}</h3>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="title" class="col-sm-2 control-label">Име</label>
-
-                                <div class="col-sm-10">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="title" id="title" placeholder="Име">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default">Запази</button>
-                                        </span>
-                                    </div>
-                                    <span class="error" id="title-error"></span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="category" class="col-sm-2 control-label">Категория</label>
-
-                                <div class="col-sm-10">
-                                    <select class="form-control select2" id="category" name="category">
-                                        <option value="">избери</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->title }}
-                                                ({{ $category->alias }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <span class="error" id="category-error"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <textarea name="description" id="description"></textarea>
-                                    <span class="error" id="description-error"></span>
-                                </div>
-                            </div>
-                        </div>
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">{{ $title }}</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="col-xs-12">
+                        <table id="categories" class="table table-bordered table-hover dataTable">
+                            <thead>
+                            <tr role="row" class="heading">
+                                <th>Име</th>
+                                <th>Категория</th>
+                                <th>Създаден на</th>
+                                <th>Действие</th>
+                            </tr>
+                            <tr class="filter">
+                                <form id="form-filter" class="form-horizontal">
+                                    <th><input type="text" class="form-control form-filter" name="filter[name]"></th>
+                                    <th><input type="text" class="form-control form-filter" name="filter[category_id]"></th>
+                                    <th class="filter-date">
+                                        <div class="form-group col-sm-12 row">
+                                            <div class="col-sm-6 filter-date-from">
+                                                <input type="text" class="form-control form-filter" name="filter[created_at_from]"
+                                                       id="datepicker-from">
+                                            </div>
+                                            <div class="col-sm-6 filter-date-to">
+                                                <input type="text" class="form-control form-filter" name="filter[created_at_to]" id="datepicker-to">
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary" title="Търси"><i
+                                                    class="fa fa-search"></i></button>
+                                            <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary"
+                                                    title="Изчисти филтъра"><i
+                                                    class="fa fa-times"></i></button>
+                                        </div>
+                                    </th>
+                                </form>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>Име</th>
+                                <th>Псевдоним</th>
+                                <th>Родителска категория</th>
+                                <th>Действие</th>
+                            </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Снимка</h3>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                    </div>
-                </div>
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Галерия</h3>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                    </div>
-                </div>
-            </div>
-        </form>
-        <!-- Modal -->
-        <div class="modal fade center" id="myModal" role="dialog">
         </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
     </div>
 @endsection
 
 @push('js')
-    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-    <script type="text/javascript">
-        var editor_config = {
-            path_absolute: "{{ URL::to('/') }}/",
-            selector: "#description",
-            height: 300,
-            fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
-            plugins: [
-                "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-                "searchreplace wordcount visualblocks visualchars code fullscreen",
-                "insertdatetime media nonbreaking save table contextmenu directionality",
-                "emoticons template paste textcolor colorpicker textpattern codesample"
-            ],
-            toolbar: "insertfile undo redo | styleselect | bold italic underline | fontselect | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | code",
-            codesample_languages: [
-                {text: 'PHP', value: 'php'},
-                {text: 'HTML/XML', value: 'markup'},
-                {text: 'JavaScript', value: 'javascript'},
-                {text: 'CSS', value: 'css'},
-                {text: 'MySQL', value: 'sql'},
-            ],
-            relative_urls: false,
-            file_browser_callback: function (field_name, url, type, win) {
-                var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-                var y = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
-
-                var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
-                if (type == 'image') {
-                    cmsURL = cmsURL + "&type=Images";
-                } else {
-                    cmsURL = cmsURL + "&type=Files";
-                }
-
-                tinyMCE.activeEditor.windowManager.open({
-                    file: cmsURL,
-                    title: 'Filemanager',
-                    width: x * 0.8,
-                    height: y * 0.8,
-                    resizable: "yes",
-                    close_previous: "no"
-                });
-            }
-        };
-
-        tinyMCE.init(editor_config);
-
-        $('#create-product').submit(function (e) {
-            e.preventDefault();
-            $("textarea[name=description]").val(tinyMCE.activeEditor.getContent())
-            let form = $(this);
-            $.ajax({
-                url: "{{ route('products.store') }}",
-                data: form.serialize(),
-                method: 'post',
-                success: function (data) {
-                    window.location.replace(data['url']);
+    <!-- DataTables -->
+    <script src="{{ URL::to('bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ URL::to('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script>
+        let table;
+        $(function () {
+            table = $('#categories').DataTable({
+                paging: true,
+                lengthChange: true,
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Всички"]],
+                searching: false,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                processing: true,
+                serverSide: true,
+                orderCellsTop: true,
+                order: [0, "asc"],
+                columnDefs: [{
+                    orderable: false,
+                    targets: [3],
+                }],
+                ajax: {
+                    "url": '{{ route('products.ajax') }}',
+                    "type": "POST",
+                    data: function (d) {
+                        d.name            = $('input[name="filter[name]"]').val();
+                        d.category_id     = $('input[name="filter[category_id]"]').val();
+                        d.created_at_from = $('input[name="filter[created_at_from]"]').val();
+                        d.created_at_to   = $('input[name="filter[created_at_to]"]').val();
+                    }
                 },
-                error: function (data) {
-                    showErrors(data);
+                columns: [
+                    {data: 'name'},
+                    {data: 'category_id'},
+                    {data: 'created_at'},
+                    {data: 'actions'},
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    $('#parent_id').html('');
+                    let categoriesData = table.rows().data().sort();
+                    let o              = new Option("Без", '');
+                    $(o).html('Без');
+                    $('#parent_id').append(o);
+                    for (let i = 0; i < categoriesData.length; i++) {
+                        let o = new Option(`${categoriesData[i]['title']} (${categoriesData[i]['alias']})`, categoriesData[i]['id']);
+                        $(o).html(`${categoriesData[i]['title']} (${categoriesData[i]['alias']})`);
+                        $('#parent_id').append(o);
+                    }
+
+                    $('.delete-product').click(function () {
+                        let product = $(this).data('product');
+                        let productId   = $(this).data('productId');
+                        Lobibox.confirm({
+                            msg: `Наистина ли искате да изтриете: <strong>${product}</strong> ?`,
+                            callback: function ($this, type) {
+                                if (type === 'yes') {
+                                    $.ajax({
+                                        url: `/admin/products/${productId}`,
+                                        method: 'delete',
+                                        success: function (data) {
+                                            Lobibox.notify('success', {
+                                                msg: `Продуктът <strong>${product}</strong> беше успешно изтрит.`
+                                            });
+                                            table.ajax.reload()
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    });
+
                 }
             });
+            $('#filter').click(function () {
+                table.ajax.reload(null, true);
+            });
+            $('.form-filter').keypress(function (e) {
+                if (e.which == 13) {
+                    table.ajax.reload(null, true);
+                }
+            });
+            $('#clear').click(function () {
+                $('[name^="filter"]').val('');
+                table.ajax.reload(null, false);
+            });
+
+        });
+
+        $('#datepicker-from').datepicker({
+            autoclose: true,
+            format: 'dd-mm-yyyy',
+        });
+
+        $('#datepicker-to').datepicker({
+            autoclose: true,
+            format: 'dd-mm-yyyy',
         })
+
+        $('#title').on('input', function () {
+            $('#alias').val($(this).val());
+        })
+
+        $(document).keyup(function (e) {
+            if (e.key === "Escape") {
+                $('#myModal').modal('hide');
+            }
+        });
     </script>
 @endpush

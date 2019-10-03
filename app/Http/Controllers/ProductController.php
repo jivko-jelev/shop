@@ -6,29 +6,32 @@ use App\Category;
 use App\Http\Requests\ProductRequest;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
-        //
+        return view('admin.products.index', [
+            'title' => 'Списък на продуктите',
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
         $categories = Category::all();
 
-        return view('admin.products.index', [
+        return view('admin.products.create', [
             'title'      => 'Създаване на продукт',
             'categories' => $categories,
         ]);
@@ -39,7 +42,7 @@ class ProductController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param ProductRequest           $productRequest
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(ProductRequest $productRequest)
     {
@@ -56,7 +59,7 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param \App\Product $product
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Product $product)
     {
@@ -67,7 +70,7 @@ class ProductController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param \App\Product $product
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Product $product)
     {
@@ -97,11 +100,52 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Product $product
-     * @return \Illuminate\Http\Response
+     * @param Product $product
+     * @return void
+     * @throws \Exception
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+    }
+
+    public function ajax(Request $request)
+    {
+        $products = Product::with(['category:id,title,alias'])->select('id', 'name', 'category_id', 'created_at');
+
+        $ajaxGridColumnNames = [
+            0 => 'name',
+            1 => 'category_id',
+            2 => 'created_at_from',
+            3 => 'created_at_to',
+        ];
+
+        $products->whereLikeIf('name', $request->get('name'))
+                 ->when($request->get('category_id'), function ($query) use ($request) {
+                     $query->whereHas('category', function ($query) use ($request) {
+                         $query->where('title', 'like', "%{$request->get('category_id')}%");
+                     });
+                 })
+                 ->whereDateGreaterIf('created_at', $request->get('created_at_from'))
+                 ->whereDateLessIf('created_at', $request->get('created_at_to'));
+
+        $orderState = $request->get('order');
+        foreach ($orderState as $singleOrderState) {
+            $products->orderBy($ajaxGridColumnNames[$singleOrderState['column']], $singleOrderState['dir']);
+        }
+
+        $products     = $products->get();
+        $recordsTotal = $recordsFiltered = $products->count();
+
+        foreach ($products as $product) {
+            $product->actions     = view('admin.products.layouts.actions')->with('product', $product)->render();
+            $product->category_id = "{$product->category->title} ({$product->category->alias})";
+        }
+
+        return response()->json([
+            'data'            => $products,
+            'recordsTotal'    => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+        ]);
     }
 }
