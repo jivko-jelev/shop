@@ -24,27 +24,26 @@
                                 <th>Действие</th>
                             </tr>
                             <tr class="filter">
-                                <form id="form-filter" class="form-horizontal">
+                                <form id="form-filter">
                                     <th><input type="text" class="form-control form-filter" name="filter[name]"></th>
                                     <th><input type="text" class="form-control form-filter" name="filter[category_id]"></th>
                                     <th class="filter-date">
-                                        <div class="form-group col-sm-12 row">
-                                            <div class="col-sm-6 filter-date-from">
-                                                <input type="text" class="form-control form-filter" name="filter[created_at_from]"
-                                                       id="datepicker-from">
+                                        <div class="form-group">
+                                            <div class="filter-date-from">
+                                                <input type="text" class="form-control form-filter" name="filter[created_at_from]" id="datepicker-from" placeholder="От Дата">
                                             </div>
-                                            <div class="col-sm-6 filter-date-to">
-                                                <input type="text" class="form-control form-filter" name="filter[created_at_to]" id="datepicker-to">
+                                            <div class="filter-date-to">
+                                                <input type="text" class="form-control form-filter" name="filter[created_at_to]" id="datepicker-to" placeholder="До Дата">
                                             </div>
                                         </div>
                                     </th>
                                     <th>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary" title="Търси"><i
-                                                    class="fa fa-search"></i></button>
+                                                        class="fa fa-search"></i></button>
                                             <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary"
                                                     title="Изчисти филтъра"><i
-                                                    class="fa fa-times"></i></button>
+                                                        class="fa fa-times"></i></button>
                                         </div>
                                     </th>
                                 </form>
@@ -55,8 +54,8 @@
                             <tfoot>
                             <tr>
                                 <th>Име</th>
-                                <th>Псевдоним</th>
-                                <th>Родителска категория</th>
+                                <th>Категория</th>
+                                <th>Създаден на</th>
                                 <th>Действие</th>
                             </tr>
                             </tfoot>
@@ -123,8 +122,8 @@
                     }
 
                     $('.delete-product').click(function () {
-                        let product = $(this).data('product');
-                        let productId   = $(this).data('productId');
+                        let product   = $(this).data('product');
+                        let productId = $(this).data('productId');
                         Lobibox.confirm({
                             msg: `Наистина ли искате да изтриете: <strong>${product}</strong> ?`,
                             callback: function ($this, type) {

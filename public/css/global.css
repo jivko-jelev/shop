@@ -77,7 +77,7 @@ table.dataTable thead .sorting:after {
     min-width: 75px !important;
 }
 
-.dataTable thead .filter th:last-child {
+.dataTable thead .filter th:last-child, .filter-date {
     width: 1%;
     white-space: nowrap;
 }
@@ -95,5 +95,15 @@ table.dataTable thead .sorting:after {
 }
 
 .filter-date{
-    max-width: 100px !important;
+    min-width: 150px !important;
+}
+
+.filter-date .form-group div:first-child{
+    margin-bottom: 10px;
+}
+
+#form-filter th input{
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
 }
