@@ -1,12 +1,28 @@
 @extends('admin.partials.master')
 
 @section('styles')
+    <style>
+        .modal-body {
+            max-height: calc(100vh - 212px);
+            overflow-y: auto;
+        }
+
+        ul.thumbnails.image_picker_selector li {
+            margin: 0px 8px 0px 0px;
+            width: 98px;
+            float: left;
+        }
+
+        #product-picture {
+            width: 100%;
+        }
+    </style>
 @endsection
 
 @section('content')
     <div class="row">
         <form action="" class="form-horizontal" id="create-product">
-            <div class="col-xs-9">
+            <div class="col-xs-10">
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">{{ $title }}</h3>
@@ -31,7 +47,7 @@
                             <div class="form-group">
                                 <label for="category" class="col-sm-2 control-label">Категория</label>
 
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <select class="form-control select2" id="category" name="category">
                                         <option value="">избери</option>
                                         @foreach($categories as $category)
@@ -42,6 +58,15 @@
                                     </select>
                                     <span class="error" id="category-error"></span>
                                 </div>
+
+
+                                {{--                                <label for="title" class="col-sm-2 control-label">Пермалинк</label>--}}
+
+                                {{--                                <div class="col-sm-4">--}}
+                                {{--                                    <a href="">{{ route('products.index', 1) }}</a>--}}
+                                {{--                                    <input type="text" class="form-control" name="title" id="title" placeholder="Име">--}}
+                                {{--                                    <span class="error" id="title-error"></span>--}}
+                                {{--                                </div>--}}
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -53,13 +78,18 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Снимка</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        <button type="button" class="btn btn-default btn-block" id="select-picture-button" data-toggle="modal"
+                                data-target="#select-picture-modal">
+                            Избери снимка
+                        </button>
+                        <img src="" alt="" id="product-picture">
                     </div>
                 </div>
                 <div class="box">
@@ -75,6 +105,34 @@
         <!-- Modal -->
         <div class="modal fade center" id="myModal" role="dialog">
         </div>
+
+        <div class="modal fade" id="select-picture-modal" role="dialog">
+            <div class="modal-dialog modal-lg">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Modal Header</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data" id="product-picture-form">
+                            @csrf
+                            <input type="file" name="picture[]" id="picture" multiple>
+                            <input type="submit" value="Upload Image" name="submit">
+                        </form>
+                        <select id="selectable">
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-default" data-dismiss="modal">Затвори</a>
+                        <button type="submit" id="submit" class="btn btn-primary pull-right">Промени</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
     </div>
 @endsection
 
@@ -140,6 +198,56 @@
                     showErrors(data);
                 }
             });
+
+        })
+        {{--$('#product-picture-form').submit(function (e) {--}}
+        {{--    e.preventDefault();--}}
+        {{--    let form=$(this);--}}
+        {{--    $.ajax({--}}
+        {{--        url: "{{ route('pictures.store') }}",--}}
+        {{--        data: form.serialize(),--}}
+        {{--        method: 'post',--}}
+        {{--        success: function (data) {--}}
+        {{--        },--}}
+        {{--        error: function (data) {--}}
+        {{--            showErrors(data);--}}
+        {{--        }--}}
+        {{--    })--}}
+        {{--})--}}
+
+
+        $('#select-picture-button').click(function (e) {
+            $('.selectable').html('')
+            $('#select-picture-modal').on('hidden.bs.modal', function () {
+                $("#selectable").html('');
+            });
+            $.ajax({
+                method: 'post',
+                url: '{{ route('thumbnails.index') }}',
+                success: function (data) {
+                    $("#selectable").append('<option></option>');
+                    for (let i = 0; i < data.length; i++) {
+                        if ($('#product-picture').attr('src') != '{{ URL::to('') }}/' + data[i].filename) {
+                            $("#selectable").append('<option data-img-src="{{ URL::to('') }}/' + data[i].filename + '"  value="' + data[i].picture_id + '"></option>');
+                        } else {
+                            $("#selectable").append('<option data-img-src="{{ URL::to('') }}/' + data[i].filename + '"  value="' + data[i].picture_id + '" selected></option>');
+                        }
+                    }
+
+                    $("#selectable").imagepicker();
+
+                }
+            });
+
+            $('#submit').click(function (e) {
+                e.preventDefault();
+                $('#select-picture-modal').modal('hide');
+                if($("#selectable option:selected").data('img-src')) {
+                    $('#product-picture').attr('src', $("#selectable option:selected").data('img-src'));
+                }else{
+                    $('#product-picture').attr('src', '');
+                }
+            })
         })
     </script>
 @endpush

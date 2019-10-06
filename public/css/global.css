@@ -102,7 +102,7 @@ table.dataTable thead .sorting:after {
     margin-bottom: 10px;
 }
 
-#form-filter th input{
+.vcenter {
     display: inline-block;
     vertical-align: middle;
     float: none;

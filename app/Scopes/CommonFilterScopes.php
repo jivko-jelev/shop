@@ -27,6 +27,15 @@ trait CommonFilterScopes
         return $query;
     }
 
+    public function scopeWhereBeginsWith($query, $field, $value)
+    {
+        if ($value) {
+            $query->where($field, 'like', "$value%");
+        }
+
+        return $query;
+    }
+
     public function scopeWhereDateLessIf($query, $field, $value)
     {
         if ($value) {

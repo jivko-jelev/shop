@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ URL::to('css/lobibox.min.css') }}"/>
     <link rel="stylesheet" href="{{ URL::to('css/global.css') }}">
+    <link rel="stylesheet" href="{{ URL::to('css/image-picker.css') }}">
+    <link rel="stylesheet" href="{{ URL::to('css/global.css') }}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -557,6 +559,7 @@
 <script src="{{ URL::to('dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ URL::to('dist/js/demo.js') }}"></script>
+<script src="{{ URL::to('js/image-picker.js') }}"></script>
 <!--Lobibox - Free responsive jQuery messagebox and notification plugin available for commercial and non-commercial usages.-->
 <script src="{{ URL::to('js/lobibox.js') }}"></script>
 <script>

@@ -37,6 +37,21 @@ class ProductController extends Controller
         ]);
     }
 
+    public static function generatePermanlink(string $title): string
+    {
+        $title      = Product::sanitize(Product::cyrillicToLatin(mb_strtolower($title)));
+        $permalinks = Product::select('permalink')->where('permalink', 'like', $title . '%')->get();
+        if ($permalinks->where('permalink', '=', $title)->count() == 0) {
+            return $title;
+        } else {
+            $counter = 0;
+            while ($permalinks->where('permalink', '=', $title . '-' . ++$counter)->count() > 0) {
+            }
+
+            return $title . '-' . $counter;
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -50,6 +65,7 @@ class ProductController extends Controller
             'name'        => $productRequest->title,
             'category_id' => $productRequest->category,
             'description' => $productRequest->description,
+            'permalink'   => self::generatePermanlink($productRequest->title),
         ]);
 
         return response()->json(['url' => route('products.edit', ['product' => $product])]);
@@ -112,12 +128,13 @@ class ProductController extends Controller
     public function ajax(Request $request)
     {
         $products = Product::with(['category:id,title,alias'])->select('id', 'name', 'category_id', 'created_at');
+        $recordsTotal = Product::all()->count();
+        $recordsFiltered = $products->count();
 
         $ajaxGridColumnNames = [
             0 => 'name',
             1 => 'category_id',
-            2 => 'created_at_from',
-            3 => 'created_at_to',
+            2 => 'created_at',
         ];
 
         $products->whereLikeIf('name', $request->get('name'))
@@ -134,8 +151,9 @@ class ProductController extends Controller
             $products->orderBy($ajaxGridColumnNames[$singleOrderState['column']], $singleOrderState['dir']);
         }
 
-        $products     = $products->get();
-        $recordsTotal = $recordsFiltered = $products->count();
+        $products     = $products->skip($request->input('start'))
+                                 ->take($request->input('length'))
+                                 ->get();
 
         foreach ($products as $product) {
             $product->actions     = view('admin.products.layouts.actions')->with('product', $product)->render();

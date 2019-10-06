@@ -14,14 +14,19 @@ class CreateCategoriesTable extends Migration
     public function up()
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->smallIncrements('id');
+            $table->bigIncrements('id');
             $table->string('title');
             $table->string('alias')->unique();
-            $table->unsignedSmallInteger('parent_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->nullable();
         });
+        \App\Category::insert([
+            'title' => 'morpheus',
+            'alias' => 'Морфей',
+        ]);
+
     }
 
     /**

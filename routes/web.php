@@ -10,8 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-//$a=\App\Product::where('created_at','>','01-11-2019')->get();
-//dd($a);
 
 Route::prefix('admin')
      ->middleware(['auth', 'admin'])
@@ -39,10 +37,15 @@ Route::prefix('admin')
          Route::get('products', 'ProductController@index')->name('products.index');
          Route::post('products/ajax', 'ProductController@ajax')->name('products.ajax');
          Route::get('products/create', 'ProductController@create')->name('products.create');
+         Route::get('products/{product}', 'ProductController@show')->name('products.show');
          Route::post('products/store', 'ProductController@store')->name('products.store');
          Route::get('products/{product}/edit', 'ProductController@edit')->name('products.edit');
          Route::put('products/{product}', 'ProductController@update')->name('products.update');
          Route::delete('products/{product}', 'ProductController@destroy')->name('products.destroy');
+
+         // Снимки
+         Route::post('pictures/store', 'PictureController@store')->name('pictures.store');
+         Route::post('thumbnails', 'ThumbnailController@index')->name('thumbnails.index');
      });
 
 Auth::routes();
