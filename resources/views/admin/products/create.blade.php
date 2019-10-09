@@ -1,22 +1,6 @@
 @extends('admin.partials.master')
 
 @section('styles')
-    <style>
-        .modal-body {
-            max-height: calc(100vh - 212px);
-            overflow-y: auto;
-        }
-
-        ul.thumbnails.image_picker_selector li {
-            margin: 0px 8px 0px 0px;
-            width: 98px;
-            float: left;
-        }
-
-        #product-picture {
-            width: 100%;
-        }
-    </style>
 @endsection
 
 @section('content')
@@ -107,7 +91,7 @@
         </div>
 
         <div class="modal fade" id="select-picture-modal" role="dialog">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
 
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -126,7 +110,7 @@
                     </div>
                     <div class="modal-footer">
                         <a class="btn btn-default" data-dismiss="modal">Затвори</a>
-                        <button type="submit" id="submit" class="btn btn-primary pull-right">Промени</button>
+                        <button type="submit" id="submit" class="btn btn-primary pull-right">Запази</button>
                     </div>
                 </div>
 

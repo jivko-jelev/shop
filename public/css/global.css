@@ -94,11 +94,11 @@ table.dataTable thead .sorting:after {
     padding-right: 0;
 }
 
-.filter-date{
+.filter-date {
     min-width: 150px !important;
 }
 
-.filter-date .form-group div:first-child{
+.filter-date .form-group div:first-child {
     margin-bottom: 10px;
 }
 
@@ -106,4 +106,23 @@ table.dataTable thead .sorting:after {
     display: inline-block;
     vertical-align: middle;
     float: none;
+}
+
+.modal-xl {
+    width: 95%;
+}
+
+.modal-body {
+    max-height: calc(100vh - 212px);
+    overflow-y: auto;
+}
+
+ul.thumbnails.image_picker_selector li {
+    margin: 0 8px 0 0;
+    width: 134px;
+    float: left;
+}
+
+#product-picture {
+    width: 100%;
 }
