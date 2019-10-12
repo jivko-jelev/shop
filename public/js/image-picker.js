@@ -110,6 +110,7 @@ function _classCallCheck(instance, Constructor) {
                     success: function (data) {
                         $(`#${that[0].select[0].id}  option[value='${pictureForDelete}']`).remove();
                         pictureForDelete.closest('li').remove();
+                        showErrorMessage('Снимката беше успешно изтрита.');
                     },
                     error: function (data) {
                     },

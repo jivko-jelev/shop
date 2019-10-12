@@ -92,7 +92,6 @@
 
         <div class="modal fade" id="select-picture-modal" role="dialog">
             <div class="modal-dialog modal-xl">
-
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
@@ -110,10 +109,9 @@
                             <input type="submit" value="Upload Image" name="submit" class="btn btn-success pull-left">
                         </form>
                         <a class="btn btn-default" data-dismiss="modal">Затвори</a>
-                        <button type="submit" id="submit" class="btn btn-primary pull-right">Запази</button>
+                        <button type="button" name="save" class="btn btn-primary pull-right">Запази</button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -182,80 +180,77 @@
                     showErrors(data);
                 }
             });
+        });
 
-        })
-                {{--$('#product-picture-form').submit(function (e) {--}}
-                {{--    e.preventDefault();--}}
-                {{--    let form=$(this);--}}
-                {{--    $.ajax({--}}
-                {{--        url: "{{ route('pictures.store') }}",--}}
-                {{--        data: form.serialize(),--}}
-                {{--        method: 'post',--}}
-                {{--        success: function (data) {--}}
-                {{--        },--}}
-                {{--        error: function (data) {--}}
-                {{--            showErrors(data);--}}
-                {{--        }--}}
-                {{--    })--}}
-                {{--})--}}
-
-
-            $('#select-picture-button').click(function (e) {
-                $('#selectable').html('')
-                $('#select-picture-modal').on('hidden.bs.modal', function () {
-                    $("#selectable").html('');
-                });
+        var pictureProduct = function () {
+            var reloadPictures = function(selectable, pictureModal, productPicture){
                 $.ajax({
                     method: 'post',
                     url: '{{ route('thumbnails.index') }}',
                     success: function (data) {
-                        $("#selectable").append('<option></option>');
+                        $(selectable).html('')
+                        $(pictureModal).on('hidden.bs.modal', function () {
+                            $(selectable).html('');
+                        });
+                        $(selectable).append('<option></option>');
                         for (let i = 0; i < data.length; i++) {
-                            let isSelected;
-                            if ($('#product-picture').attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
-                                isSelected = ' selected';
+                            let isSelected = '';
+                            if ($(productPicture).attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
+                                isSelected = 'selected';
                             }
-                            $("#selectable").append('<option data-img-src="{{ URL::to('') }}/' + `${data[i].filename}" value="${data[i].picture_id}"${isSelected}></option>`);
+                            $(selectable).append('<option data-img-src="{{ URL::to('') }}/' + `${data[i].filename}" value="${data[i].picture_id}" ${isSelected}></option>`);
                         }
 
-                        $("#selectable").imagepicker();
+                        $(selectable).imagepicker();
                     }
                 });
+            };
+            var initModal = function (majorButton, selectable, pictureModal, productPicture) {
+                $(majorButton).click(function (e) {
+                    reloadPictures(selectable, pictureModal, productPicture);
+                    $(`${pictureModal} [name="save"]`).click(function (e) {
+                        $(pictureModal).modal('hide');
+                        if ($(`${selectable} option:selected`).data('img-src')) {
+                            $(productPicture).attr('src', $(`${selectable} option:selected`).data('img-src'));
+                        } else {
+                            $(productPicture).attr('src', '');
+                        }
+                    })
 
-                $('#submit').click(function (e) {
-                    e.preventDefault();
-                    $('#select-picture-modal').modal('hide');
-                    if ($("#selectable option:selected").data('img-src')) {
-                        $('#product-picture').attr('src', $("#selectable option:selected").data('img-src'));
-                    } else {
-                        $('#product-picture').attr('src', '');
-                    }
-                })
-            });
-
-
-        $('#product-picture-form').submit(function (e) {
-            e.preventDefault();
-            let form_data = new FormData();
-            let ins       = document.getElementById('pictures').files.length;
-            for (let x = 0; x < ins; x++) {
-                form_data.append("picture[]", document.getElementById('pictures').files[x]);
+                    $('#product-picture-form').submit(function (e) {
+                        e.preventDefault();
+                        let form_data = new FormData();
+                        let ins       = document.getElementById('pictures').files.length;
+                        for (let x = 0; x < ins; x++) {
+                            form_data.append("picture[]", document.getElementById('pictures').files[x]);
+                        }
+                        $.ajax({
+                            url: '{{ route('pictures.store') }}',
+                            method: 'post',
+                            data: form_data,
+                            dataType: 'text', // what to expect back from the PHP script
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                reloadPictures(selectable, pictureModal, productPicture);
+                                showSuccessMessage('Снимките бяха качени успешно!');
+                            },
+                            error: function (data) {
+                                showError(data);
+                            }
+                        });
+                    });
+                });
             }
-            $.ajax({
-                url: '{{ route('pictures.store') }}',
-                method: 'post',
-                data: form_data,
-                dataType: 'text', // what to expect back from the PHP script
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    showSuccessMessage('Снимките бяха качени успешно!');
+
+            return {
+                init: function (majorButton, selectable, pictureModal, productPicture) {
+                    initModal(majorButton, selectable, pictureModal, productPicture);
                 },
-                error: function (data) {
-                    showError(data);
-                }
-            });
-        });
+            };
+        }();
+
+        pictureProduct.init('#select-picture-button', '#selectable', '#select-picture-modal', '#product-picture');
     </script>
 @endpush

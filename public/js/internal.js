@@ -26,6 +26,14 @@ function showError(data) {
     }
 }
 
+function showErrorMessage(message) {
+    Lobibox.notify('error', {
+        showClass: 'rollIn',
+        hideClass: 'rollOut',
+        msg: `${message}`
+    });
+}
+
 function showSuccessMessage(message) {
     Lobibox.notify('success', {
         showClass: 'rollIn',
