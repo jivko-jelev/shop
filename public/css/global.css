@@ -126,3 +126,17 @@ ul.thumbnails.image_picker_selector li {
 #product-picture {
     width: 100%;
 }
+
+.remove-picture{
+    position: relative;
+    top: -119px;
+    left: 95px;
+    color: red;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+#product-picture-form #picture{
+    /*display: none;*/
+}

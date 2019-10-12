@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Picture;
+use App\Thumbnail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -36,10 +37,14 @@ class PictureController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'picture'   => 'required',
+            'picture.*' => 'image|mimes:jpeg,png,jpg',
+        ]);
         $year  = Carbon::today()->year;
         $month = Carbon::today()->month;
         foreach ($request->picture as $item) {
-            $filename=Picture::generateUniqueFilename("storage/$year/$month/{$item->getClientOriginalName()}");
+            $filename = Picture::generateUniqueFilename("storage/$year/$month/{$item->getClientOriginalName()}");
 
             $item->storeAs("$year/$month", $filename);
             $picture = Picture::create([
@@ -49,7 +54,7 @@ class PictureController extends Controller
             Picture::cropImage($picture->filename);
             $picture->generateThumbnails();
         }
-        die;
+
     }
 
     /**
@@ -90,9 +95,15 @@ class PictureController extends Controller
      *
      * @param \App\Picture $picture
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Picture $picture)
     {
-        //
+        $thumbnails = Thumbnail::where('picture_id', $picture->id)->get();
+        foreach ($thumbnails as $thumbnail) {
+            unlink($thumbnail->filename);
+        }
+        unlink($picture->filename);
+        $picture->delete();
     }
 }

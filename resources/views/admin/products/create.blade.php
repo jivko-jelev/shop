@@ -100,15 +100,15 @@
                         <h4 class="modal-title">Modal Header</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data" id="product-picture-form">
-                            @csrf
-                            <input type="file" name="picture[]" id="picture" multiple>
-                            <input type="submit" value="Upload Image" name="submit">
-                        </form>
                         <select id="selectable">
                         </select>
                     </div>
                     <div class="modal-footer">
+                        <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data" id="product-picture-form">
+                            @csrf
+                            <input type="file" name="picture[]" id="pictures" multiple="multiple" class="btn btn-success pull-left">
+                            <input type="submit" value="Upload Image" name="submit" class="btn btn-success pull-left">
+                        </form>
                         <a class="btn btn-default" data-dismiss="modal">Затвори</a>
                         <button type="submit" id="submit" class="btn btn-primary pull-right">Запази</button>
                     </div>
@@ -184,54 +184,78 @@
             });
 
         })
-        {{--$('#product-picture-form').submit(function (e) {--}}
-        {{--    e.preventDefault();--}}
-        {{--    let form=$(this);--}}
-        {{--    $.ajax({--}}
-        {{--        url: "{{ route('pictures.store') }}",--}}
-        {{--        data: form.serialize(),--}}
-        {{--        method: 'post',--}}
-        {{--        success: function (data) {--}}
-        {{--        },--}}
-        {{--        error: function (data) {--}}
-        {{--            showErrors(data);--}}
-        {{--        }--}}
-        {{--    })--}}
-        {{--})--}}
+                {{--$('#product-picture-form').submit(function (e) {--}}
+                {{--    e.preventDefault();--}}
+                {{--    let form=$(this);--}}
+                {{--    $.ajax({--}}
+                {{--        url: "{{ route('pictures.store') }}",--}}
+                {{--        data: form.serialize(),--}}
+                {{--        method: 'post',--}}
+                {{--        success: function (data) {--}}
+                {{--        },--}}
+                {{--        error: function (data) {--}}
+                {{--            showErrors(data);--}}
+                {{--        }--}}
+                {{--    })--}}
+                {{--})--}}
 
 
-        $('#select-picture-button').click(function (e) {
-            $('.selectable').html('')
-            $('#select-picture-modal').on('hidden.bs.modal', function () {
-                $("#selectable").html('');
-            });
-            $.ajax({
-                method: 'post',
-                url: '{{ route('thumbnails.index') }}',
-                success: function (data) {
-                    $("#selectable").append('<option></option>');
-                    for (let i = 0; i < data.length; i++) {
-                        if ($('#product-picture').attr('src') != '{{ URL::to('') }}/' + data[i].filename) {
-                            $("#selectable").append('<option data-img-src="{{ URL::to('') }}/' + data[i].filename + '"  value="' + data[i].picture_id + '"></option>');
-                        } else {
-                            $("#selectable").append('<option data-img-src="{{ URL::to('') }}/' + data[i].filename + '"  value="' + data[i].picture_id + '" selected></option>');
+            $('#select-picture-button').click(function (e) {
+                $('#selectable').html('')
+                $('#select-picture-modal').on('hidden.bs.modal', function () {
+                    $("#selectable").html('');
+                });
+                $.ajax({
+                    method: 'post',
+                    url: '{{ route('thumbnails.index') }}',
+                    success: function (data) {
+                        $("#selectable").append('<option></option>');
+                        for (let i = 0; i < data.length; i++) {
+                            let isSelected;
+                            if ($('#product-picture').attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
+                                isSelected = ' selected';
+                            }
+                            $("#selectable").append('<option data-img-src="{{ URL::to('') }}/' + `${data[i].filename}" value="${data[i].picture_id}"${isSelected}></option>`);
                         }
+
+                        $("#selectable").imagepicker();
                     }
+                });
 
-                    $("#selectable").imagepicker();
-
-                }
+                $('#submit').click(function (e) {
+                    e.preventDefault();
+                    $('#select-picture-modal').modal('hide');
+                    if ($("#selectable option:selected").data('img-src')) {
+                        $('#product-picture').attr('src', $("#selectable option:selected").data('img-src'));
+                    } else {
+                        $('#product-picture').attr('src', '');
+                    }
+                })
             });
 
-            $('#submit').click(function (e) {
-                e.preventDefault();
-                $('#select-picture-modal').modal('hide');
-                if($("#selectable option:selected").data('img-src')) {
-                    $('#product-picture').attr('src', $("#selectable option:selected").data('img-src'));
-                }else{
-                    $('#product-picture').attr('src', '');
+
+        $('#product-picture-form').submit(function (e) {
+            e.preventDefault();
+            let form_data = new FormData();
+            let ins       = document.getElementById('pictures').files.length;
+            for (let x = 0; x < ins; x++) {
+                form_data.append("picture[]", document.getElementById('pictures').files[x]);
+            }
+            $.ajax({
+                url: '{{ route('pictures.store') }}',
+                method: 'post',
+                data: form_data,
+                dataType: 'text', // what to expect back from the PHP script
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    showSuccessMessage('Снимките бяха качени успешно!');
+                },
+                error: function (data) {
+                    showError(data);
                 }
-            })
-        })
+            });
+        });
     </script>
 @endpush

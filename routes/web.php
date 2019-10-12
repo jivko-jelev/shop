@@ -46,6 +46,7 @@ Route::prefix('admin')
          // Снимки
          Route::post('pictures/store', 'PictureController@store')->name('pictures.store');
          Route::post('thumbnails', 'ThumbnailController@index')->name('thumbnails.index');
+         Route::delete('pictures/{picture}', 'PictureController@destroy')->name('pictures.destroy');
      });
 
 Auth::routes();
