@@ -96,7 +96,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Modal Header</h4>
+                        <h4 class="modal-title">Снимки</h4>
                     </div>
                     <div class="modal-body">
                         <select id="selectable">
@@ -104,10 +104,10 @@
                     </div>
                     <div class="modal-footer">
                         <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data" id="product-picture-form">
-                            @csrf
                             <input type="file" name="picture[]" id="pictures" multiple="multiple" class="btn btn-success pull-left">
                             <input type="submit" value="Upload Image" name="submit" class="btn btn-success pull-left">
                         </form>
+                        <span class="pull-left pictures-num"></span>
                         <a class="btn btn-default" data-dismiss="modal">Затвори</a>
                         <button type="button" name="save" class="btn btn-primary pull-right">Запази</button>
                     </div>
@@ -115,6 +115,21 @@
             </div>
         </div>
     </div>
+    <div id="loading">
+        <div class="lds-spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
     </div>
 @endsection
 
@@ -182,30 +197,37 @@
             });
         });
 
-        var pictureProduct = function () {
-            var reloadPictures = function(selectable, pictureModal, productPicture){
+        let pictureProduct = function () {
+            let reloadPictures = function (selectable, pictureModal, productPicture) {
                 $.ajax({
                     method: 'post',
                     url: '{{ route('thumbnails.index') }}',
                     success: function (data) {
-                        $(selectable).html('')
+                        $(selectable).html('');
                         $(pictureModal).on('hidden.bs.modal', function () {
                             $(selectable).html('');
+                            $('#product-picture-form').off();
                         });
                         $(selectable).append('<option></option>');
+                        $('.pictures-num').html(`Снимки: ${data.length}`);
                         for (let i = 0; i < data.length; i++) {
                             let isSelected = '';
                             if ($(productPicture).attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
                                 isSelected = 'selected';
                             }
-                            $(selectable).append('<option data-img-src="{{ URL::to('') }}/' + `${data[i].filename}" value="${data[i].picture_id}" ${isSelected}></option>`);
+                            let label = data[i].filename.substring(data[i].filename.lastIndexOf('/') + 1);
+                            label     = label.substring(0, label.lastIndexOf('-'));
+                            label     = label.substring(1, 18);
+                            $(selectable).append('<option data-img-src="{{ URL::to('') }}/' + `${data[i].filename}" value="${data[i].picture_id}" data-img-label="${label}" ${isSelected}></option>`);
                         }
 
-                        $(selectable).imagepicker();
+                        $(selectable).imagepicker({
+                            show_label: true,
+                        });
                     }
                 });
             };
-            var initModal = function (majorButton, selectable, pictureModal, productPicture) {
+            let initModal      = function (majorButton, selectable, pictureModal, productPicture) {
                 $(majorButton).click(function (e) {
                     reloadPictures(selectable, pictureModal, productPicture);
                     $(`${pictureModal} [name="save"]`).click(function (e) {
@@ -215,31 +237,37 @@
                         } else {
                             $(productPicture).attr('src', '');
                         }
-                    })
+                    });
 
                     $('#product-picture-form').submit(function (e) {
                         e.preventDefault();
+                        $('#loading').show();
                         let form_data = new FormData();
                         let ins       = document.getElementById('pictures').files.length;
                         for (let x = 0; x < ins; x++) {
-                            form_data.append("picture[]", document.getElementById('pictures').files[x]);
+                            form_data.append('picture[]', document.getElementById('pictures').files[x]);
                         }
                         $.ajax({
                             url: '{{ route('pictures.store') }}',
                             method: 'post',
                             data: form_data,
-                            dataType: 'text', // what to expect back from the PHP script
+                            dataType: 'json', // what to expect back from the PHP script
                             cache: false,
                             contentType: false,
                             processData: false,
                             success: function (data) {
+                                $('#pictures').val('');
                                 reloadPictures(selectable, pictureModal, productPicture);
                                 showSuccessMessage('Снимките бяха качени успешно!');
+                                $('#loading').hide();
+                                let picturesNum = $(`${selectable}`).find('option').length - 1;
+                                $('.pictures-num').html(`Снимки: ${picturesNum}`);
                             },
                             error: function (data) {
+                                $('#loading').hide();
                                 showError(data);
-                            }
-                        });
+                            },
+                        })
                     });
                 });
             }

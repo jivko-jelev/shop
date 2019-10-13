@@ -108,9 +108,11 @@ function _classCallCheck(instance, Constructor) {
                     url: `/admin/pictures/${pictureForDelete.data('picture-id')}`,
                     method: 'delete',
                     success: function (data) {
-                        $(`#${that[0].select[0].id}  option[value='${pictureForDelete}']`).remove();
+                        $(`#${that[0].select[0].id}  option[value='${pictureForDelete.data('picture-id')}']`).remove();
                         pictureForDelete.closest('li').remove();
-                        showErrorMessage('Снимката беше успешно изтрита.');
+                        showSuccessMessage('Снимката беше успешно изтрита.');
+                        let pictureNum = $(`#${that[0].select[0].id}`).find('option').length - 1;
+                        $('.pictures-num').html(`Снимки: ${pictureNum}`);
                     },
                     error: function (data) {
                     },

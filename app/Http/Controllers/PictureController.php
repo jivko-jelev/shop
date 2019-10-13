@@ -40,8 +40,9 @@ class PictureController extends Controller
     {
         $this->validate($request, [
             'picture'   => 'required',
-            'picture.*' => 'image|mimes:jpeg,png,jpg',
+            'picture.*' => 'image',
         ]);
+
         $year  = Carbon::today()->year;
         $month = Carbon::today()->month;
         foreach ($request->picture as $item) {
@@ -56,6 +57,7 @@ class PictureController extends Controller
             $picture->generateThumbnails();
         }
 
+        return response()->json(['success' => true], 200);
     }
 
     /**
