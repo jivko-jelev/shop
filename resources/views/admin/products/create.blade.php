@@ -73,6 +73,7 @@
                                 data-target="#select-picture-modal">
                             Избери снимка
                         </button>
+                        <a href="#" id="remove-product-picture">Премахни снимка</a>
                         <img src="" alt="" id="product-picture">
                     </div>
                 </div>
@@ -215,7 +216,7 @@
                             if ($(productPicture).attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
                                 isSelected = 'selected';
                             }
-                            let label = data[i].filename.substring(data[i].filename.lastIndexOf('/') + 1);
+                            let label = data[i].filename.substring(data[i].filename.lastIndexOf('/'));
                             label     = label.substring(0, label.lastIndexOf('-'));
                             label     = label.substring(1, 18);
                             $(selectable).append('<option data-img-src="{{ URL::to('') }}/' + `${data[i].filename}" value="${data[i].picture_id}" data-img-label="${label}" ${isSelected}></option>`);
@@ -280,5 +281,8 @@
         }();
 
         pictureProduct.init('#select-picture-button', '#selectable', '#select-picture-modal', '#product-picture');
+        $('#remove-product-picture').click(function () {
+            $('#select-picture-button').prop('selected', false);
+        })
     </script>
 @endpush
