@@ -11,6 +11,13 @@
 |
 */
 
+use App\Product;
+use App\Thumbnail;
+use Illuminate\Database\Eloquent\Builder;
+
+
+Route::get('category/{category}', 'ProductController@index')->name('products.index');
+
 Route::prefix('admin')
      ->middleware(['auth', 'admin'])
      ->group(function () {
@@ -34,7 +41,7 @@ Route::prefix('admin')
          Route::delete('categories/{category}', 'CategoryController@destroy')->name('categories.destroy');
 
          // Продукти
-         Route::get('products', 'ProductController@index')->name('products.index');
+         Route::get('products', 'ProductController@indexAdmin')->name('products.index.admin');
          Route::post('products/ajax', 'ProductController@ajax')->name('products.ajax');
          Route::get('products/create', 'ProductController@create')->name('products.create');
          Route::get('products/{product}', 'ProductController@show')->name('products.show');
@@ -52,3 +59,21 @@ Route::prefix('admin')
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::get('test', function () {
+    $otherImages = Thumbnail::whereNotIn('picture_id', [247])
+                            ->select('filename', 'picture_id')
+                            ->where('size', 1)
+                            ->latest()
+                            ->get();
+
+    $selectedPicture = Thumbnail::where('picture_id', 247)
+                                ->select('filename', 'picture_id')
+                                ->where('size', 1)
+                                ->get();
+
+    $thumbnails = $selectedPicture->toBase()->merge($otherImages);
+    dump($thumbnails);
+
+});

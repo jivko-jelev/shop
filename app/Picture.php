@@ -20,18 +20,18 @@ class Picture extends Model
         return $this->hasMany(Thumbnail::class);
     }
 
-    public static function cropImage($filename)
+    public static function cropImage($source, $dest, $width, $height)
     {
-        $image = Image::make($filename);
-        if ($image->width() / Picture::MAX_WIDTH < $image->height() / Picture::MAX_HEIGHT) {
-            $image->widen(Picture::MAX_WIDTH)
-                  ->crop(Picture::MAX_WIDTH, Picture::MAX_HEIGHT, 0, 0)
-                  ->save();
+        $image    = Image::make($source);
+        $newImage = Image::canvas($width, $height);
+        if ($image->width() / $width > $image->height() / $height) {
+            $image->widen($width);
+            $newImage->insert($image, 'top', 0, round($height / 2 - $image->height() / 2));
         } else {
-            $image->heighten(Picture::MAX_HEIGHT)
-                  ->crop(Picture::MAX_WIDTH, Picture::MAX_HEIGHT, round($image->width() / 2 - Picture::MAX_WIDTH / 2), 0)
-                  ->save();
+            $image->heighten($height);
+            $newImage->insert($image, 'top', round($width / 2 - $image->width() / 2), 0);
         }
+        $newImage->save($dest);
     }
 
     public static function generateUniqueFilename(string $fname): string
@@ -53,7 +53,7 @@ class Picture extends Model
         }
     }
 
-    public function generateThumbnails()
+    public function generateThumbnails($source)
     {
         $path     = substr($this->filename, 0, strrpos($this->filename, '/') + 1) . 'thumbnails/';
         $filename = substr($this->filename, strrpos($this->filename, '/') + 1);
@@ -72,10 +72,7 @@ class Picture extends Model
                 'size'       => $key,
             ]);
 
-            $image = Image::make($this->filename)
-                          ->widen($thumbnail[0])
-                          ->crop($thumbnail[0], $thumbnail[1], 0, 0)
-                          ->save($thumbnailFilename);
+            Picture::cropImage($source, $thumbnailFilename, $thumbnail[0], $thumbnail[1]);
         }
     }
 }

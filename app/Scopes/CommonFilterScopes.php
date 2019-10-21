@@ -58,4 +58,17 @@ trait CommonFilterScopes
         return Carbon::parse($timestamp)->format('d-m-Y H:i:s');
     }
 
+    public function scopeWhereHasIf($query, $relation, $field, $value)
+    {
+        if ($value) {
+            $query->whereHas(
+                $relation,
+                function ($query) use ($field, $value) {
+                    $query->where($field, $value);
+                }
+            );
+        }
+
+        return $query;
+    }
 }

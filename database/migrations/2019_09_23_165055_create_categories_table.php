@@ -24,7 +24,7 @@ class CreateCategoriesTable extends Migration
         });
         \App\Category::insert([
             'title' => 'morpheus',
-            'alias' => 'Морфей',
+            'alias' => 'morpheus',
         ]);
 
     }

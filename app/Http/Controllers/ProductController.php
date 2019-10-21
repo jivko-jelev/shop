@@ -10,12 +10,24 @@ use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
+    public function index($category)
+    {
+        $products = Product::with(['category'])
+                           ->whereHas('category', function ($query) use ($category) {
+                               $query->where('alias', $category);
+                           })
+                           ->get();
+        return view('category', [
+            'products' => $products,
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index()
+    public function indexAdmin()
     {
         return view('admin.products.index', [
             'title' => 'Списък на продуктите',
@@ -65,6 +77,9 @@ class ProductController extends Controller
             'name'        => $productRequest->title,
             'category_id' => $productRequest->category,
             'description' => $productRequest->description,
+            'picture_id'  => $productRequest->picture_id,
+            'price'       => $productRequest->price,
+            'promo_price' => $productRequest->promo_price,
             'permalink'   => self::generatePermanlink($productRequest->title),
         ]);
 
@@ -127,8 +142,8 @@ class ProductController extends Controller
 
     public function ajax(Request $request)
     {
-        $products = Product::with(['category:id,title,alias'])->select('id', 'name', 'category_id', 'created_at');
-        $recordsTotal = Product::all()->count();
+        $products        = Product::with(['category:id,title,alias'])->select('id', 'name', 'category_id', 'created_at');
+        $recordsTotal    = Product::all()->count();
         $recordsFiltered = $products->count();
 
         $ajaxGridColumnNames = [
@@ -151,9 +166,9 @@ class ProductController extends Controller
             $products->orderBy($ajaxGridColumnNames[$singleOrderState['column']], $singleOrderState['dir']);
         }
 
-        $products     = $products->skip($request->input('start'))
-                                 ->take($request->input('length'))
-                                 ->get();
+        $products = $products->skip($request->input('start'))
+                             ->take($request->input('length'))
+                             ->get();
 
         foreach ($products as $product) {
             $product->actions     = view('admin.products.layouts.actions')->with('product', $product)->render();

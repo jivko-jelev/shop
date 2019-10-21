@@ -144,6 +144,8 @@ return [
         "message"                  => "Съобщение",
         "password_confirmation"    => "Повтори Паролата",
         "category"                 => "Категория",
+        "price"                    => "Цена",
+        "promo_price"              => "Промо Цена",
     ],
 
 ];

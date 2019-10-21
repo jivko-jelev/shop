@@ -10,14 +10,28 @@ class ThumbnailController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $thumbnails = Thumbnail::select('filename', 'picture_id')
-                               ->where('size', 1)
-                               ->latest()
-                               ->get();
+        $picture = $request->get('picture');
+        if (!isset($picture)) {
+            $thumbnails = Thumbnail::where('size', 1)
+                                   ->latest()
+                                   ->get();
+        } else {
+            $otherImages = Thumbnail::whereNotIn('picture_id', [$picture])
+                                    ->where('size', 1)
+                                    ->latest()
+                                    ->get();
+
+            $selectedPicture = Thumbnail::where('picture_id', $picture)
+                                        ->where('size', 1)
+                                        ->get();
+
+            $thumbnails = $selectedPicture->toBase()->merge($otherImages);
+        }
 
         return response()->json($thumbnails);
     }

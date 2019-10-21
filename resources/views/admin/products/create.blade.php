@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="row">
-        <form action="" class="form-horizontal" id="create-product">
+        <form action="" class="form-horizontal" id="create-product" autocomplete="off">
             <div class="col-xs-10">
                 <div class="box">
                     <div class="box-header">
@@ -52,6 +52,26 @@
                                 {{--                                    <span class="error" id="title-error"></span>--}}
                                 {{--                                </div>--}}
                             </div>
+
+                            <div class="form-group">
+                                <label for="price" class="col-sm-2 control-label">Цена</label>
+
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input type="number" step=".01" class="form-control" name="price" id="price" placeholder="Цена">
+                                    </div>
+                                    <span class="error" id="price-error"></span>
+                                </div>
+
+                                <label for="promo_price" class="col-sm-2 control-label">Промо цена</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="promo_price" id="promo_price" placeholder="Промо цена">
+                                    </div>
+                                    <span class="error" id="promo_price-error"></span>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <textarea name="description" id="description"></textarea>
@@ -86,6 +106,7 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden" id="picture-id" name="picture_id">
         </form>
         <!-- Modal -->
         <div class="modal fade center" id="myModal" role="dialog">
@@ -199,9 +220,11 @@
         });
 
         let pictureProduct = function () {
-            let reloadPictures = function (selectable, pictureModal, productPicture) {
+            let reloadPictures = function (selectable, pictureModal, productPicture, pictureId) {
                 $.ajax({
                     method: 'post',
+                    data: {picture: $(pictureId).val()},
+                    dataType: 'json',
                     url: '{{ route('thumbnails.index') }}',
                     success: function (data) {
                         $(selectable).html('');
@@ -225,16 +248,17 @@
                         $(selectable).imagepicker({
                             show_label: true,
                         });
-                    }
+                    },
                 });
             };
-            let initModal      = function (majorButton, selectable, pictureModal, productPicture) {
+            let initModal      = function (majorButton, selectable, pictureModal, productPicture, pictureId) {
                 $(majorButton).click(function (e) {
-                    reloadPictures(selectable, pictureModal, productPicture);
+                    reloadPictures(selectable, pictureModal, productPicture, pictureId);
                     $(`${pictureModal} [name="save"]`).click(function (e) {
                         $(pictureModal).modal('hide');
                         if ($(`${selectable} option:selected`).data('img-src')) {
                             $(productPicture).attr('src', $(`${selectable} option:selected`).data('img-src'));
+                            $(pictureId).val($(`${selectable} option:selected`).val());
                         } else {
                             $(productPicture).attr('src', '');
                         }
@@ -274,13 +298,13 @@
             }
 
             return {
-                init: function (majorButton, selectable, pictureModal, productPicture) {
-                    initModal(majorButton, selectable, pictureModal, productPicture);
+                init: function (majorButton, selectable, pictureModal, productPicture, pictureId) {
+                    initModal(majorButton, selectable, pictureModal, productPicture, pictureId);
                 },
             };
         }();
 
-        pictureProduct.init('#select-picture-button', '#selectable', '#select-picture-modal', '#product-picture');
+        pictureProduct.init('#select-picture-button', '#selectable', '#select-picture-modal', '#product-picture', '#picture-id');
         $('#remove-product-picture').click(function () {
             $('#select-picture-button').prop('selected', false);
         })

@@ -26,6 +26,15 @@ class ProductRequest extends FormRequest
         return [
             'title'       => 'required',
             'category'    => 'required',
+            'price'       => 'required|numeric|min:0.01',
+            'promo_price' => 'nullable|numeric|max:' . ($this->price - 0.01),
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'promo_price.min' => 'Промо цената трябва да бъде по-малка от цената на продукта'
         ];
     }
 }

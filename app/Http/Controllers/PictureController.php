@@ -53,10 +53,9 @@ class PictureController extends Controller
                 'filename' => "storage/$year/$month/$filename",
             ]);
 
-            Picture::cropImage($picture->filename);
-            $picture->generateThumbnails();
+            Picture::cropImage($item->getPathname(), $picture->filename, 1000, 1000);
+            $picture->generateThumbnails($item->getPathname());
         }
-
         return response()->json(['success' => true], 200);
     }
 

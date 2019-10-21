@@ -46,8 +46,6 @@ class CategoryController extends Controller
         $cat->updated_at = null;
 
         $cat->save();
-//
-//        return response()->json();
     }
 
     /**
