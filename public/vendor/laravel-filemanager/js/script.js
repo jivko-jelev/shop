@@ -313,15 +313,15 @@ function useFile(file_url) {
 
   function useFckeditor2(url) {
     var p = url;
-    var w = data['Properties']['Width'];
-    var h = data['Properties']['Height'];
+    var w = data['Property']['Width'];
+    var h = data['Property']['Height'];
     window.opener.SetUrl(p,w,h);
   }
 
   var url = file_url;
   var field_name = getUrlParam('field_name');
   var is_ckeditor = getUrlParam('CKEditor');
-  var is_fcke = typeof data != 'undefined' && data['Properties']['Width'] != '';
+  var is_fcke = typeof data != 'undefined' && data['Property']['Width'] != '';
   var file_path = url.replace(route_prefix, '');
 
   if (window.opener || window.tinyMCEPopup || field_name || getUrlParam('CKEditorCleanUpFuncNum') || is_ckeditor) {

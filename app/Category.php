@@ -19,4 +19,10 @@ class Category extends Model
     {
         return $this->hasMany('App\Product');
     }
+
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
+
 }

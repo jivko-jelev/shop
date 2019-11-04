@@ -26,6 +26,11 @@ class Product extends Model
         return $this->hasOne('App\Picture', 'id', 'picture_id');
     }
 
+    public function subProperties()
+    {
+        return $this->hasMany('App\ProductSubProperties', 'product_id', 'id');
+    }
+
     public function getPicture()
     {
         return URL::to($this->picture ? $this->picture->filename : 'images/empty.jpg');
@@ -34,6 +39,21 @@ class Product extends Model
     public function getThumbnail(int $num = 1)
     {
         return URL::to($this->picture ? $this->picture->thumbnails->where('size', $num)[$num]->filename : "images/empty{$num}.jpg");
+    }
+
+    public function priceText()
+    {
+        return $this->price . ' лв.';
+    }
+
+    public function promoPriceText()
+    {
+        return $this->promo_price . ' лв.';
+    }
+
+    public function discountText()
+    {
+        return '-' . (100 - ($this->promo_price / $this->price) * 100) . '%';
     }
 
     public static function cyrillicToLatin(string $textcyr): string

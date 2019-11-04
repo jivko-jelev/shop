@@ -5,20 +5,76 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Http\Requests\ProductRequest;
 use App\Product;
+use App\Property;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function index($category)
+    public function index($categoryName, Request $request)
     {
-        $products = Product::with(['category'])
-                           ->whereHas('category', function ($query) use ($category) {
-                               $query->where('alias', $category);
+        $category = Category::where('alias', $categoryName)->first()->id;
+
+        $products = Product::with(['picture' => function ($query) {
+            $query->with('thumbnails');
+        }, 'subProperties',
+        ])
+                           ->when($request->get('check'), function ($query) use ($request, $category) {
+                               $query->whereHas('subProperties', function ($query) use ($request, $category) {
+                                   $query->whereIn('subproperty_id', $request->get('check'));
+                               });
                            })
-                           ->get();
+                           ->whereHas('category', function ($query) use ($category) {
+                               $query->where('id', $category);
+                           });
+//                           ->select('products.*')
+//                           ->when($request->get('check'), function ($query) use ($request, $category) {
+//                               $query->join('product_sub_properties as psp', function ($query) use ($request, $category) {
+//                                   $query->on('psp.product_id', 'products.id')
+//                                         ->addSelect('psp.subproperty_id')
+//                                         ->whereIn('psp.subproperty_id', $request->get('check'))
+//                                         ->where('products.category_id', $category);
+//                               });
+//                           });
+
+
+        if ($request->get('order-by')) {
+            $products = $products->orderBy(explode('-', $request->get('order-by'))[0], explode('-', $request->get('order-by'))[1]);
+        } else {
+            $products = $products->orderBy('price');
+        }
+
+        $count = $products->count();
+
+        $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 2);
+
+        $prices   = Product::selectRaw('min(price) as min_price, max(price) as max_price')->where('category_id', $category)->first();
+        $products = $products->paginate($limit);
+
+        $properties = Property::with(['subProperties' => function ($query) use ($category, $products) {
+        }])
+                              ->get();
+        if ($request->ajax()) {
+            return response()->json([
+                'check'          => $request->all(),
+                'products_count' => $count,
+                'view'           => view('products', [
+                    'products'     => $products,
+                    'properties'   => $properties,
+                    'prices'       => $prices,
+                    'categoryName' => $categoryName,
+                ])->render(),
+            ]);
+        }
+
         return view('category', [
-            'products' => $products,
+            'products'       => $products,
+            'products_count' => $count,
+            'categories'     => Category::all(),
+            'properties'     => $properties,
+            'prices'         => $prices,
+            'categoryName'   => $categoryName,
         ]);
     }
 

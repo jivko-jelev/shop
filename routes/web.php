@@ -11,10 +11,8 @@
 |
 */
 
+use App\Category;
 use App\Product;
-use App\Thumbnail;
-use Illuminate\Database\Eloquent\Builder;
-
 
 Route::get('category/{category}', 'ProductController@index')->name('products.index');
 
@@ -34,6 +32,7 @@ Route::prefix('admin')
 
          // Категории
          Route::get('categories', 'CategoryController@index')->name('categories');
+         Route::get('categories/create', 'CategoryController@create')->name('categories.create');
          Route::get('categories/{category}/edit', 'CategoryController@edit')->name('categories.edit');
          Route::post('categories', 'CategoryController@store')->name('categories.store');
          Route::post('categories/ajax', 'CategoryController@ajax')->name('categories.ajax');
@@ -62,18 +61,37 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-    $otherImages = Thumbnail::whereNotIn('picture_id', [247])
-                            ->select('filename', 'picture_id')
-                            ->where('size', 1)
-                            ->latest()
-                            ->get();
+    $category = 1;
+    $request  = [1, 2,3,4,5,6];
+    $p        = DB::table('products')
+                  ->join('categories', function ($query) use ($category) {
+                      $query->on('products.category_id', 'categories.id')
+                            ->where('categories.id', $category);
+                  })
+                  ->when($request, function ($query) use ($request) {
+                      $query->join('product_sub_properties as psp', function ($query) use ($request) {
+                          $query->on('products.id', 'psp.product_id')
+                                ->whereIn('categories.id', $request);
+                      });
+                  })
+                  ->get();
 
-    $selectedPicture = Thumbnail::where('picture_id', 247)
-                                ->select('filename', 'picture_id')
-                                ->where('size', 1)
-                                ->get();
+    dd($p->min('price'));
 
-    $thumbnails = $selectedPicture->toBase()->merge($otherImages);
-    dump($thumbnails);
-
+//    $p=Product::with(['subProperties'=>function($query){
+//            $query->where('subproperty_id', 1);
+//    }])->get();
+    dump($p);
+//    $category = Category::where('alias', 'morpheus')->first()->id;
+//    $request  = [1, 4];
+//    $products = Product::with(['picture'          => function ($query) use ($category) {
+//        $query->with('thumbnails');
+//    },
+//                               'category'         => function ($query) use ($category) {
+//                                   $query->where('id', $category);
+//                               }, 'subProperties' => function ($query) use ($request) {
+//                $query->whereIn('subproperty_id', $request);
+//        }])->get();
+//
+//    dump($products);
 });

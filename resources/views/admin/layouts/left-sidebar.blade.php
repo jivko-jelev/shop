@@ -26,6 +26,12 @@
                     <span>Потребители</span>
                 </a>
             </li>
+            <li @if(request()->routeIs('categories.create')) class="active" @endif>
+                <a href="{{ route('categories.create') }}">
+                    <i class="fa fa-list"></i>
+                    <span>Създай Категория</span>
+                </a>
+            </li>
             <li @if(request()->routeIs('categories')) class="active" @endif>
                 <a href="{{ route('categories') }}">
                     <i class="fa fa-list"></i>

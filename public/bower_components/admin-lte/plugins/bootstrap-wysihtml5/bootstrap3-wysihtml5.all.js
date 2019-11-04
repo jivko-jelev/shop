@@ -6850,14 +6850,14 @@ wysihtml5.dom.replaceWithChildNodes = function(node) {
        */
       doc                 = document,
       /**
-       * Properties to unset/protect on the window object
+       * Property to unset/protect on the window object
        */
       windowProperties    = [
         "parent", "top", "opener", "frameElement", "frames",
         "localStorage", "globalStorage", "sessionStorage", "indexedDB"
       ],
       /**
-       * Properties on the window object which are set to an empty function
+       * Property on the window object which are set to an empty function
        */
       windowProperties2   = [
         "open", "close", "openDialog", "showModalDialog",
@@ -6866,7 +6866,7 @@ wysihtml5.dom.replaceWithChildNodes = function(node) {
         "XMLHttpRequest", "XDomainRequest"
       ],
       /**
-       * Properties to unset/protect on the document object
+       * Property to unset/protect on the document object
        */
       documentProperties  = [
         "referrer",
