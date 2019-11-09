@@ -103,10 +103,18 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        <button type="button" class="btn btn-default btn-block" id="select-pictures-button" data-toggle="modal"
+                                data-target="#select-pictures-modal">
+                            Избери снимки
+                        </button>
+                        <a href="#" id="remove-product-pictures">Премахни снимките</a>
+                        <p id="product-pictures" class="product-pictures">
+                        </p>
                     </div>
                 </div>
             </div>
             <input type="hidden" id="picture-id" name="picture_id">
+            <p type="hidden" id="pictures-id" name="pictures_id"></p>
         </form>
         <!-- Modal -->
         <div class="modal fade center" id="myModal" role="dialog">
@@ -125,8 +133,33 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data" id="product-picture-form">
-                            <input type="file" name="picture[]" id="pictures" multiple="multiple" class="btn btn-success pull-left">
+                        <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data" class="product-picture-form">
+                            <input type="file" name="picture[]" multiple="multiple" class="btn btn-success pull-left" id="product-picture-pictures">
+                            <input type="submit" value="Upload Image" name="submit" class="btn btn-success pull-left">
+                        </form>
+                        <span class="pull-left pictures-num"></span>
+                        <a class="btn btn-default" data-dismiss="modal">Затвори</a>
+                        <button type="button" name="save" class="btn btn-primary pull-right">Запази</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="select-pictures-modal" role="dialog">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Снимки</h4>
+                    </div>
+                    <div class="modal-body">
+                        <select id="selectables" multiple="multiple">
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data" class="product-picture-form">
+                            <input type="file" name="picture[]" multiple="multiple" class="btn btn-success pull-left" id="product-pictures-pictures">
                             <input type="submit" value="Upload Image" name="submit" class="btn btn-success pull-left">
                         </form>
                         <span class="pull-left pictures-num"></span>
@@ -219,7 +252,7 @@
             });
         });
 
-        let pictureProduct = function () {
+        function productPicture(majorButton, selectable, pictureModal, productPicture, pictureId, picture) {
             let reloadPictures = function (selectable, pictureModal, productPicture, pictureId) {
                 $.ajax({
                     method: 'post',
@@ -230,13 +263,21 @@
                         $(selectable).html('');
                         $(pictureModal).on('hidden.bs.modal', function () {
                             $(selectable).html('');
-                            $('#product-picture-form').off();
+                            $('.product-picture-form').off();
                         });
                         $(selectable).append('<option></option>');
                         $('.pictures-num').html(`Снимки: ${data.length}`);
                         for (let i = 0; i < data.length; i++) {
                             let isSelected = '';
-                            if ($(productPicture).attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
+                            if ($(`${selectable}`).attr('multiple') == 'multiple') {
+                                $(productPicture).find('img').each(function () {
+                                    if ($(this).attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
+                                        isSelected = 'selected';
+                                        return;
+                                    }
+                                });
+                                // console.log($(productPicture).find('img').attr('src'));
+                            } else if ($(productPicture).attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
                                 isSelected = 'selected';
                             }
                             let label = data[i].filename.substring(data[i].filename.lastIndexOf('/'));
@@ -251,32 +292,41 @@
                     },
                 });
             };
-            let initModal      = function (majorButton, selectable, pictureModal, productPicture, pictureId) {
+            let initModal      = function (majorButton, selectable, pictureModal, productPicture, pictureId, picture) {
                 $(majorButton).click(function (e) {
                     reloadPictures(selectable, pictureModal, productPicture, pictureId);
                     $(`${pictureModal} [name="save"]`).click(function (e) {
                         $(pictureModal).modal('hide');
                         if ($(`${selectable} option:selected`).data('img-src')) {
-                            $(productPicture).attr('src', $(`${selectable} option:selected`).data('img-src'));
-                            $(pictureId).val($(`${selectable} option:selected`).val());
+                            if ($(`${selectable}`).attr('multiple') == 'multiple') {
+                                $(productPicture).html('');
+                                $(pictureId).html('');
+                                $(selectable + " > option:selected").each(function () {
+                                    $(productPicture).append('<img src="' + $(this).data('img-src') + '">');
+                                    $(pictureId).append('<input type="hidden" name="picture_id[]" val="' + $(this).val() + '">');
+                                });
+                            } else {
+                                $(productPicture).attr('src', $(`${selectable} option:selected`).data('img-src'));
+                                $(pictureId).val($(`${selectable} option:selected`).val());
+                            }
                         } else {
                             $(productPicture).attr('src', '');
                         }
                     });
 
-                    $('#product-picture-form').submit(function (e) {
+                    $(pictureModal).find('.product-picture-form').submit(function (e) {
                         e.preventDefault();
                         $('#loading').show();
                         let form_data = new FormData();
-                        let ins       = document.getElementById('pictures').files.length;
+                        let ins       = document.getElementById(picture).files.length;
                         for (let x = 0; x < ins; x++) {
-                            form_data.append('picture[]', document.getElementById('pictures').files[x]);
+                            form_data.append('picture[]', document.getElementById(picture).files[x]);
                         }
                         $.ajax({
                             url: '{{ route('pictures.store') }}',
                             method: 'post',
                             data: form_data,
-                            dataType: 'json', // what to expect back from the PHP script
+                            dataType: 'json',
                             cache: false,
                             contentType: false,
                             processData: false,
@@ -297,16 +347,14 @@
                 });
             }
 
-            return {
-                init: function (majorButton, selectable, pictureModal, productPicture, pictureId) {
-                    initModal(majorButton, selectable, pictureModal, productPicture, pictureId);
-                },
-            };
-        }();
+            initModal(majorButton, selectable, pictureModal, productPicture, pictureId, picture);
+        };
 
-        pictureProduct.init('#select-picture-button', '#selectable', '#select-picture-modal', '#product-picture', '#picture-id');
+        let a = productPicture('#select-picture-button', '#selectable', '#select-picture-modal', '#product-picture', '#picture-id', 'product-picture-pictures');
         $('#remove-product-picture').click(function () {
             $('#select-picture-button').prop('selected', false);
-        })
+        });
+
+        let b = productPicture('#select-pictures-button', '#selectables', '#select-pictures-modal', '#product-pictures', '#pictures-id', 'product-pictures-pictures');
     </script>
 @endpush

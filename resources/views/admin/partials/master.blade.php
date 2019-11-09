@@ -27,7 +27,6 @@
     <!-- Daterange picker -->
     <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ URL::to('css/lobibox.min.css') }}"/>
-    <link rel="stylesheet" href="{{ URL::to('css/global.css') }}">
     <link rel="stylesheet" href="{{ URL::to('css/image-picker.css') }}">
     <link rel="stylesheet" href="{{ URL::to('css/global.css') }}">
 
