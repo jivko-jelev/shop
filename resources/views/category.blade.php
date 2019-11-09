@@ -14,7 +14,6 @@
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/jquery-ui-1.12.1.custom/jquery-ui.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('styles/shop_styles.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('styles/responsive.css') }}">
-
 </head>
 
 <body>
@@ -404,6 +403,7 @@
                                     </ul>
                                 </div>
                             @endforeach
+                            <input type="hidden" name="page" id="page" value="{{ $products->currentPage() }}">
                             <input type="hidden" name="order-by" id="order-by" value="price-asc">
                             <input type="hidden" name="per-page" id="per-page" value="20">
                             <input type="hidden" name="min_price" id="min-price" value="{{ round($prices->min_price) }}">
@@ -455,9 +455,7 @@
                         <div class="product_grid">
                             @include('products')
                         </div>
-                        <div class="d-flex justify-content-end" id="paginator">
-                            {{ $products->links() }}
-                        </div>
+                        @include('partials.pagination', ['products' => $products])
                     </div>
                 </div>
             </div>
@@ -689,31 +687,28 @@
 
     productStyles();
 
+
     function initPriceSlider(min_price, max_price, selected_min_price, selected_max_price) {
-        if($("#slider-range").length)
-        {
+        if ($("#slider-range").length) {
             $("#slider-range").slider(
                 {
                     range: true,
                     min: 0,
                     max: 1000,
-                    values: [ 0, 500 ],
-                    slide: function( event, ui )
-                    {
-                        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+                    values: [0, 500],
+                    slide: function (event, ui) {
+                        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
                     }
                 });
 
-            $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) + " - $" + $( "#slider-range" ).slider( "values", 1 ) );
-            $('.ui-slider-handle').on('mouseup', function()
-            {
+            $("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+            $('.ui-slider-handle').on('mouseup', function () {
                 $('.product_grid').isotope({
-                    filter: function()
-                    {
+                    filter: function () {
                         var priceRange = $('#amount').val();
-                        var priceMin = parseFloat(priceRange.split('-')[0].replace('$', ''));
-                        var priceMax = parseFloat(priceRange.split('-')[1].replace('$', ''));
-                        var itemPrice = $(this).find('.product_price').clone().children().remove().end().text().replace( '$', '' );
+                        var priceMin   = parseFloat(priceRange.split('-')[0].replace('$', ''));
+                        var priceMax   = parseFloat(priceRange.split('-')[1].replace('$', ''));
+                        var itemPrice  = $(this).find('.product_price').clone().children().remove().end().text().replace('$', '');
 
                         return (itemPrice > priceMin) && (itemPrice < priceMax);
                     },
@@ -737,6 +732,12 @@
                 $('.product_grid').html(`${data.view}`);
                 productStyles();
                 initPriceSlider({{ $prices->min_price }}, {{ $prices->max_price }});
+                $('#pagination').html(data.pagination);
+                $('.pagination li a').click(function (e) {
+                    e.preventDefault();
+                    paginationClick($(this));
+                });
+
             },
             error: function (data) {
             }
@@ -744,21 +745,42 @@
     }
 
     $('.form-check-input').change(function () {
+        $('#page').val(1);
+        history.pushState(undefined, "", window.location.href.split('/')[window.location.href.split('/').length - 1].split('?')[0]);
         reloadProducts();
     });
 
     initPriceSlider({{ $prices->min_price }}, {{ $prices->max_price }}, {{ $prices->min_price }}, {{ $prices->max_price }});
+
+    function paginationClick(element) {
+        $('#page').val(element.data('page'));
+        setTimeout(reloadProducts, 500);
+        $("html, body").animate({scrollTop: $('.shop_content').offset().top}, 500);
+
+        let pieces = element.attr('href').split(/[\/]+/);
+        pieces     = pieces[pieces.length - 1];
+        history.pushState(undefined, "", pieces);
+    }
+
     function initIsotope() {
         $('.shop_sorting_button').on('click', function () {
             $(this).parent().parent().find('.sorting_text').html($(this).text() + '<i class="fas fa-chevron-down"></i>');
             if ($(this).data('sort-by')) {
                 $('#order-by').val($(this).data('sort-by'));
             } else {
-                $('#per-page').val($(this).data('sort-by'));
+                $('#per-page').val($(this).text());
             }
+            $('#page').val(1);
             reloadProducts();
+            history.pushState(undefined, "", window.location.href.split('/')[window.location.href.split('/').length - 1].split('?')[0]);
         });
     }
+
+    $('.pagination li a').click(function (e) {
+        e.preventDefault();
+        paginationClick($(this));
+    });
+
 </script>
 </body>
 

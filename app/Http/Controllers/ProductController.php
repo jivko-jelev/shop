@@ -8,20 +8,24 @@ use App\Product;
 use App\Property;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class ProductController extends Controller
 {
     public function index($categoryName, Request $request)
     {
-        $category = Category::where('alias', $categoryName)->first()->id;
+        try {
+            $category = Category::where('alias', $categoryName)->first()->id;
+        } catch (\Exception $e) {
+            abort(404);
+        }
 
         $products = Product::with(['picture' => function ($query) {
             $query->with('thumbnails');
         }, 'subProperties',
         ])
-                           ->when($request->get('check'), function ($query) use ($request, $category) {
-                               $query->whereHas('subProperties', function ($query) use ($request, $category) {
+                           ->when($request->get('check'), function ($query) use ($request) {
+                               $query->whereHas('subProperties', function ($query) use ($request) {
                                    $query->whereIn('subproperty_id', $request->get('check'));
                                });
                            })
@@ -40,14 +44,19 @@ class ProductController extends Controller
 
 
         if ($request->get('order-by')) {
-            $products = $products->orderBy(explode('-', $request->get('order-by'))[0], explode('-', $request->get('order-by'))[1]);
+            $order = explode('-', $request->get('order-by'));
+            if (($order[0] == 'name' || $order[0] == 'price') && ($order[1] == 'asc' || $order[1] == 'desc')) {
+                $products = $products->orderBy($order[0], $order[1]);
+            } else {
+//                $products = $products->orderBy(explode('-', )[0], explode('-', $request->get('order-by'))[1]);
+            }
         } else {
             $products = $products->orderBy('price');
         }
 
         $count = $products->count();
 
-        $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 2);
+        $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 8);
 
         $prices   = Product::selectRaw('min(price) as min_price, max(price) as max_price')->where('category_id', $category)->first();
         $products = $products->paginate($limit);
@@ -65,9 +74,11 @@ class ProductController extends Controller
                     'prices'       => $prices,
                     'categoryName' => $categoryName,
                 ])->render(),
+                'pagination'     => view('partials.pagination', ['products' => $products])->render(),
             ]);
         }
 
+//        dd($products);
         return view('category', [
             'products'       => $products,
             'products_count' => $count,
