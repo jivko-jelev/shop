@@ -265,3 +265,11 @@ ul.thumbnails.image_picker_selector {
 .product-pictures img {
     width: 50%;
 }
+
+legend {
+    width: auto;
+    margin-bottom: auto;
+    border-bottom: none;
+    padding-left: 5px;
+    padding-right: 5px;
+}

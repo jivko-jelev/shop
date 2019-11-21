@@ -21,16 +21,10 @@ class ThumbnailController extends Controller
                                    ->latest()
                                    ->get();
         } else {
-            $otherImages = Thumbnail::whereNotIn('picture_id', [$picture])
-                                    ->where('size', 1)
-                                    ->latest()
-                                    ->get();
-
-            $selectedPicture = Thumbnail::where('picture_id', $picture)
-                                        ->where('size', 1)
-                                        ->get();
-
-            $thumbnails = $selectedPicture->toBase()->merge($otherImages);
+            $picture = implode(',', $request->get('picture'));
+            $thumbnails = Thumbnail::where('size', 1)
+                                   ->orderByRaw("IF(picture_id IN({$picture}), 0, 1), created_at desc")
+                                   ->get();
         }
 
         return response()->json($thumbnails);

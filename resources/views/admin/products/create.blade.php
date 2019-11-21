@@ -31,7 +31,7 @@
                             <div class="form-group">
                                 <label for="category" class="col-sm-2 control-label">Категория</label>
 
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <select class="form-control select2" id="category" name="category">
                                         <option value="">избери</option>
                                         @foreach($categories as $category)
@@ -51,12 +51,9 @@
                                 {{--                                    <input type="text" class="form-control" name="title" id="title" placeholder="Име">--}}
                                 {{--                                    <span class="error" id="title-error"></span>--}}
                                 {{--                                </div>--}}
-                            </div>
+                                <label for="price" class="col-sm-1 control-label">Цена</label>
 
-                            <div class="form-group">
-                                <label for="price" class="col-sm-2 control-label">Цена</label>
-
-                                <div class="col-sm-4">
+                                <div class="col-sm-2">
                                     <div class="input-group">
                                         <input type="number" step=".01" class="form-control" name="price" id="price" placeholder="Цена">
                                     </div>
@@ -64,7 +61,7 @@
                                 </div>
 
                                 <label for="promo_price" class="col-sm-2 control-label">Промо цена</label>
-                                <div class="col-sm-4">
+                                <div class="col-sm-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="promo_price" id="promo_price" placeholder="Промо цена">
                                     </div>
@@ -76,6 +73,14 @@
                                 <div class="col-sm-12">
                                     <textarea name="description" id="description"></textarea>
                                     <span class="error" id="description-error"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <p>Процесори</p>
+                                    <input type="checkbox" id="minimal-checkbox-1">
+                                    <label for="minimal-checkbox-1">&nbsp Checkbox 1</label>
                                 </div>
                             </div>
                         </div>
@@ -94,7 +99,7 @@
                             Избери снимка
                         </button>
                         <a href="#" id="remove-product-picture">Премахни снимка</a>
-                        <img src="" alt="" id="product-picture">
+                        <p id="product-picture"></p>
                     </div>
                 </div>
                 <div class="box">
@@ -113,7 +118,7 @@
                     </div>
                 </div>
             </div>
-            <input type="hidden" id="picture-id" name="picture_id">
+            <p type="hidden" id="picture-id" name="picture-id"></p>
             <p type="hidden" id="pictures-id" name="pictures_id"></p>
         </form>
         <!-- Modal -->
@@ -254,9 +259,13 @@
 
         function productPicture(majorButton, selectable, pictureModal, productPicture, pictureId, picture) {
             let reloadPictures = function (selectable, pictureModal, productPicture, pictureId) {
+                let map = [];
+                $(pictureId + ' input').each(function () {
+                    map.push($(this).val());
+                });
                 $.ajax({
                     method: 'post',
-                    data: {picture: $(pictureId).val()},
+                    data: {picture: map},
                     dataType: 'json',
                     url: '{{ route('thumbnails.index') }}',
                     success: function (data) {
@@ -269,17 +278,12 @@
                         $('.pictures-num').html(`Снимки: ${data.length}`);
                         for (let i = 0; i < data.length; i++) {
                             let isSelected = '';
-                            if ($(`${selectable}`).attr('multiple') == 'multiple') {
-                                $(productPicture).find('img').each(function () {
-                                    if ($(this).attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
-                                        isSelected = 'selected';
-                                        return;
-                                    }
-                                });
-                                // console.log($(productPicture).find('img').attr('src'));
-                            } else if ($(productPicture).attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
-                                isSelected = 'selected';
-                            }
+                            $(productPicture).find('img').each(function () {
+                                if ($(this).attr('src') == '{{ URL::to('') }}/' + data[i].filename) {
+                                    isSelected = 'selected';
+                                    return;
+                                }
+                            });
                             let label = data[i].filename.substring(data[i].filename.lastIndexOf('/'));
                             label     = label.substring(0, label.lastIndexOf('-'));
                             label     = label.substring(1, 18);
@@ -298,17 +302,12 @@
                     $(`${pictureModal} [name="save"]`).click(function (e) {
                         $(pictureModal).modal('hide');
                         if ($(`${selectable} option:selected`).data('img-src')) {
-                            if ($(`${selectable}`).attr('multiple') == 'multiple') {
-                                $(productPicture).html('');
-                                $(pictureId).html('');
-                                $(selectable + " > option:selected").each(function () {
-                                    $(productPicture).append('<img src="' + $(this).data('img-src') + '">');
-                                    $(pictureId).append('<input type="hidden" name="picture_id[]" val="' + $(this).val() + '">');
-                                });
-                            } else {
-                                $(productPicture).attr('src', $(`${selectable} option:selected`).data('img-src'));
-                                $(pictureId).val($(`${selectable} option:selected`).val());
-                            }
+                            $(productPicture).html('');
+                            $(pictureId).html('');
+                            $(selectable + " > option:selected").each(function () {
+                                $(productPicture).append('<img src="' + $(this).data('img-src') + '">');
+                                $(pictureId).append('<input type="hidden" name="picture_id[]" value="' + $(this).val() + '">');
+                            });
                         } else {
                             $(productPicture).attr('src', '');
                         }
@@ -356,5 +355,9 @@
         });
 
         let b = productPicture('#select-pictures-button', '#selectables', '#select-pictures-modal', '#product-pictures', '#pictures-id', 'product-pictures-pictures');
+
+        $('#category').change(function () {
+            alert($(this).val());
+        });
     </script>
 @endpush

@@ -32,16 +32,6 @@ class ProductController extends Controller
                            ->whereHas('category', function ($query) use ($category) {
                                $query->where('id', $category);
                            });
-//                           ->select('products.*')
-//                           ->when($request->get('check'), function ($query) use ($request, $category) {
-//                               $query->join('product_sub_properties as psp', function ($query) use ($request, $category) {
-//                                   $query->on('psp.product_id', 'products.id')
-//                                         ->addSelect('psp.subproperty_id')
-//                                         ->whereIn('psp.subproperty_id', $request->get('check'))
-//                                         ->where('products.category_id', $category);
-//                               });
-//                           });
-
 
         if ($request->get('order-by')) {
             $order = explode('-', $request->get('order-by'));
@@ -58,7 +48,10 @@ class ProductController extends Controller
 
         $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 8);
 
-        $prices   = Product::selectRaw('min(price) as min_price, max(price) as max_price')->where('category_id', $category)->first();
+        $prices   = Product::selectRaw('min(price) as min_price, max(price) as max_price')
+                           ->where('category_id', $category)
+                           ->first();
+
         $products = $products->paginate($limit);
 
         $properties = Property::with(['subProperties' => function ($query) use ($category, $products) {

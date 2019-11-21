@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="{{ URL::to('dist/css/skins/_all-skins.min.css') }}">
     <!-- jvectormap -->
     <link rel="stylesheet" href="{{ URL::to('bower_components/jvectormap/jquery-jvectormap.css') }}">
+
+    <link rel="stylesheet" href="{{ URL::to('plugins/iCheck/all.css') }}">
     <!-- Date Picker -->
     <link rel="stylesheet" href="{{ URL::to('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
     <!-- Daterange picker -->
@@ -544,6 +546,7 @@
 
 <!-- jQuery 3 -->
 <script src="{{ URL::to('bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ URL::to('plugins/iCheck/icheck.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ URL::to('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Bootstrap 3.3.7 -->
@@ -575,6 +578,11 @@
     $(function () {
         $('.select2').select2()
     });
+
+    $('input[type="checkbox"], input[type="radio"].minimal-red').iCheck({
+        checkboxClass: 'icheckbox_minimal-blue',
+        radioClass   : 'iradio_minimal-blue'
+    })
 </script>
 @stack('js')
 </body>
