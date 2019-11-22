@@ -10,6 +10,8 @@ class SubProperty extends Model
 
     protected $fillable = ['name', 'property_id'];
 
+    public $timestamps = false;
+
     public function Category()
     {
         return $this->belongsTo(Property::class);

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Http\Requests\CategoryRequest;
+use App\SubProperty;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use phpDocumentor\Reflection\DocBlock\Tags\Property;
 use Throwable;
 
 class CategoryController extends Controller
@@ -47,8 +49,29 @@ class CategoryController extends Controller
         $cat->alias      = $category->alias;
         $cat->parent_id  = $category->parent_id;
         $cat->updated_at = null;
-
         $cat->save();
+
+        foreach ($category->property_name as $key => $property) {
+            if ($property) {
+                $property = \App\Property::create([
+                    'name'        => $property,
+                    'category_id' => $cat->id,
+                ]);
+
+                $subProperties = explode(PHP_EOL, $category->sub_property[$key]);;
+                $data = [];
+                foreach ($subProperties as $subPropertyKey => $subProperty) {
+                    if (trim($subProperty) != '') {
+                        $data[] = [
+                            'name'        => (($subPropertyKey == count($subProperties) - 1)
+                                ? $subProperty : mb_substr($subProperty, 0, mb_strlen($subProperty) - 1)),
+                            'property_id' => $property->id,
+                        ];
+                    }
+                }
+                SubProperty::insert($data);
+            }
+        }
     }
 
     /**
@@ -151,5 +174,10 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
+    }
+
+    public function getProperties(Category $category)
+    {
+//        $properties=
     }
 }

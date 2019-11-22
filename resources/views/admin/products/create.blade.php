@@ -351,13 +351,18 @@
 
         let a = productPicture('#select-picture-button', '#selectable', '#select-picture-modal', '#product-picture', '#picture-id', 'product-picture-pictures');
         $('#remove-product-picture').click(function () {
-            $('#select-picture-button').prop('selected', false);
+            $('#product-picture').html('');
         });
 
         let b = productPicture('#select-pictures-button', '#selectables', '#select-pictures-modal', '#product-pictures', '#pictures-id', 'product-pictures-pictures');
+        $('#remove-product-pictures').click(function () {
+            $('#product-pictures').html('');
+        });
 
         $('#category').change(function () {
-            alert($(this).val());
+            $.ajax({
+               url:
+            });
         });
     </script>
 @endpush

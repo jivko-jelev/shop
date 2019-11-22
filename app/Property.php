@@ -8,7 +8,9 @@ class Property extends Model
 {
     protected $table = 'properties';
 
-    protected $fillable = ['name', 'product_id'];
+    protected $fillable = ['name', 'category_id'];
+
+    public $timestamps = false;
 
     public function subProperties()
     {

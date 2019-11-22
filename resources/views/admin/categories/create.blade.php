@@ -48,17 +48,17 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="property-name[]" class="col-sm-2 control-label">Атрибут</label>
+                                    <label for="property_name[]" class="col-sm-2 control-label">Атрибут</label>
 
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="property-name[]" id="property-name[]" placeholder="Атрибут">
+                                        <input type="text" class="form-control" name="property_name[]" id="property_name[]" placeholder="Атрибут">
                                         <span class="error" id="alias-error-modal"></span><br>
                                         <button class="btn btn-danger btn-block delete-property" type="button">Изтрий</button>
                                         <button class="btn btn-primary btn-block add-property" type="button">Добави още един атрибут</button>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <textarea name="property" class="form-control" rows="6"></textarea>
+                                        <textarea name="sub_property[]" class="form-control" rows="6"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -88,9 +88,10 @@
         $(function () {
             $('#form-category').submit(function (e) {
                 e.preventDefault();
+                console.log($('[name="title"]').val());
                 $.ajax({
                     url: '{{ route("categories.store") }}',
-                    data: $('#form-create-category').serialize(),
+                    data: $('#form-category').serialize(),
                     method: 'post',
                     success: function (data) {
                         table.ajax.reload(null, false);
@@ -104,7 +105,6 @@
                         $('[name="alias"]').val('');
                     },
                     error: function (data) {
-                        console.log(data);
                         $('.error').html('');
                         for (let i = 0; i < Object.keys(data.responseJSON.errors).length; i++) {
                             if (Object.keys(data.responseJSON.errors)[i] !== undefined) {
@@ -199,17 +199,17 @@
 
         function createNewAttribute() {
             $('.modal-body .box-body').append('                                <div class="form-group">\n' +
-                '                                    <label for="property-name[]" class="col-sm-2 control-label">Атрибут</label>\n' +
+                '                                    <label for="property_name[]" class="col-sm-2 control-label">Атрибут</label>\n' +
                 '\n' +
                 '                                    <div class="col-sm-4">\n' +
-                '                                        <input type="text" class="form-control" name="property-name[]" id="property-name[]" placeholder="Атрибут">\n' +
+                '                                        <input type="text" class="form-control" name="property_name[]" id="property_name[]" placeholder="Атрибут">\n' +
                 '                                        <span class="error" id="alias-error-modal"></span><br>\n' +
                 '                                        <button class="btn btn-danger btn-block delete-property" type="button">Изтрий</button>\n' +
                 '                                        <button class="btn btn-primary btn-block add-property" type="button">Добави още един атрибут</button>\n' +
                 '                                    </div>\n' +
                 '                                    \n' +
                 '                                    <div class="col-md-6">\n' +
-                '                                        <textarea name="property" class="form-control" rows="6"></textarea>\n' +
+                '                                        <textarea name="sub_property[]" class="form-control" rows="6"></textarea>\n' +
                 '                                    </div>\n' +
                 '                                </div>\n')
 

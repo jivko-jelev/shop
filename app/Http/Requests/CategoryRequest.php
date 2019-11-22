@@ -25,13 +25,17 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required', Rule::unique('categories')->where(function ($query) {
-                return $query->where('title', $this->request->get('title'))
-                             ->where('parent_id', $this->request->get('parent_id'));
-            })->ignore($this->category),],
-            'alias' => ['required', Rule::unique('categories')->where(function ($query) {
-                return $query->where('alias', $this->request->get('alias'));
-            })->ignore($this->category),],
+            'title' => [
+                'required',
+                Rule::unique('categories')->where(function ($query) {
+                    return $query->where('title', $this->request->get('title'))
+                                 ->where('parent_id', $this->request->get('parent_id'));
+                })->ignore($this->category),],
+            'alias' => [
+                'required',
+                Rule::unique('categories')->where(function ($query) {
+                    return $query->where('alias', $this->request->get('alias'));
+                })->ignore($this->category),],
         ];
     }
 

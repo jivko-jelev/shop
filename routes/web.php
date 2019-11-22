@@ -38,6 +38,7 @@ Route::prefix('admin')
          Route::post('categories/ajax', 'CategoryController@ajax')->name('categories.ajax');
          Route::put('categories/{category}/update', 'CategoryController@update')->name('categories.update');
          Route::delete('categories/{category}', 'CategoryController@destroy')->name('categories.destroy');
+         Route::get('categories/{category}/properties', 'CategoryController@getProperties')->name('categories.properties');
 
          // Продукти
          Route::get('products', 'ProductController@indexAdmin')->name('products.index.admin');
