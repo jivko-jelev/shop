@@ -76,13 +76,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    <p>Процесори</p>
-                                    <input type="checkbox" id="minimal-checkbox-1">
-                                    <label for="minimal-checkbox-1">&nbsp Checkbox 1</label>
-                                </div>
-                            </div>
+                            <div id="properties"></div>
                         </div>
                     </div>
                 </div>
@@ -175,22 +169,7 @@
             </div>
         </div>
     </div>
-    <div id="loading">
-        <div class="lds-spinner">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    </div>
+    @include('admin.layouts.loading')
 @endsection
 
 @push('js')
@@ -208,13 +187,6 @@
                 "emoticons template paste textcolor colorpicker textpattern codesample"
             ],
             toolbar: "insertfile undo redo | styleselect | bold italic underline | fontselect | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | code",
-            codesample_languages: [
-                {text: 'PHP', value: 'php'},
-                {text: 'HTML/XML', value: 'markup'},
-                {text: 'JavaScript', value: 'javascript'},
-                {text: 'CSS', value: 'css'},
-                {text: 'MySQL', value: 'sql'},
-            ],
             relative_urls: false,
             file_browser_callback: function (field_name, url, type, win) {
                 var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
@@ -360,8 +332,16 @@
         });
 
         $('#category').change(function () {
+            let val = $(this).val();
             $.ajax({
-               url:
+                url: `/admin/categories/${val}/properties`,
+                method: 'get',
+                success: function (data) {
+                    $('#properties').html(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
             });
         });
     </script>

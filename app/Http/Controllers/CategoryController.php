@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Http\Requests\CategoryRequest;
+use App\Property;
 use App\SubProperty;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use phpDocumentor\Reflection\DocBlock\Tags\Property;
 use Throwable;
 
 class CategoryController extends Controller
@@ -53,7 +53,7 @@ class CategoryController extends Controller
 
         foreach ($category->property_name as $key => $property) {
             if ($property) {
-                $property = \App\Property::create([
+                $property = Property::create([
                     'name'        => $property,
                     'category_id' => $cat->id,
                 ]);
@@ -178,6 +178,11 @@ class CategoryController extends Controller
 
     public function getProperties(Category $category)
     {
-//        $properties=
+        $properties = Property::with('subProperties')
+                              ->where('category_id', $category->id)
+                              ->get();
+
+//        return response()->json()
+        return view('admin.products.properties', compact('properties'))->render();
     }
 }

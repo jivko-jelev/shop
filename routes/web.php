@@ -12,7 +12,7 @@
 */
 
 use App\Category;
-use App\Product;
+use App\Property;
 
 Route::get('category/{category}', 'ProductController@index')->name('products.index');
 
@@ -62,37 +62,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-    $category = 1;
-    $request  = [1, 2,3,4,5,6];
-    $p        = DB::table('products')
-                  ->join('categories', function ($query) use ($category) {
-                      $query->on('products.category_id', 'categories.id')
-                            ->where('categories.id', $category);
-                  })
-                  ->when($request, function ($query) use ($request) {
-                      $query->join('product_sub_properties as psp', function ($query) use ($request) {
-                          $query->on('products.id', 'psp.product_id')
-                                ->whereIn('categories.id', $request);
-                      });
-                  })
-                  ->get();
+    dd(Property::with('subProperties')
+            ->where('category_id', 1)
+            ->get());
 
-    dd($p->min('price'));
-
-//    $p=Product::with(['subProperties'=>function($query){
-//            $query->where('subproperty_id', 1);
-//    }])->get();
-    dump($p);
-//    $category = Category::where('alias', 'morpheus')->first()->id;
-//    $request  = [1, 4];
-//    $products = Product::with(['picture'          => function ($query) use ($category) {
-//        $query->with('thumbnails');
-//    },
-//                               'category'         => function ($query) use ($category) {
-//                                   $query->where('id', $category);
-//                               }, 'subProperties' => function ($query) use ($request) {
-//                $query->whereIn('subproperty_id', $request);
-//        }])->get();
-//
-//    dump($products);
 });

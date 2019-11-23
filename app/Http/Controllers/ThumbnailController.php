@@ -21,6 +21,8 @@ class ThumbnailController extends Controller
                                    ->latest()
                                    ->get();
         } else {
+            // да върне колекция в която първо са снимките които са избрани от потребителя и след това са всички останали снимки
+            // сортиране по дата на създаване - низходящо
             $picture = implode(',', $request->get('picture'));
             $thumbnails = Thumbnail::where('size', 1)
                                    ->orderByRaw("IF(picture_id IN({$picture}), 0, 1), created_at desc")
