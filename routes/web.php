@@ -62,8 +62,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-    dd(Property::with('subProperties')
-            ->where('category_id', 1)
-            ->get());
+    dd( Property::with('subProperties')
+                          ->where('category_id', 1)
+                          ->get());
 
 });

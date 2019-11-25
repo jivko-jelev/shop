@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Http\Requests\ProductRequest;
 use App\Product;
+use App\ProductSubProperties;
 use App\Property;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -38,47 +39,43 @@ class ProductController extends Controller
             if (($order[0] == 'name' || $order[0] == 'price') && ($order[1] == 'asc' || $order[1] == 'desc')) {
                 $products = $products->orderBy($order[0], $order[1]);
             } else {
+                  // Най-високо оценени
 //                $products = $products->orderBy(explode('-', )[0], explode('-', $request->get('order-by'))[1]);
             }
         } else {
             $products = $products->orderBy('price');
         }
 
-        $count = $products->count();
+        $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 20);
 
-        $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 8);
+        $prices = Product::selectRaw('min(price) as min_price, max(price) as max_price')
+                         ->where('category_id', $category)
+                         ->first();
 
-        $prices   = Product::selectRaw('min(price) as min_price, max(price) as max_price')
-                           ->where('category_id', $category)
-                           ->first();
-
-        $products = $products->paginate($limit);
-
-        $properties = Property::with(['subProperties' => function ($query) use ($category, $products) {
-        }])
+        $products   = $products->paginate($limit);
+        $properties = Property::with('subProperties')
+                              ->where('category_id', $category)
                               ->get();
         if ($request->ajax()) {
             return response()->json([
-                'check'          => $request->all(),
-                'products_count' => $count,
-                'view'           => view('products', [
+                'check'      => $request->all(),
+                'view'       => view('products', [
                     'products'     => $products,
                     'properties'   => $properties,
                     'prices'       => $prices,
                     'categoryName' => $categoryName,
                 ])->render(),
-                'pagination'     => view('partials.pagination', ['products' => $products])->render(),
+                'pagination' => view('partials.pagination', ['products' => $products])->render(),
             ]);
         }
 
 //        dd($products);
         return view('category', [
-            'products'       => $products,
-            'products_count' => $count,
-            'categories'     => Category::all(),
-            'properties'     => $properties,
-            'prices'         => $prices,
-            'categoryName'   => $categoryName,
+            'products'     => $products,
+            'categories'   => Category::all(),
+            'properties'   => $properties,
+            'prices'       => $prices,
+            'categoryName' => $categoryName,
         ]);
     }
 
@@ -142,6 +139,16 @@ class ProductController extends Controller
             'promo_price' => $productRequest->promo_price,
             'permalink'   => self::generatePermanlink($productRequest->title),
         ]);
+
+        $productSubProperties = [];
+        foreach ($productRequest->sub_properties as $item) {
+            $productSubProperties[] = [
+                'product_id'     => $product->id,
+                'subproperty_id' => $item,
+            ];
+        }
+
+        ProductSubProperties::insert($productSubProperties);
 
         return response()->json(['url' => route('products.edit', ['product' => $product])]);
     }

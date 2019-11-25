@@ -52,7 +52,7 @@ class CategoryController extends Controller
         $cat->save();
 
         foreach ($category->property_name as $key => $property) {
-            if ($property) {
+            if ($property && self::haveSubProperties($category->sub_property[$key])) {
                 $property = Property::create([
                     'name'        => $property,
                     'category_id' => $cat->id,
@@ -72,6 +72,18 @@ class CategoryController extends Controller
                 SubProperty::insert($data);
             }
         }
+    }
+
+    public static function haveSubProperties(string $subProperties): bool
+    {
+        $subProperties = explode(PHP_EOL, $subProperties);
+        foreach ($subProperties as $subProperty) {
+            if (trim($subProperty) != '') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -182,7 +194,6 @@ class CategoryController extends Controller
                               ->where('category_id', $category->id)
                               ->get();
 
-//        return response()->json()
-        return view('admin.products.properties', compact('properties'))->render();
+        return view('admin.products.layouts.properties', compact('properties'))->render();
     }
 }

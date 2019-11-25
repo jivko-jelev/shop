@@ -128,7 +128,7 @@
                         <h4 class="modal-title">Снимки</h4>
                     </div>
                     <div class="modal-body">
-                        <select id="selectable">
+                        <select id="picture-selectable">
                         </select>
                     </div>
                     <div class="modal-footer">
@@ -153,7 +153,7 @@
                         <h4 class="modal-title">Снимки</h4>
                     </div>
                     <div class="modal-body">
-                        <select id="selectables" multiple="multiple">
+                        <select id="pictures-selectable" multiple="multiple">
                         </select>
                     </div>
                     <div class="modal-footer">
@@ -229,10 +229,10 @@
             });
         });
 
-        function productPicture(majorButton, selectable, pictureModal, productPicture, pictureId, picture) {
-            let reloadPictures = function (selectable, pictureModal, productPicture, pictureId) {
+        function productPicture(element) {
+            let reloadPictures = function () {
                 let map = [];
-                $(pictureId + ' input').each(function () {
+                pictureId.find('input').each(function () {
                     map.push($(this).val());
                 });
                 $.ajax({
@@ -268,30 +268,30 @@
                     },
                 });
             };
-            let initModal      = function (majorButton, selectable, pictureModal, productPicture, pictureId, picture) {
-                $(majorButton).click(function (e) {
-                    reloadPictures(selectable, pictureModal, productPicture, pictureId);
-                    $(`${pictureModal} [name="save"]`).click(function (e) {
-                        $(pictureModal).modal('hide');
-                        if ($(`${selectable} option:selected`).data('img-src')) {
-                            $(productPicture).html('');
-                            $(pictureId).html('');
-                            $(selectable + " > option:selected").each(function () {
-                                $(productPicture).append('<img src="' + $(this).data('img-src') + '">');
-                                $(pictureId).append('<input type="hidden" name="picture_id[]" value="' + $(this).val() + '">');
+            let initModal      = function () {
+                majorButton.click(function (e) {
+                    reloadPictures();
+                    pictureModal.find('button[name="save"]').click(function (e) {
+                        pictureModal.modal('hide');
+                        if (selectable.val()) {
+                            productPicture.html('');
+                            pictureId.html('');
+                            selectable.find('option:selected').each(function () {
+                                productPicture.append(`<img src="${$(this).data('img-src')}">`);
+                                pictureId.append(`<input type="hidden" name="picture_id[]" value="${$(this).val()}">`);
                             });
                         } else {
-                            $(productPicture).attr('src', '');
+                            productPicture.html('');
                         }
                     });
 
-                    $(pictureModal).find('.product-picture-form').submit(function (e) {
+                    pictureModal.find('.product-picture-form').submit(function (e) {
                         e.preventDefault();
                         $('#loading').show();
                         let form_data = new FormData();
-                        let ins       = document.getElementById(picture).files.length;
+                        let ins       = document.getElementById(picture.attr('id')).files.length;
                         for (let x = 0; x < ins; x++) {
-                            form_data.append('picture[]', document.getElementById(picture).files[x]);
+                            form_data.append('picture[]', document.getElementById(picture.attr('id')).files[x]);
                         }
                         $.ajax({
                             url: '{{ route('pictures.store') }}',
@@ -302,11 +302,10 @@
                             contentType: false,
                             processData: false,
                             success: function (data) {
-                                $('#pictures').val('');
-                                reloadPictures(selectable, pictureModal, productPicture);
+                                reloadPictures();
                                 showSuccessMessage('Снимките бяха качени успешно!');
                                 $('#loading').hide();
-                                let picturesNum = $(`${selectable}`).find('option').length - 1;
+                                let picturesNum = selectable.find('option').length - 1;
                                 $('.pictures-num').html(`Снимки: ${picturesNum}`);
                             },
                             error: function (data) {
@@ -318,18 +317,21 @@
                 });
             }
 
-            initModal(majorButton, selectable, pictureModal, productPicture, pictureId, picture);
+            let majorButton    = $(`#select-${element}-button`);
+            let selectable     = $(`#${element}-selectable`);
+            let pictureModal   = $(`#select-${element}-modal`);
+            let productPicture = $(`#product-${element}`);
+            let pictureId      = $(`#${element}-id`);
+            let picture        = $(`#product-${element}-pictures`);
+            $(`#remove-product-${element}`).click(function () {
+                productPicture.html('');
+            });
+
+            initModal();
         };
 
-        let a = productPicture('#select-picture-button', '#selectable', '#select-picture-modal', '#product-picture', '#picture-id', 'product-picture-pictures');
-        $('#remove-product-picture').click(function () {
-            $('#product-picture').html('');
-        });
-
-        let b = productPicture('#select-pictures-button', '#selectables', '#select-pictures-modal', '#product-pictures', '#pictures-id', 'product-pictures-pictures');
-        $('#remove-product-pictures').click(function () {
-            $('#product-pictures').html('');
-        });
+        let picture        = productPicture('picture');
+        let productGallery = productPicture('pictures');
 
         $('#category').change(function () {
             let val = $(this).val();

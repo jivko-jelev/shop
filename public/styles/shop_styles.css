@@ -2405,3 +2405,7 @@ select option {
 .pagination{
     margin-top: 100px;
 }
+
+.form-check-label {
+    padding-left: .5rem;
+}

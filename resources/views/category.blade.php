@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/OwlCarousel2-2.2.1/owl.theme.default.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/OwlCarousel2-2.2.1/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/jquery-ui-1.12.1.custom/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ URL::to('plugins/iCheck/all.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('styles/shop_styles.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('styles/responsive.css') }}">
 </head>
@@ -394,11 +395,11 @@
                                     <div class="sidebar_subtitle brands_subtitle">{{ $prop->name }}</div>
                                     <ul class="brands_list">
                                         @foreach ($prop->subProperties as $subProperty)
-                                            <div class="form-check">
+                                            <li>
                                                 <input class="form-check-input" type="checkbox" value="{{ $subProperty->id }}"
                                                        id="check[{{ $subProperty->id }}]" name="check[{{ $subProperty->id }}]">
                                                 <label class="form-check-label" for="check[{{ $subProperty->id }}]">{{ $subProperty->name }}</label>
-                                            </div>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -420,7 +421,7 @@
                     <div class="shop_content">
                         <div class="shop_bar clearfix">
                             <div class="shop_product_count">
-                                <span id="num-products">{{ $products_count }}</span> {{ $products_count > 1 ? 'намерени продукта' : 'намерен продукт' }}
+                                <span id="num-products">{{ $products->total()  }}</span> {{ $products->total() > 1 ? 'намерени продукта' : 'намерен продукт' }}
                             </div>
                             <div class="shop_sorting">
                                 <span>Подреди по:</span>
@@ -657,6 +658,7 @@
 </div>
 
 <script src="{{ URL::to('bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ URL::to('plugins/iCheck/icheck.min.js') }}"></script>
 <script src="{{ URL::to('styles/bootstrap4/popper.js') }}"></script>
 <script src="{{ URL::to('styles/bootstrap4/bootstrap.min.js') }}"></script>
 <script src="{{ URL::to('plugins/greensock/TweenMax.min.js') }}"></script>
@@ -744,7 +746,12 @@
         })
     }
 
-    $('.form-check-input').change(function () {
+    $('input[type="checkbox"]').iCheck({
+        checkboxClass: 'icheckbox_minimal-blue',
+        radioClass: 'iradio_minimal-blue'
+    });
+
+    $('.form-check-input').on('ifChanged', function () {
         $('#page').val(1);
         history.pushState(undefined, "", window.location.href.split('/')[window.location.href.split('/').length - 1].split('?')[0]);
         reloadProducts();

@@ -4,8 +4,10 @@
             <h3>{{ $property->name }}</h3>
             @foreach($property->subProperties as $subPropertyKey => $subProperty)
                 <div class="w-100">
-                    <input type="checkbox" id="minimal-checkbox-{{ $subPropertyKey }}" class="icheckbox_minimal-blue">
-                    <label for="minimal-checkbox-{{ $subPropertyKey }}">&nbsp;{{ $subProperty->name }}</label>
+                    <input type="radio" id="minimal-checkbox-{{ $subProperty->id }}" class="icheckbox_minimal-blue"
+                           name="sub_properties[{{ $key }}]"
+                           value="{{ $subProperty->id }}">
+                    <label for="minimal-checkbox-{{ $subProperty->id }}">&nbsp;{{ $subProperty->name }}</label>
                 </div>
             @endforeach
         </div>
@@ -13,7 +15,7 @@
 </div>
 
 <script>
-    $('input[type="checkbox"]').iCheck({
+    $('input[type="checkbox"], input[type="radio"]').iCheck({
         checkboxClass: 'icheckbox_minimal-blue',
         radioClass: 'iradio_minimal-blue'
     })
