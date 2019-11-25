@@ -9,7 +9,6 @@ use App\ProductSubProperties;
 use App\Property;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\URL;
 
 class ProductController extends Controller
 {
@@ -21,14 +20,38 @@ class ProductController extends Controller
             abort(404);
         }
 
+        $properties = Property::with('subProperties')
+                              ->where('category_id', $category)
+                              ->get();
+
         $products = Product::with(['picture' => function ($query) {
             $query->with('thumbnails');
-        }, 'subProperties',
+        },
         ])
-                           ->when($request->get('check'), function ($query) use ($request) {
-                               $query->whereHas('subProperties', function ($query) use ($request) {
-                                   $query->whereIn('subproperty_id', $request->get('check'));
+                           ->select('products.*')
+                           ->when($request->get('check'), function ($query) use ($request, $category) {
+                               $props = Property::select('properties.id')
+                                                ->selectRaw('sub_properties.id as sub_id')
+//                                                ->distinct('properties.id')
+                                                ->where('category_id', 1)
+                                                ->join('sub_properties', 'sub_properties.property_id', 'properties.id')
+                                                ->whereIn('sub_properties.id', $request->get('check'))
+                                                ->get();
+
+                               $query->join('product_sub_properties', function ($join) use ($request, $category, $props) {
+                                   $join->on('product_sub_properties.product_id', 'products.id')
+                                        ->where(function ($query) use ($request, $category, $props) {
+                                            foreach ($props as $prop) {
+                                                $query->where('product_sub_properties.subproperty_id', $request->get('check'));
+                                            }
+                                        });
                                });
+
+//                               $query->join('sub_properties', 'sub_properties.property_id', '=', 'properties.id')
+//                                     ->whereIn('sub_properties.id', $request->get('check'));
+//                               $query->whereHas('subProperties', function ($query) use ($request) {
+//                                   $query->whereIn('subproperty_id', $request->get('check'));
+//                               });
                            })
                            ->whereHas('category', function ($query) use ($category) {
                                $query->where('id', $category);
@@ -39,7 +62,7 @@ class ProductController extends Controller
             if (($order[0] == 'name' || $order[0] == 'price') && ($order[1] == 'asc' || $order[1] == 'desc')) {
                 $products = $products->orderBy($order[0], $order[1]);
             } else {
-                  // Най-високо оценени
+                // Най-високо оценени
 //                $products = $products->orderBy(explode('-', )[0], explode('-', $request->get('order-by'))[1]);
             }
         } else {
@@ -52,10 +75,7 @@ class ProductController extends Controller
                          ->where('category_id', $category)
                          ->first();
 
-        $products   = $products->paginate($limit);
-        $properties = Property::with('subProperties')
-                              ->where('category_id', $category)
-                              ->get();
+        $products = $products->paginate($limit);
         if ($request->ajax()) {
             return response()->json([
                 'check'      => $request->all(),

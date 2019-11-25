@@ -12,6 +12,7 @@
 */
 
 use App\Category;
+use App\Product;
 use App\Property;
 
 Route::get('category/{category}', 'ProductController@index')->name('products.index');
@@ -62,8 +63,29 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-    dd( Property::with('subProperties')
-                          ->where('category_id', 1)
-                          ->get());
+    $prop = Property::select('properties.id')
+                    ->selectRaw('sub_properties.id as sub_id')
+                    ->where('category_id', 1)
+                    ->join('sub_properties', 'sub_properties.property_id', 'properties.id')
+                    ->whereIn('sub_properties.id', [1, 5, 6, 7])
+                    ->get()
+                    ->all();
+
+    dump($prop);
+
+    foreach ($prop as $p) {
+        foreach ($p as $s) {
+            dump($s);
+        }
+    }
+
+//    $prop = Property::select('properties.id', 'sub_properties.name')
+//                    ->join('sub_properties', 'sub_properties.property_id', 'properties.id')
+//                    ->where('category_id', 1)
+//                    ->whereIn('sub_properties.id', [1, 2,3,4, 6,7,8,9])
+//                    ->get();
+//
+
+//    dump($prop);
 
 });
