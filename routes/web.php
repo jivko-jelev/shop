@@ -63,20 +63,20 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-    $prop = Property::select('properties.id')
-                    ->selectRaw('sub_properties.id as sub_id')
-                    ->where('category_id', 1)
-                    ->join('sub_properties', 'sub_properties.property_id', 'properties.id')
-                    ->whereIn('sub_properties.id', [1, 5, 6, 7])
-                    ->get()
-                    ->all();
+    $mem   = [1, 4, 7];
+    $props = Property::select('properties.id')
+                     ->selectRaw('sub_properties.id as sub_id')
+                     ->where('category_id', 1)
+                     ->join('sub_properties', 'sub_properties.property_id', 'properties.id')
+                     ->whereIn('sub_properties.id', $mem)
+                     ->get();
 
-    dump($prop);
-
-    foreach ($prop as $p) {
-        foreach ($p as $s) {
+    foreach ($props->pluck('id')->unique() as $p) {
+        foreach ($props as $s) {
+            if($s->id==$p)
             dump($s);
         }
+        echo '==============';
     }
 
 //    $prop = Property::select('properties.id', 'sub_properties.name')

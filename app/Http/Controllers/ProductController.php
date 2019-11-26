@@ -29,20 +29,27 @@ class ProductController extends Controller
         },
         ])
                            ->select('products.*')
+                           ->distinct('products.id')
                            ->when($request->get('check'), function ($query) use ($request, $category) {
                                $props = Property::select('properties.id')
                                                 ->selectRaw('sub_properties.id as sub_id')
-//                                                ->distinct('properties.id')
                                                 ->where('category_id', 1)
                                                 ->join('sub_properties', 'sub_properties.property_id', 'properties.id')
                                                 ->whereIn('sub_properties.id', $request->get('check'))
                                                 ->get();
 
+
                                $query->join('product_sub_properties', function ($join) use ($request, $category, $props) {
                                    $join->on('product_sub_properties.product_id', 'products.id')
                                         ->where(function ($query) use ($request, $category, $props) {
-                                            foreach ($props as $prop) {
-                                                $query->where('product_sub_properties.subproperty_id', $request->get('check'));
+                                            foreach ($props->pluck('id')->unique() as $p) {
+                                                $query->orWhere(function ($query) use ($request, $category, $props, $p) {
+                                                    foreach ($props as $s) {
+                                                        if ($s->id == $p) {
+                                                            $query->orWhere('product_sub_properties.subproperty_id', $s->sub_id);
+                                                        }
+                                                    }
+                                                });
                                             }
                                         });
                                });
