@@ -63,29 +63,22 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-    $mem   = [1, 4, 7];
-    $props = Property::select('properties.id')
-                     ->selectRaw('sub_properties.id as sub_id')
-                     ->where('category_id', 1)
-                     ->join('sub_properties', 'sub_properties.property_id', 'properties.id')
-                     ->whereIn('sub_properties.id', $mem)
-                     ->get();
 
-    foreach ($props->pluck('id')->unique() as $p) {
-        foreach ($props as $s) {
-            if($s->id==$p)
-            dump($s);
-        }
-        echo '==============';
-    }
-
-//    $prop = Property::select('properties.id', 'sub_properties.name')
-//                    ->join('sub_properties', 'sub_properties.property_id', 'properties.id')
-//                    ->where('category_id', 1)
-//                    ->whereIn('sub_properties.id', [1, 2,3,4, 6,7,8,9])
-//                    ->get();
-//
-
-//    dump($prop);
-
+    $a = Product::with('subProperties')
+                ->whereHas('subProperties', function ($query) {
+                    $query->where(function ($query) {
+                        $query->orWhere('subproperty_id', 1)
+                              ->orWhere('subproperty_id', 3);
+                    });
+                })
+                ->whereHas('subProperties', function ($query) {
+                    $query->where(function ($query) {
+                        $query->orWhere('subproperty_id', 5)
+                              ->orWhere('subproperty_id', 6);
+                    });
+                })
+                ->get()
+                ->all();
+    dump($a);
+//    dump($a[0]->subProperties);
 });
