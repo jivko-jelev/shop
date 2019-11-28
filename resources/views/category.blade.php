@@ -425,7 +425,7 @@
                                     <li>
                                         <span class="sorting_text">цена възх.<i class="fas fa-chevron-down"></i></span>
                                         <ul>
-                                            <li class="shop_sorting_button" data-sort-by='rating'>най-високо оценени</li>
+                                            <li class="shop_sorting_button" data-sort-by='promo'>промоции</li>
                                             <li class="shop_sorting_button" data-sort-by='name-asc'>име възх.</li>
                                             <li class="shop_sorting_button" data-sort-by='name-desc'>име низх.</li>
                                             <li class="shop_sorting_button" data-sort-by='order_price-asc'>цена възх.</li>

@@ -54,9 +54,9 @@ class ProductController extends Controller
                 $order = explode('-', $request->get('order-by'));
                 if (($order[0] == 'name' || $order[0] == 'order_price') && ($order[1] == 'asc' || $order[1] == 'desc')) {
                     $products = $products->orderBy($order[0], $order[1]);
-                } else {
-                    // Най-високо оценени
-//                $products = $products->orderBy(explode('-', )[0], explode('-', $request->get('order-by'))[1]);
+                } else{
+                    // Промоции
+                $products = $products->orderByRaw('IF(promo_price IS NULL, 1, 0), promo_price asc, created_at desc');
                 }
             } else {
                 $products = $products->orderBy('order_price');
