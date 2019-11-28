@@ -9,6 +9,7 @@ use App\ProductSubProperties;
 use App\Property;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -29,7 +30,9 @@ class ProductController extends Controller
         }, 'subProperties',
         ])
                            ->select('products.*')
-                           ->selectRaw('IFNULL(promo_price, price) as order_price')
+                           ->selectRaw('IFNULL(promo_price, price) AS order_price')
+                           ->whereRaw('IFNULL(`promo_price`, `price`) >=' . ($request->get('min-price') ?? 0))
+                           ->whereRaw('IFNULL(promo_price, `price`) <=' . ($request->get('max-price') ?? PHP_INT_MAX))
                            ->when($request->get('check'), function ($query) use ($request, $category) {
                                foreach ($request->get('check') as $subProperties) {
                                    $query->whereHas('subProperties', function ($query) use ($subProperties) {
@@ -59,7 +62,7 @@ class ProductController extends Controller
 
         $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 20);
 
-        $prices = Product::selectRaw('min(price) as min_price, max(price) as max_price')
+        $prices = Product::selectRaw('MIN(price) AS min_price, MAX(IFNULL(promo_price, price)) as max_price')
                          ->where('category_id', $category)
                          ->first();
 

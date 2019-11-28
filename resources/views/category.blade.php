@@ -409,7 +409,7 @@
                                 </div>
                             @endforeach
                             <input type="hidden" name="page" id="page" value="{{ $products->currentPage() }}">
-                            <input type="hidden" name="order-by" id="order-by" value="price-asc">
+                            <input type="hidden" name="order-by" id="order-by" value="order_price-asc">
                             <input type="hidden" name="per-page" id="per-page" value="20">
                             <input type="hidden" name="min_price" id="min-price" value="{{ round($prices->min_price) }}">
                             <input type="hidden" name="max_price" id="max-price" value="{{ round($prices->max_price) }}">
@@ -706,14 +706,14 @@
     productStyles();
 
 
-    function initPriceSlider(min_price, max_price, selected_min_price, selected_max_price) {
+    function initPriceSlider() {
         if ($("#slider-range").length) {
             $("#slider-range").slider(
                 {
                     range: true,
-                    min: 0,
-                    max: 1000,
-                    values: [0, 500],
+                    min: 100,
+                    max: 100,
+                    values: [100,100],
                     slide: function (event, ui) {
                         $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
                     }
@@ -721,21 +721,9 @@
 
             $("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
             $('.ui-slider-handle').on('mouseup', function () {
-                $('.product_grid').isotope({
-                    filter: function () {
-                        var priceRange = $('#amount').val();
-                        var priceMin   = parseFloat(priceRange.split('-')[0].replace('$', ''));
-                        var priceMax   = parseFloat(priceRange.split('-')[1].replace('$', ''));
-                        var itemPrice  = $(this).find('.product_price').clone().children().remove().end().text().replace('$', '');
-
-                        return (itemPrice > priceMin) && (itemPrice < priceMax);
-                    },
-                    animationOptions: {
-                        duration: 750,
-                        easing: 'linear',
-                        queue: false
-                    }
-                });
+                $('#min-price').val(100);
+                $('#max-price').val(100);
+                reloadProducts();
             });
         }
     }
@@ -749,7 +737,6 @@
                 $('#num-products').html(data.products.total);
                 $('.product_grid').html(`${data.view}`);
                 productStyles();
-                initPriceSlider({{ $prices->min_price }}, {{ $prices->max_price }});
                 $('#pagination').html(data.pagination);
                 $('.pagination li a').click(function (e) {
                     e.preventDefault();
@@ -762,6 +749,9 @@
         })
     }
 
+    initPriceSlider(100,2000);
+
+
     $('input[type="checkbox"]').iCheck({
         checkboxClass: 'icheckbox_minimal-blue',
         radioClass: 'iradio_minimal-blue'
@@ -773,7 +763,7 @@
         reloadProducts();
     });
 
-    initPriceSlider({{ $prices->min_price }}, {{ $prices->max_price }}, {{ $prices->min_price }}, {{ $prices->max_price }});
+{{--    initPriceSlider({{ $prices->min_price }}, {{ $prices->max_price }}, {{ $prices->min_price }}, {{ $prices->max_price }});--}}
 
     function paginationClick(element) {
         $('#page').val(element.data('page'));
