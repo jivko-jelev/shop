@@ -27,15 +27,16 @@ class CategoryRequest extends FormRequest
         return [
             'title' => [
                 'required',
-                Rule::unique('categories')->where(function ($query) {
-                    return $query->where('title', $this->request->get('title'))
-                                 ->where('parent_id', $this->request->get('parent_id'));
-                })->ignore($this->category),],
+                Rule::unique('categories')
+                    ->where(function ($query) {
+                        return $query->where('title', $this->request->get('title'))
+                                     ->where('parent_id', $this->request->get('parent_id'));
+                    })->ignore($this->category),],
             'alias' => [
                 'required',
-                Rule::unique('categories')->where(function ($query) {
-                    return $query->where('alias', $this->request->get('alias'));
-                })->ignore($this->category),],
+                Rule::unique('categories')
+                    ->where('alias', $this->request->get('alias'))
+                    ->ignore($this->category),],
         ];
     }
 

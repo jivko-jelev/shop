@@ -16,78 +16,86 @@ class ProductController extends Controller
     public function index($categoryName, Request $request)
     {
         try {
-            $category = Category::where('alias', $categoryName)->first()->id;
+            $categories = Category::all();
+            $category = $categories->where('alias', $categoryName)->first()->id;
+
+            $properties = Property::with('subProperties')
+                                  ->where('category_id', $category)
+                                  ->get();
+
+            $products = Product::with(['picture' => function ($query) {
+                $query->with('thumbnails');
+            }, 'subProperties',
+            ])
+                               ->select('products.*')
+                               ->selectRaw('IFNULL(promo_price, price) AS order_price')
+                               ->when($request->get('min_price'), function($query) use ($request){
+                                   $query->whereRaw("IFNULL(`promo_price`, `price`) >={$request->get('min_price')}");
+                               }
+                               )
+                               ->when($request->get('max_price'), function($query) use ($request){
+                                   $query->whereRaw("IFNULL(`promo_price`, `price`) <={$request->get('max_price')}");
+                               }
+                               )
+                               ->when($request->get('check'), function ($query) use ($request, $category) {
+                                   foreach ($request->get('check') as $subProperties) {
+                                       $query->whereHas('subProperties', function ($query) use ($subProperties) {
+                                           $query->where(function ($query) use ($subProperties) {
+                                               foreach ($subProperties as $subProperty) {
+                                                   $query->orWhere('subproperty_id', $subProperty);
+                                               }
+                                           });
+                                       });
+                                   }
+                               })
+                               ->whereHas('category', function ($query) use ($category) {
+                                   $query->where('id', $category);
+                               });
+
+            if ($request->get('order-by')) {
+                $order = explode('-', $request->get('order-by'));
+                if (($order[0] == 'name' || $order[0] == 'order_price') && ($order[1] == 'asc' || $order[1] == 'desc')) {
+                    $products = $products->orderBy($order[0], $order[1]);
+                } else {
+                    // Най-високо оценени
+//                $products = $products->orderBy(explode('-', )[0], explode('-', $request->get('order-by'))[1]);
+                }
+            } else {
+                $products = $products->orderBy('order_price');
+            }
+
+            $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 20);
+
+            $prices = Product::selectRaw('MIN(price) AS min_price, MAX(IFNULL(promo_price, price)) as max_price')
+                             ->where('category_id', $category)
+                             ->first();
+
+            $products = $products->paginate($limit);
+            if ($request->ajax()) {
+                return response()->json([
+                    'check'      => $request->all(),
+                    'view'       => view('products', [
+                        'products'     => $products,
+                        'properties'   => $properties,
+                        'prices'       => $prices,
+                        'categoryName' => $categoryName,
+                    ])->render(),
+                    'products'   => $products,
+                    'pagination' => view('partials.pagination', ['products' => $products])->render(),
+                ]);
+            }
+
+            return view('category', [
+                'products'     => $products,
+                'categories'   => Category::all(),
+                'properties'   => $properties,
+                'prices'       => $prices,
+                'categoryName' => $categoryName,
+            ]);
         } catch (\Exception $e) {
             abort(404);
         }
 
-        $properties = Property::with('subProperties')
-                              ->where('category_id', $category)
-                              ->get();
-
-        $products = Product::with(['picture' => function ($query) {
-            $query->with('thumbnails');
-        }, 'subProperties',
-        ])
-                           ->select('products.*')
-                           ->selectRaw('IFNULL(promo_price, price) AS order_price')
-                           ->whereRaw('IFNULL(`promo_price`, `price`) >=' . ($request->get('min-price') ?? 0))
-                           ->whereRaw('IFNULL(promo_price, `price`) <=' . ($request->get('max-price') ?? PHP_INT_MAX))
-                           ->when($request->get('check'), function ($query) use ($request, $category) {
-                               foreach ($request->get('check') as $subProperties) {
-                                   $query->whereHas('subProperties', function ($query) use ($subProperties) {
-                                       $query->where(function ($query) use ($subProperties) {
-                                           foreach ($subProperties as $subProperty) {
-                                               $query->orWhere('subproperty_id', $subProperty);
-                                           }
-                                       });
-                                   });
-                               }
-                           })
-                           ->whereHas('category', function ($query) use ($category) {
-                               $query->where('id', $category);
-                           });
-
-        if ($request->get('order-by')) {
-            $order = explode('-', $request->get('order-by'));
-            if (($order[0] == 'name' || $order[0] == 'order_price') && ($order[1] == 'asc' || $order[1] == 'desc')) {
-                $products = $products->orderBy($order[0], $order[1]);
-            } else {
-                // Най-високо оценени
-//                $products = $products->orderBy(explode('-', )[0], explode('-', $request->get('order-by'))[1]);
-            }
-        } else {
-            $products = $products->orderBy('order_price');
-        }
-
-        $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 20);
-
-        $prices = Product::selectRaw('MIN(price) AS min_price, MAX(IFNULL(promo_price, price)) as max_price')
-                         ->where('category_id', $category)
-                         ->first();
-
-        $products = $products->paginate($limit);
-        if ($request->ajax()) {
-            return response()->json([
-                'check'      => $request->all(),
-                'view'       => view('products', [
-                    'products'     => $products,
-                    'properties'   => $properties,
-                    'prices'       => $prices,
-                    'categoryName' => $categoryName,
-                ])->render(),
-                'products'   => $products,
-                'pagination' => view('partials.pagination', ['products' => $products])->render(),
-            ]);
-        }
-
-        return view('category', [
-            'products'     => $products,
-            'categories'   => Category::all(),
-            'properties'   => $properties,
-            'prices'       => $prices,
-            'categoryName' => $categoryName,
-        ]);
     }
 
     /**

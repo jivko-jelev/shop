@@ -46,7 +46,7 @@ class CategoryController extends Controller
     {
         $cat             = new Category;
         $cat->title      = $category->title;
-        $cat->alias      = $category->alias;
+        $cat->alias      = mb_strtolower($category->alias);
         $cat->parent_id  = $category->parent_id;
         $cat->updated_at = null;
         $cat->save();
