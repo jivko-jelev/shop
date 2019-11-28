@@ -103,7 +103,7 @@
                                             </div>
                                         </div>
                                         <button type="submit" class="header_search_button trans_300" value="Submit"><img
-                                                src="{{ URL::to('images/search.png') }}" alt=""></button>
+                                                    src="{{ URL::to('images/search.png') }}" alt=""></button>
                                     </form>
                                 </div>
                             </div>
@@ -415,9 +415,9 @@
                         <div class="shop_bar clearfix">
                             <div class="shop_product_count">
                                 <span
-                                    id="num-products">{{ $products->total()  }}</span>
+                                        id="num-products">{{ $products->total()  }}</span>
                                 <span
-                                    id="num-products-text">{{ $products->total() != 0  ? ' намерени продукта' : ' намерен продукт' }}</span>
+                                        id="num-products-text">{{ $products->total() != 0  ? ' намерени продукта' : ' намерен продукт' }}</span>
                             </div>
                             <div class="shop_sorting">
                                 <span>Подреди по:</span>
@@ -469,50 +469,50 @@
                                 <div class="owl-carousel owl-theme brands_slider">
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                src="{{ URL::to('images/brands_1.jpg') }}"
-                                                alt="">
+                                                    src="{{ URL::to('images/brands_1.jpg') }}"
+                                                    alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                src="{{ URL::to('images/brands_2.jpg') }}"
-                                                alt="">
+                                                    src="{{ URL::to('images/brands_2.jpg') }}"
+                                                    alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                src="{{ URL::to('images/brands_3.jpg') }}"
-                                                alt="">
+                                                    src="{{ URL::to('images/brands_3.jpg') }}"
+                                                    alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                src="{{ URL::to('images/brands_4.jpg') }}"
-                                                alt="">
+                                                    src="{{ URL::to('images/brands_4.jpg') }}"
+                                                    alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                src="{{ URL::to('images/brands_5.jpg') }}"
-                                                alt="">
+                                                    src="{{ URL::to('images/brands_5.jpg') }}"
+                                                    alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                src="{{ URL::to('images/brands_6.jpg') }}"
-                                                alt="">
+                                                    src="{{ URL::to('images/brands_6.jpg') }}"
+                                                    alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                src="{{ URL::to('images/brands_7.jpg') }}"
-                                                alt="">
+                                                    src="{{ URL::to('images/brands_7.jpg') }}"
+                                                    alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                src="{{ URL::to('images/brands_8.jpg') }}"
-                                                alt="">
+                                                    src="{{ URL::to('images/brands_8.jpg') }}"
+                                                    alt="">
                                         </div>
                                     </div>
 
@@ -535,7 +535,7 @@
                     <div class="row">
                         <div class="col">
                             <div
-                                class="newsletter_container d-flex flex-lg-row flex-column align-items-lg-center align-items-center justify-content-lg-start justify-content-center">
+                                    class="newsletter_container d-flex flex-lg-row flex-column align-items-lg-center align-items-center justify-content-lg-start justify-content-center">
                                 <div class="newsletter_title_container">
                                     <div class="newsletter_icon"><img src="{{ URL::to('images/send.png') }}" alt=""></div>
                                     <div class="newsletter_title">Sign up for Newsletter</div>
@@ -644,7 +644,7 @@
                                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                     Copyright &copy;<script>document.write(new Date().getFullYear());</script>
                                     All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a
-                                        href="https://colorlib.com" target="_blank">Colorlib</a>
+                                            href="https://colorlib.com" target="_blank">Colorlib</a>
                                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                 </div>
                                 <div class="logos ml-sm-auto">
@@ -740,9 +740,6 @@
             }
         })
     }
-
-    initPriceSlider(100, 2000);
-
 
     $('input[type="checkbox"]').iCheck({
         checkboxClass: 'icheckbox_minimal-blue',

@@ -17,7 +17,7 @@ class ProductController extends Controller
     {
         try {
             $categories = Category::all();
-            $category = $categories->where('alias', $categoryName)->first()->id;
+            $category   = $categories->where('alias', $categoryName)->first()->id;
 
             $properties = Property::with('subProperties')
                                   ->where('category_id', $category)
@@ -29,14 +29,12 @@ class ProductController extends Controller
             ])
                                ->select('products.*')
                                ->selectRaw('IFNULL(promo_price, price) AS order_price')
-                               ->when($request->get('min_price'), function($query) use ($request){
-                                   $query->whereRaw("IFNULL(`promo_price`, `price`) >={$request->get('min_price')}");
-                               }
-                               )
-                               ->when($request->get('max_price'), function($query) use ($request){
+                               ->when($request->get('min_price'), function ($query) use ($request) {
+                                   $query->where('price', '>=', $request->get('min_price'));
+                               })
+                               ->when($request->get('max_price'), function ($query) use ($request) {
                                    $query->whereRaw("IFNULL(`promo_price`, `price`) <={$request->get('max_price')}");
-                               }
-                               )
+                               })
                                ->when($request->get('check'), function ($query) use ($request, $category) {
                                    foreach ($request->get('check') as $subProperties) {
                                        $query->whereHas('subProperties', function ($query) use ($subProperties) {
@@ -159,15 +157,19 @@ class ProductController extends Controller
             'permalink'   => self::generatePermanlink($productRequest->title),
         ]);
 
-        $productSubProperties = [];
-        foreach ($productRequest->sub_properties as $item) {
-            $productSubProperties[] = [
-                'product_id'     => $product->id,
-                'subproperty_id' => $item,
-            ];
+        if ($productRequest->sub_properties) {
+            $productSubProperties = [];
+            foreach ($productRequest->sub_properties as $item) {
+                $productSubProperties[] = [
+                    'product_id'     => $product->id,
+                    'subproperty_id' => $item,
+                ];
+            }
+
+            ProductSubProperties::insert($productSubProperties);
         }
 
-        ProductSubProperties::insert($productSubProperties);
+        return redirect()->route('products.edit', [$product]);
 
         return response()->json(['url' => route('products.edit', ['product' => $product])]);
     }
