@@ -372,24 +372,13 @@
                     <!-- Shop Sidebar -->
                     <div class="shop_sidebar">
                         <div class="sidebar_section filter_by_section">
-                            <div class="sidebar_title">Filter By</div>
-                            <div class="sidebar_subtitle">Price</div>
+                            <div class="sidebar_title">Филтър</div>
+                            <div class="sidebar_subtitle">Цена</div>
                             <div class="filter_price">
                                 <div id="slider-range" class="slider_range"></div>
                                 <p>Диапазон: </p>
                                 <p><input type="text" id="amount" class="amount" readonly style="border:0; font-weight:bold;"></p>
                             </div>
-                        </div>
-                        <div class="sidebar_section">
-                            <div class="sidebar_subtitle color_subtitle">Color</div>
-                            <ul class="colors_list">
-                                <li class="color"><a href="#" style="background: #b19c83;"></a></li>
-                                <li class="color"><a href="#" style="background: #000000;"></a></li>
-                                <li class="color"><a href="#" style="background: #999999;"></a></li>
-                                <li class="color"><a href="#" style="background: #0e8ce4;"></a></li>
-                                <li class="color"><a href="#" style="background: #df3b3b;"></a></li>
-                                <li class="color"><a href="#" style="background: #ffffff; border: solid 1px #e1e1e1;"></a></li>
-                            </ul>
                         </div>
                         <form action="" id="properties">
                             @foreach ($properties as $prop)
@@ -427,7 +416,8 @@
                             <div class="shop_product_count">
                                 <span
                                     id="num-products">{{ $products->total()  }}</span>
-                                <span id="num-products-text">{{ $products->total() != 0  ? ' намерени продукта' : ' намерен продукт' }}</span>
+                                <span
+                                    id="num-products-text">{{ $products->total() != 0  ? ' намерени продукта' : ' намерен продукт' }}</span>
                             </div>
                             <div class="shop_sorting">
                                 <span>Подреди по:</span>
@@ -712,18 +702,18 @@
             $("#slider-range").slider(
                 {
                     range: true,
-                    min: 100,
-                    max: 100,
-                    values: [100, 100],
+                    min: {{ $prices->min_price }},
+                    max: {{ $prices->max_price }},
+                    values: [{{ $prices->min_price }}, {{ $prices->max_price }}],
                     slide: function (event, ui) {
-                        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                        $("#amount").val(ui.values[0] + "лв. - " + ui.values[1] + "лв.");
                     }
                 });
 
-            $("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+            $("#amount").val($("#slider-range").slider("values", 0) + "лв. - " + $("#slider-range").slider("values", 1) + "лв.");
             $('.ui-slider-handle').on('mouseup', function () {
-                $('#min-price').val(100);
-                $('#max-price').val(100);
+                $('#min-price').val($('#slider-range').slider('option', 'values')[0]);
+                $('#max-price').val($('#slider-range').slider('option', 'values')[1]);
                 reloadProducts();
             });
         }
@@ -795,7 +785,12 @@
         e.preventDefault();
         paginationClick($(this));
     });
-
+    $(function () {
+        $('#slider-range').slider('option', 'min', {{ $prices->min_price }});
+        $('#slider-range').slider('option', 'max', {{ $prices->max_price }});
+        $('#slider-range').slider('option', 'values', [{{ $prices->min_price }}, {{ $prices->max_price}}]);
+        $("#amount").val($("#slider-range").slider("values", 0) + "лв. - " + $("#slider-range").slider("values", 1) + "лв.");
+    });
 </script>
 </body>
 
