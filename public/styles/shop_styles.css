@@ -2409,3 +2409,7 @@ select option {
 .form-check-label {
     padding-left: .5rem;
 }
+
+#num-products-text{
+    color: #000000;
+}

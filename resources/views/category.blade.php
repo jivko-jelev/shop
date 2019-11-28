@@ -426,7 +426,8 @@
                         <div class="shop_bar clearfix">
                             <div class="shop_product_count">
                                 <span
-                                    id="num-products">{{ $products->total()  }}</span> {{ $products->total() > 1 ? 'намерени продукта' : 'намерен продукт' }}
+                                    id="num-products">{{ $products->total()  }}</span>
+                                <span id="num-products-text">{{ $products->total() != 0  ? ' намерени продукта' : ' намерен продукт' }}</span>
                             </div>
                             <div class="shop_sorting">
                                 <span>Подреди по:</span>
@@ -713,7 +714,7 @@
                     range: true,
                     min: 100,
                     max: 100,
-                    values: [100,100],
+                    values: [100, 100],
                     slide: function (event, ui) {
                         $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
                     }
@@ -735,6 +736,7 @@
             dataType: "json",
             success: function (data) {
                 $('#num-products').html(data.products.total);
+                $('#num-products-text').html(data.products.total != 1 ? ' намерени продукта' : ' намерен продукт');
                 $('.product_grid').html(`${data.view}`);
                 productStyles();
                 $('#pagination').html(data.pagination);
@@ -749,7 +751,7 @@
         })
     }
 
-    initPriceSlider(100,2000);
+    initPriceSlider(100, 2000);
 
 
     $('input[type="checkbox"]').iCheck({
@@ -763,7 +765,7 @@
         reloadProducts();
     });
 
-{{--    initPriceSlider({{ $prices->min_price }}, {{ $prices->max_price }}, {{ $prices->min_price }}, {{ $prices->max_price }});--}}
+    {{--    initPriceSlider({{ $prices->min_price }}, {{ $prices->max_price }}, {{ $prices->min_price }}, {{ $prices->max_price }});--}}
 
     function paginationClick(element) {
         $('#page').val(element.data('page'));
