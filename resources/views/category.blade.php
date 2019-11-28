@@ -432,8 +432,8 @@
                                             <li class="shop_sorting_button" data-sort-by='rating'>най-високо оценени</li>
                                             <li class="shop_sorting_button" data-sort-by='name-asc'>име възх.</li>
                                             <li class="shop_sorting_button" data-sort-by='name-desc'>име низх.</li>
-                                            <li class="shop_sorting_button" data-sort-by='price-asc'>цена възх.</li>
-                                            <li class="shop_sorting_button" data-sort-by='price-desc'>цена низх.</li>
+                                            <li class="shop_sorting_button" data-sort-by='order_price-asc'>цена възх.</li>
+                                            <li class="shop_sorting_button" data-sort-by='order_price-desc'>цена низх.</li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -730,7 +730,7 @@
             data: $('#properties').serialize(),
             dataType: "json",
             success: function (data) {
-                $('#num-products').html(data.products_count);
+                $('#num-products').html(data.products.total);
                 $('.product_grid').html(`${data.view}`);
                 productStyles();
                 initPriceSlider({{ $prices->min_price }}, {{ $prices->max_price }});

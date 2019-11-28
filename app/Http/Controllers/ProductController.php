@@ -29,7 +29,7 @@ class ProductController extends Controller
         }, 'subProperties',
         ])
                            ->select('products.*')
-                           ->distinct('products.id')
+                           ->selectRaw('IFNULL(promo_price, price) as order_price')
                            ->when($request->get('check'), function ($query) use ($request, $category) {
                                $props = Property::select('properties.id', 'sub_properties.id as sub_id')
                                                 ->where('category_id', $category)
@@ -55,14 +55,14 @@ class ProductController extends Controller
 
         if ($request->get('order-by')) {
             $order = explode('-', $request->get('order-by'));
-            if (($order[0] == 'name' || $order[0] == 'price') && ($order[1] == 'asc' || $order[1] == 'desc')) {
+            if (($order[0] == 'name' || $order[0] == 'order_price') && ($order[1] == 'asc' || $order[1] == 'desc')) {
                 $products = $products->orderBy($order[0], $order[1]);
             } else {
                 // Най-високо оценени
 //                $products = $products->orderBy(explode('-', )[0], explode('-', $request->get('order-by'))[1]);
             }
         } else {
-            $products = $products->orderBy('price');
+            $products = $products->orderBy('order_price');
         }
 
         $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 20);
@@ -81,11 +81,11 @@ class ProductController extends Controller
                     'prices'       => $prices,
                     'categoryName' => $categoryName,
                 ])->render(),
+                'products'   => $products,
                 'pagination' => view('partials.pagination', ['products' => $products])->render(),
             ]);
         }
 
-//        dd($products);
         return view('category', [
             'products'     => $products,
             'categories'   => Category::all(),
@@ -165,6 +165,7 @@ class ProductController extends Controller
         }
 
         ProductSubProperties::insert($productSubProperties);
+
         return response()->json(['url' => route('products.edit', ['product' => $product])]);
     }
 
@@ -224,7 +225,8 @@ class ProductController extends Controller
 
     public function ajax(Request $request)
     {
-        $products        = Product::with(['category:id,title,alias'])->select('id', 'name', 'category_id', 'created_at');
+        $products        = Product::with(['category:id,title,alias'])
+                                  ->select('id', 'name', 'category_id', 'created_at');
         $recordsTotal    = Product::all()->count();
         $recordsFiltered = $products->count();
 
