@@ -387,7 +387,7 @@
                                     <ul class="brands_list">
                                         @foreach ($prop->subProperties as $subProperty)
                                             <li>
-                                                <input class="form-check-input" type="checkbox" value="{{ $subProperty->id }}"
+                                                <input class="form-check-input icheckbox_minimal-blue" type="checkbox" value="{{ $subProperty->id }}"
                                                        id="check[{{ $prop->id }}][{{ $subProperty->id }}]"
                                                        name="check[{{ $prop->id }}][{{ $subProperty->id }}]">
                                                 <label class="form-check-label"
