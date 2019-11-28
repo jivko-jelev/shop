@@ -63,7 +63,8 @@
                                 <label for="promo_price" class="col-sm-2 control-label">Промо цена</label>
                                 <div class="col-sm-2">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="promo_price" id="promo_price" placeholder="Промо цена">
+                                        <input type="text" class="form-control" name="promo_price" id="promo_price"
+                                               placeholder="Промо цена">
                                     </div>
                                     <span class="error" id="promo_price-error"></span>
                                 </div>
@@ -132,8 +133,10 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data" class="product-picture-form">
-                            <input type="file" name="picture[]" multiple="multiple" class="btn btn-success pull-left" id="product-picture-pictures">
+                        <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data"
+                              class="product-picture-form">
+                            <input type="file" name="picture[]" multiple="multiple" class="btn btn-success pull-left"
+                                   id="product-picture-pictures">
                             <input type="submit" value="Upload Image" name="submit" class="btn btn-success pull-left">
                         </form>
                         <span class="pull-left pictures-num"></span>
@@ -157,8 +160,10 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data" class="product-picture-form">
-                            <input type="file" name="picture[]" multiple="multiple" class="btn btn-success pull-left" id="product-pictures-pictures">
+                        <form action="{{ route('pictures.store') }}" method="post" enctype="multipart/form-data"
+                              class="product-picture-form">
+                            <input type="file" name="picture[]" multiple="multiple" class="btn btn-success pull-left"
+                                   id="product-pictures-pictures">
                             <input type="submit" value="Upload Image" name="submit" class="btn btn-success pull-left">
                         </form>
                         <span class="pull-left pictures-num"></span>

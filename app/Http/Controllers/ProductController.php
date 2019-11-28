@@ -150,7 +150,7 @@ class ProductController extends Controller
             'name'        => $productRequest->title,
             'category_id' => $productRequest->category,
             'description' => $productRequest->description,
-            'picture_id'  => $productRequest->picture_id,
+            'picture_id'  => $productRequest->picture_id[0],
             'price'       => $productRequest->price,
             'promo_price' => $productRequest->promo_price,
             'permalink'   => self::generatePermanlink($productRequest->title),
@@ -165,7 +165,6 @@ class ProductController extends Controller
         }
 
         ProductSubProperties::insert($productSubProperties);
-
         return response()->json(['url' => route('products.edit', ['product' => $product])]);
     }
 

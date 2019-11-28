@@ -4,7 +4,7 @@
             <h3>{{ $property->name }}</h3>
             @foreach($property->subProperties as $subPropertyKey => $subProperty)
                 <div class="w-100">
-                    <input type="radio" id="minimal-checkbox-{{ $subProperty->id }}" class="icheckbox_minimal-blue"
+                    <input type="checkbox" id="minimal-checkbox-{{ $subProperty->id }}" class="icheckbox_minimal-blue"
                            name="sub_properties[{{ $key }}]"
                            value="{{ $subProperty->id }}">
                     <label for="minimal-checkbox-{{ $subProperty->id }}">&nbsp;{{ $subProperty->name }}</label>
