@@ -103,7 +103,7 @@
                                             </div>
                                         </div>
                                         <button type="submit" class="header_search_button trans_300" value="Submit"><img
-                                                    src="{{ URL::to('images/search.png') }}" alt=""></button>
+                                                src="{{ URL::to('images/search.png') }}" alt=""></button>
                                     </form>
                                 </div>
                             </div>
@@ -268,7 +268,8 @@
 
                             <div class="page_menu_search">
                                 <form action="#">
-                                    <input type="search" required="required" class="page_menu_search_input" placeholder="Search for products...">
+                                    <input type="search" required="required" class="page_menu_search_input"
+                                           placeholder="Search for products...">
                                 </form>
                             </div>
                             <ul class="page_menu_nav">
@@ -353,7 +354,8 @@
     <!-- Home -->
 
     <div class="home">
-        <div class="home_background parallax-window" data-parallax="scroll" data-image-src="{{ URL::to('images/shop_background.jpg') }}"></div>
+        <div class="home_background parallax-window" data-parallax="scroll"
+             data-image-src="{{ URL::to('images/shop_background.jpg') }}"></div>
         <div class="home_overlay"></div>
         <div class="home_content d-flex flex-column align-items-center justify-content-center">
             <h2 class="home_title">Smartphones & Tablets</h2>
@@ -397,8 +399,10 @@
                                         @foreach ($prop->subProperties as $subProperty)
                                             <li>
                                                 <input class="form-check-input" type="checkbox" value="{{ $subProperty->id }}"
-                                                       id="check[{{ $subProperty->id }}]" name="check[{{ $subProperty->id }}]">
-                                                <label class="form-check-label" for="check[{{ $subProperty->id }}]">{{ $subProperty->name }}</label>
+                                                       id="check[{{ $prop->id }}][{{ $subProperty->id }}]"
+                                                       name="check[{{ $prop->id }}][{{ $subProperty->id }}]">
+                                                <label class="form-check-label"
+                                                       for="check[{{ $prop->id }}][{{ $subProperty->id }}]">{{ $subProperty->name }}</label>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -421,7 +425,8 @@
                     <div class="shop_content">
                         <div class="shop_bar clearfix">
                             <div class="shop_product_count">
-                                <span id="num-products">{{ $products->total()  }}</span> {{ $products->total() > 1 ? 'намерени продукта' : 'намерен продукт' }}
+                                <span
+                                    id="num-products">{{ $products->total()  }}</span> {{ $products->total() > 1 ? 'намерени продукта' : 'намерен продукт' }}
                             </div>
                             <div class="shop_sorting">
                                 <span>Подреди по:</span>
@@ -472,43 +477,51 @@
 
                                 <div class="owl-carousel owl-theme brands_slider">
                                     <div class="owl-item">
-                                        <div class="brands_item d-flex flex-column justify-content-center"><img src="{{ URL::to('images/brands_1.jpg') }}"
-                                                                                                                alt="">
+                                        <div class="brands_item d-flex flex-column justify-content-center"><img
+                                                src="{{ URL::to('images/brands_1.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
-                                        <div class="brands_item d-flex flex-column justify-content-center"><img src="{{ URL::to('images/brands_2.jpg') }}"
-                                                                                                                alt="">
+                                        <div class="brands_item d-flex flex-column justify-content-center"><img
+                                                src="{{ URL::to('images/brands_2.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
-                                        <div class="brands_item d-flex flex-column justify-content-center"><img src="{{ URL::to('images/brands_3.jpg') }}"
-                                                                                                                alt="">
+                                        <div class="brands_item d-flex flex-column justify-content-center"><img
+                                                src="{{ URL::to('images/brands_3.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
-                                        <div class="brands_item d-flex flex-column justify-content-center"><img src="{{ URL::to('images/brands_4.jpg') }}"
-                                                                                                                alt="">
+                                        <div class="brands_item d-flex flex-column justify-content-center"><img
+                                                src="{{ URL::to('images/brands_4.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
-                                        <div class="brands_item d-flex flex-column justify-content-center"><img src="{{ URL::to('images/brands_5.jpg') }}"
-                                                                                                                alt="">
+                                        <div class="brands_item d-flex flex-column justify-content-center"><img
+                                                src="{{ URL::to('images/brands_5.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
-                                        <div class="brands_item d-flex flex-column justify-content-center"><img src="{{ URL::to('images/brands_6.jpg') }}"
-                                                                                                                alt="">
+                                        <div class="brands_item d-flex flex-column justify-content-center"><img
+                                                src="{{ URL::to('images/brands_6.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
-                                        <div class="brands_item d-flex flex-column justify-content-center"><img src="{{ URL::to('images/brands_7.jpg') }}"
-                                                                                                                alt="">
+                                        <div class="brands_item d-flex flex-column justify-content-center"><img
+                                                src="{{ URL::to('images/brands_7.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
-                                        <div class="brands_item d-flex flex-column justify-content-center"><img src="{{ URL::to('images/brands_8.jpg') }}"
-                                                                                                                alt="">
+                                        <div class="brands_item d-flex flex-column justify-content-center"><img
+                                                src="{{ URL::to('images/brands_8.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
 
@@ -530,7 +543,8 @@
                 <div class="container">
                     <div class="row">
                         <div class="col">
-                            <div class="newsletter_container d-flex flex-lg-row flex-column align-items-lg-center align-items-center justify-content-lg-start justify-content-center">
+                            <div
+                                class="newsletter_container d-flex flex-lg-row flex-column align-items-lg-center align-items-center justify-content-lg-start justify-content-center">
                                 <div class="newsletter_title_container">
                                     <div class="newsletter_icon"><img src="{{ URL::to('images/send.png') }}" alt=""></div>
                                     <div class="newsletter_title">Sign up for Newsletter</div>
@@ -538,7 +552,8 @@
                                 </div>
                                 <div class="newsletter_content clearfix">
                                     <form action="#" class="newsletter_form">
-                                        <input type="email" class="newsletter_input" required="required" placeholder="Enter your email address">
+                                        <input type="email" class="newsletter_input" required="required"
+                                               placeholder="Enter your email address">
                                         <button class="newsletter_button">Subscribe</button>
                                     </form>
                                     <div class="newsletter_unsubscribe_link"><a href="#">unsubscribe</a></div>
@@ -634,10 +649,11 @@
                         <div class="col">
 
                             <div class="copyright_container d-flex flex-sm-row flex-column align-items-center justify-content-start">
-                                <div class="copyright_content"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                <div class="copyright_content">
+                                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                     Copyright &copy;<script>document.write(new Date().getFullYear());</script>
                                     All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a
-                                            href="https://colorlib.com" target="_blank">Colorlib</a>
+                                        href="https://colorlib.com" target="_blank">Colorlib</a>
                                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                 </div>
                                 <div class="logos ml-sm-auto">

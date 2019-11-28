@@ -31,19 +31,11 @@ class ProductController extends Controller
                            ->select('products.*')
                            ->selectRaw('IFNULL(promo_price, price) as order_price')
                            ->when($request->get('check'), function ($query) use ($request, $category) {
-                               $props = Property::select('properties.id', 'sub_properties.id as sub_id')
-                                                ->where('category_id', $category)
-                                                ->join('sub_properties', 'sub_properties.property_id', 'properties.id')
-                                                ->whereIn('sub_properties.id', $request->get('check'))
-                                                ->get();
-
-                               foreach ($props->pluck('id')->unique() as $prop) {
-                                   $query->whereHas('subProperties', function ($query) use ($props, $prop) {
-                                       $query->where(function ($query) use ($props, $prop) {
-                                           foreach ($props as $s) {
-                                               if ($s->id == $prop) {
-                                                   $query->orWhere('subproperty_id', $s->sub_id);
-                                               }
+                               foreach ($request->get('check') as $subProperties) {
+                                   $query->whereHas('subProperties', function ($query) use ($subProperties) {
+                                       $query->where(function ($query) use ($subProperties) {
+                                           foreach ($subProperties as $subProperty) {
+                                               $query->orWhere('subproperty_id', $subProperty);
                                            }
                                        });
                                    });
