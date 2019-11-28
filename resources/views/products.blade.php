@@ -26,7 +26,7 @@
                     <ul class="product_marks">
                         <li class="product_mark product_new">new</li>
                         @if($product->promo_price)
-                            <li class="product_mark product_discount">{{ $product->discountText() }}</li>
+                            <li class="product_mark product_discount">{{ round($product->discountText(), 2) }}%</li>
                         @endif
                     </ul>
                 </div>
