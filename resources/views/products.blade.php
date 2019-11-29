@@ -6,7 +6,7 @@
                 <div class="product_item is_new">
                     <div class="product_border"></div>
                     <div class="product_image d-flex flex-column align-items-center justify-content-center"><img
-                                src="{{ $product->getThumbnail() }}" alt=""></div>
+                            src="{{ $product->getThumbnail() }}" alt=""></div>
                     <div class="product_content">
                         @if($product->promo_price)
                             <div class="product_price discount">{{ $product->promoPriceText() }}
@@ -24,7 +24,9 @@
                     </div>
                     <div class="product_fav"><i class="fas fa-heart"></i></div>
                     <ul class="product_marks">
-                        <li class="product_mark product_new">new</li>
+                        @if(\Carbon\Carbon::today()->diffInDays($product->created_at) == 0)
+                            <li class="product_mark product_new">new</li>
+                        @endif
                         @if($product->promo_price)
                             <li class="product_mark product_discount">{{ ceil($product->discountText()) }}%</li>
                         @endif

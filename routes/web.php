@@ -63,22 +63,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-
-    $a = Product::with('subProperties')
-                ->whereHas('subProperties', function ($query) {
-                    $query->where(function ($query) {
-                        $query->orWhere('subproperty_id', 1)
-                              ->orWhere('subproperty_id', 3);
-                    });
-                })
-                ->whereHas('subProperties', function ($query) {
-                    $query->where(function ($query) {
-                        $query->orWhere('subproperty_id', 5)
-                              ->orWhere('subproperty_id', 6);
-                    });
-                })
-                ->get()
-                ->all();
-    dump($a);
-//    dump($a[0]->subProperties);
+//    dd(trans('constants')['newProductDays']);
 });

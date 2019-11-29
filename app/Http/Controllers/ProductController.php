@@ -25,8 +25,7 @@ class ProductController extends Controller
 
             $products = Product::with(['picture' => function ($query) {
                 $query->with('thumbnails');
-            }, 'subProperties',
-            ])
+            }, 'subProperties',])
                                ->select('products.*')
                                ->selectRaw('IFNULL(promo_price, price) AS order_price')
                                ->when($request->get('min_price'), function ($query) use ($request) {
@@ -52,17 +51,20 @@ class ProductController extends Controller
 
             if ($request->get('order-by')) {
                 $order = explode('-', $request->get('order-by'));
-                if (($order[0] == 'name' || $order[0] == 'order_price') && ($order[1] == 'asc' || $order[1] == 'desc')) {
+                if ($order[0] == 'newest') {
+                    $products = $products->orderBy('created_at', 'DESC');
+                } elseif (in_array($order[0], ['name', 'order_price']) &&
+                          in_array($order[1], ['asc', 'desc'])) {
                     $products = $products->orderBy($order[0], $order[1]);
-                } else{
-                    // Промоции
-                $products = $products->orderByRaw('IF(promo_price IS NULL, 1, 0), promo_price asc, created_at desc');
+                } elseif ($request->get('order-by') == 'promo') {
+                    $products = $products->orderByRaw('IF(promo_price IS NULL, 1, 0), RAND(promo_price), created_at DESC');
                 }
             } else {
-                $products = $products->orderBy('order_price');
+                $products = $products->orderBy('created_at', 'DESC');
             }
 
-            $limit = ($request->get('per-page') == 50 || $request->get('per-page') == 100 ? $request->get('per-page') : 20);
+            $limit = ($request->get('per-page') == 50 ||
+                      $request->get('per-page') == 100 ? $request->get('per-page') : 20);
 
             $prices = Product::selectRaw('MIN(price) AS min_price, MAX(IFNULL(promo_price, price)) as max_price')
                              ->where('category_id', $category)

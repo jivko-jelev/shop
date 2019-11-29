@@ -103,7 +103,7 @@
                                             </div>
                                         </div>
                                         <button type="submit" class="header_search_button trans_300" value="Submit"><img
-                                                    src="{{ URL::to('images/search.png') }}" alt=""></button>
+                                                src="{{ URL::to('images/search.png') }}" alt=""></button>
                                     </form>
                                 </div>
                             </div>
@@ -372,7 +372,8 @@
                     <!-- Shop Sidebar -->
                     <div class="shop_sidebar">
                         <div class="sidebar_section filter_by_section">
-                            <div class="sidebar_title">Филтър</div>
+                            <div class="sidebar_title">Филтри</div>
+                            <button class="btn btn-sm btn-primary btn-block" id="clear-filters">Изчисти филтрите</button>
                             <div class="sidebar_subtitle">Цена</div>
                             <div class="filter_price">
                                 <div id="slider-range" class="slider_range"></div>
@@ -387,7 +388,8 @@
                                     <ul class="brands_list">
                                         @foreach ($prop->subProperties as $subProperty)
                                             <li>
-                                                <input class="form-check-input icheckbox_minimal-blue" type="checkbox" value="{{ $subProperty->id }}"
+                                                <input class="form-check-input icheckbox_minimal-blue" type="checkbox"
+                                                       value="{{ $subProperty->id }}"
                                                        id="check[{{ $prop->id }}][{{ $subProperty->id }}]"
                                                        name="check[{{ $prop->id }}][{{ $subProperty->id }}]">
                                                 <label class="form-check-label"
@@ -398,7 +400,7 @@
                                 </div>
                             @endforeach
                             <input type="hidden" name="page" id="page" value="{{ $products->currentPage() }}">
-                            <input type="hidden" name="order-by" id="order-by" value="order_price-asc">
+                            <input type="hidden" name="order-by" id="order-by" value="newest">
                             <input type="hidden" name="per-page" id="per-page" value="20">
                             <input type="hidden" name="min_price" id="min-price" value="{{ round($prices->min_price) }}">
                             <input type="hidden" name="max_price" id="max-price" value="{{ round($prices->max_price) }}">
@@ -415,16 +417,17 @@
                         <div class="shop_bar clearfix">
                             <div class="shop_product_count">
                                 <span
-                                        id="num-products">{{ $products->total()  }}</span>
+                                    id="num-products">{{ $products->total()  }}</span>
                                 <span
-                                        id="num-products-text">{{ $products->total() != 0  ? ' намерени продукта' : ' намерен продукт' }}</span>
+                                    id="num-products-text">{{ $products->total() != 0  ? ' намерени продукта' : ' намерен продукт' }}</span>
                             </div>
-                            <div class="shop_sorting">
+                            <div class="shop_sorting" id="order-menu">
                                 <span>Подреди по:</span>
                                 <ul>
                                     <li>
-                                        <span class="sorting_text">цена възх.<i class="fas fa-chevron-down"></i></span>
+                                        <span class="sorting_text">най-нови<i class="fas fa-chevron-down"></i></span>
                                         <ul>
+                                            <li class="shop_sorting_button" data-sort-by='newest'>най-нови</li>
                                             <li class="shop_sorting_button" data-sort-by='promo'>промоции</li>
                                             <li class="shop_sorting_button" data-sort-by='name-asc'>име възх.</li>
                                             <li class="shop_sorting_button" data-sort-by='name-desc'>име низх.</li>
@@ -434,7 +437,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="shop_sorting">
+                            <div class="shop_sorting" id="per-page-menu">
                                 <span>Продукти на страница:</span>
                                 <ul>
                                     <li>
@@ -469,50 +472,50 @@
                                 <div class="owl-carousel owl-theme brands_slider">
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                    src="{{ URL::to('images/brands_1.jpg') }}"
-                                                    alt="">
+                                                src="{{ URL::to('images/brands_1.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                    src="{{ URL::to('images/brands_2.jpg') }}"
-                                                    alt="">
+                                                src="{{ URL::to('images/brands_2.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                    src="{{ URL::to('images/brands_3.jpg') }}"
-                                                    alt="">
+                                                src="{{ URL::to('images/brands_3.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                    src="{{ URL::to('images/brands_4.jpg') }}"
-                                                    alt="">
+                                                src="{{ URL::to('images/brands_4.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                    src="{{ URL::to('images/brands_5.jpg') }}"
-                                                    alt="">
+                                                src="{{ URL::to('images/brands_5.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                    src="{{ URL::to('images/brands_6.jpg') }}"
-                                                    alt="">
+                                                src="{{ URL::to('images/brands_6.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                    src="{{ URL::to('images/brands_7.jpg') }}"
-                                                    alt="">
+                                                src="{{ URL::to('images/brands_7.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="owl-item">
                                         <div class="brands_item d-flex flex-column justify-content-center"><img
-                                                    src="{{ URL::to('images/brands_8.jpg') }}"
-                                                    alt="">
+                                                src="{{ URL::to('images/brands_8.jpg') }}"
+                                                alt="">
                                         </div>
                                     </div>
 
@@ -535,7 +538,7 @@
                     <div class="row">
                         <div class="col">
                             <div
-                                    class="newsletter_container d-flex flex-lg-row flex-column align-items-lg-center align-items-center justify-content-lg-start justify-content-center">
+                                class="newsletter_container d-flex flex-lg-row flex-column align-items-lg-center align-items-center justify-content-lg-start justify-content-center">
                                 <div class="newsletter_title_container">
                                     <div class="newsletter_icon"><img src="{{ URL::to('images/send.png') }}" alt=""></div>
                                     <div class="newsletter_title">Sign up for Newsletter</div>
@@ -644,7 +647,7 @@
                                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                     Copyright &copy;<script>document.write(new Date().getFullYear());</script>
                                     All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a
-                                            href="https://colorlib.com" target="_blank">Colorlib</a>
+                                        href="https://colorlib.com" target="_blank">Colorlib</a>
                                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                 </div>
                                 <div class="logos ml-sm-auto">
@@ -697,25 +700,22 @@
     productStyles();
 
 
+    let slider = $('#slider-range');
+
     function initPriceSlider() {
-        if ($("#slider-range").length) {
-            $("#slider-range").slider(
+        if (slider.length) {
+            slider.slider(
                 {
                     range: true,
-                    min: {{ $prices->min_price }},
-                    max: {{ $prices->max_price }},
-                    values: [{{ $prices->min_price }}, {{ $prices->max_price }}],
+                    min: {{ round($prices->min_price) }},
+                    max: {{ round($prices->max_price) }},
+                    values: [{{ round($prices->min_price) }}, {{ round($prices->max_price) }}],
                     slide: function (event, ui) {
                         $("#amount").val(ui.values[0] + "лв. - " + ui.values[1] + "лв.");
                     }
                 });
 
-            $("#amount").val($("#slider-range").slider("values", 0) + "лв. - " + $("#slider-range").slider("values", 1) + "лв.");
-            $('.ui-slider-handle').on('mouseup', function () {
-                $('#min-price').val($('#slider-range').slider('option', 'values')[0]);
-                $('#max-price').val($('#slider-range').slider('option', 'values')[1]);
-                reloadProducts();
-            });
+            $("#amount").val(slider.slider("values", 0) + "лв. - " + slider.slider("values", 1) + "лв.");
         }
     }
 
@@ -740,19 +740,6 @@
             }
         })
     }
-
-    $('input[type="checkbox"]').iCheck({
-        checkboxClass: 'icheckbox_minimal-blue',
-        radioClass: 'iradio_minimal-blue'
-    });
-
-    $('.form-check-input').on('ifChanged', function () {
-        $('#page').val(1);
-        history.pushState(undefined, "", window.location.href.split('/')[window.location.href.split('/').length - 1].split('?')[0]);
-        reloadProducts();
-    });
-
-    {{--    initPriceSlider({{ $prices->min_price }}, {{ $prices->max_price }}, {{ $prices->min_price }}, {{ $prices->max_price }});--}}
 
     function paginationClick(element) {
         $('#page').val(element.data('page'));
@@ -783,10 +770,60 @@
         paginationClick($(this));
     });
     $(function () {
-        $('#slider-range').slider('option', 'min', {{ $prices->min_price }});
-        $('#slider-range').slider('option', 'max', {{ $prices->max_price }});
-        $('#slider-range').slider('option', 'values', [{{ $prices->min_price }}, {{ $prices->max_price}}]);
-        $("#amount").val($("#slider-range").slider("values", 0) + "лв. - " + $("#slider-range").slider("values", 1) + "лв.");
+        function setPriceAndReloadProducts() {
+            $('#min-price').val(slider.slider('option', 'values')[0]);
+            $('#max-price').val(slider.slider('option', 'values')[1]);
+            reloadProducts();
+            sliderClick = false;
+        }
+
+        function initSlider() {
+            slider.slider('option', 'min', {{ round($prices->min_price) }});
+            slider.slider('option', 'max', {{ round($prices->max_price) }});
+            slider.slider('option', 'values', [{{ round($prices->min_price) }}, {{ round($prices->max_price) }}]);
+            $("#amount").val(slider.slider("values", 0) + "лв. - " + slider.slider("values", 1) + "лв.");
+            $('#min-price').val(slider.slider('option', 'values')[0]);
+            $('#max-price').val(slider.slider('option', 'values')[1]);
+        }
+
+        initSlider();
+
+        let sliderClick = false;
+        $(document).on('mouseup', function () {
+            if (sliderClick) {
+                setPriceAndReloadProducts();
+            }
+        });
+        slider.find('span').on('mousedown', function () {
+            sliderClick = true;
+        });
+
+        function captureCheckboxes() {
+            $('input[type="checkbox"]').iCheck({
+                checkboxClass: 'icheckbox_minimal-blue',
+                radioClass: 'iradio_minimal-blue'
+            });
+            $('.form-check-input').on('ifChanged', function () {
+                $('#page').val(1);
+                history.pushState(undefined, "", window.location.href.split('/')[window.location.href.split('/').length - 1].split('?')[0]);
+                reloadProducts();
+            });
+        }
+
+        captureCheckboxes();
+        $('#clear-filters').click(function () {
+            $('#properties input[type=checkbox]').each(function () {
+                $(this).prop('checked', false);
+            });
+            captureCheckboxes();
+            initSlider();
+            $('#page').val(1);
+            $('#order-by').val('order_price-asc');
+            $('#per-page').val('order_price-asc');
+            $('#per-page-menu .sorting_text').html($('#per-page-menu').find('.shop_sorting_button:first-child').html() + '<i class="fas fa-chevron-down"></i>');
+            $('#order-menu .sorting_text').html($('#order-menu').find('.shop_sorting_button:first-child').html() + '<i class="fas fa-chevron-down"></i>');
+            reloadProducts();
+        });
     });
 </script>
 </body>
