@@ -409,7 +409,7 @@
                         <div class="product_grid">
                             @include('products')
                         </div>
-                        @include('partials.pagination', ['products' => $products])
+                        @include('layouts.pagination', ['products' => $products])
                     </div>
                 </div>
             </div>

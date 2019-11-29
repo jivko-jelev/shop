@@ -80,7 +80,7 @@ class ProductController extends Controller
                         'categoryName' => $categoryName,
                     ])->render(),
                     'products'   => $products,
-                    'pagination' => view('partials.pagination', ['products' => $products])->render(),
+                    'pagination' => view('layouts.pagination', ['products' => $products])->render(),
                 ]);
             }
 
