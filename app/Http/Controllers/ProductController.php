@@ -17,10 +17,10 @@ class ProductController extends Controller
     {
         try {
             $categories = Category::all();
-            $category   = $categories->where('alias', $categoryName)->first()->id;
+            $category   = $categories->where('alias', $categoryName)->first();
 
             $properties = Property::with('subProperties')
-                                  ->where('category_id', $category)
+                                  ->where('category_id', $category->id)
                                   ->get();
 
             $products = Product::with(['picture' => function ($query) {
@@ -29,13 +29,13 @@ class ProductController extends Controller
                                ->select('products.*')
                                ->selectRaw('IFNULL(promo_price, price) AS order_price')
                                ->when($request->get('min_price'), function ($query) use ($request) {
-                                   $query->where('price', '>=', $request->get('min_price'));
+                                   $query->where('price', '>=', (int)$request->get('min_price'));
                                })
                                ->when($request->get('max_price'), function ($query) use ($request) {
                                    $query->whereRaw("IFNULL(`promo_price`, `price`) <={$request->get('max_price')}");
                                })
-                               ->when($request->get('check'), function ($query) use ($request, $category) {
-                                   foreach ($request->get('check') as $subProperties) {
+                               ->when($request->get('filter'), function ($query) use ($request) {
+                                   foreach ($request->get('filter') as $subProperties) {
                                        $query->whereHas('subProperties', function ($query) use ($subProperties) {
                                            $query->where(function ($query) use ($subProperties) {
                                                foreach ($subProperties as $subProperty) {
@@ -46,7 +46,7 @@ class ProductController extends Controller
                                    }
                                })
                                ->whereHas('category', function ($query) use ($category) {
-                                   $query->where('id', $category);
+                                   $query->where('id', $category->id);
                                });
 
             if ($request->get('order-by')) {
@@ -67,13 +67,12 @@ class ProductController extends Controller
                       $request->get('per-page') == 100 ? $request->get('per-page') : 20);
 
             $prices = Product::selectRaw('MIN(price) AS min_price, MAX(IFNULL(promo_price, price)) as max_price')
-                             ->where('category_id', $category)
+                             ->where('category_id', $category->id)
                              ->first();
 
             $products = $products->paginate($limit);
             if ($request->ajax()) {
                 return response()->json([
-                    'check'      => $request->all(),
                     'view'       => view('products', [
                         'products'     => $products,
                         'properties'   => $properties,
@@ -91,6 +90,7 @@ class ProductController extends Controller
                 'properties'   => $properties,
                 'prices'       => $prices,
                 'categoryName' => $categoryName,
+                'categoryTitle' => $category->title,
             ]);
         } catch (\Exception $e) {
             abort(404);

@@ -7,7 +7,7 @@
     <meta name="description" content="OneTech shop project">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('styles/bootstrap4/bootstrap.min.css') }}">
-    <link href="{{ URL::to('plugins/fontawesome-free-5.0.1/css/fontawesome-all.css') }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{ URL::to('plugins/fontawesome-free-5.0.1/css/fontawesome-all.css') }}" type="text/css">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/OwlCarousel2-2.2.1/owl.carousel.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/OwlCarousel2-2.2.1/owl.theme.default.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/OwlCarousel2-2.2.1/animate.css') }}">
@@ -33,36 +33,16 @@
                     <div class="col d-flex flex-row">
                         <div class="top_bar_contact_item">
                             <div class="top_bar_icon"><img src="{{ URL::to('images/phone.png') }}" alt=""></div>
-                            +38 068 005 3570
+                            {{ env('PHONE') }}
                         </div>
                         <div class="top_bar_contact_item">
                             <div class="top_bar_icon"><img src="{{ URL::to('images/mail.png') }}" alt=""></div>
-                            <a href="mailto:fastsales@gmail.com">fastsales@gmail.com</a></div>
+                            <a href="mailto:fastsales@gmail.com">{{ env('EMAIL') }}</a></div>
                         <div class="top_bar_content ml-auto">
-                            <div class="top_bar_menu">
-                                <ul class="standard_dropdown top_bar_dropdown">
-                                    <li>
-                                        <a href="#">English<i class="fas fa-chevron-down"></i></a>
-                                        <ul>
-                                            <li><a href="#">Italian</a></li>
-                                            <li><a href="#">Spanish</a></li>
-                                            <li><a href="#">Japanese</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">$ US dollar<i class="fas fa-chevron-down"></i></a>
-                                        <ul>
-                                            <li><a href="#">EUR Euro</a></li>
-                                            <li><a href="#">GBP British Pound</a></li>
-                                            <li><a href="#">JPY Japanese Yen</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
                             <div class="top_bar_user">
                                 <div class="user_icon"><img src="{{ URL::to('images/user.svg') }}" alt=""></div>
-                                <div><a href="#">Register</a></div>
-                                <div><a href="#">Sign in</a></div>
+                                <div><a href="{{ route('register') }}">Регистрация</a></div>
+                                <div><a href="{{ route('login') }}">Влез</a></div>
                             </div>
                         </div>
                     </div>
@@ -96,7 +76,7 @@
                                                 <i class="fas fa-chevron-down"></i>
                                                 <ul class="custom_list clc">
                                                     <li><a class="clc" href="#">Всички категории</a></li>
-                                                    @foreach(\App\Category::whereNull('parent_id')->get() as $category)
+                                                    @foreach($categories->where('parent_id', null) as $category)
                                                         <li><a class="clc" href="#">{{ $category->title }}</a></li>
                                                     @endforeach
                                                 </ul>
@@ -157,33 +137,7 @@
                                     <div class="cat_menu_text">категории</div>
                                 </div>
 
-                                <ul class="cat_menu">
-                                    {{--                                    <li><a href="#">Computers & Laptops <i class="fas fa-chevron-right ml-auto"></i></a></li>--}}
-                                    {{--                                    <li><a href="#">Cameras & Photos<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                    <li class="hassubs">--}}
-                                    {{--                                        <a href="#">Hardware<i class="fas fa-chevron-right"></i></a>--}}
-                                    {{--                                        <ul>--}}
-                                    {{--                                            <li class="hassubs">--}}
-                                    {{--                                                <a href="#">Menu Item<i class="fas fa-chevron-right"></i></a>--}}
-                                    {{--                                                <ul>--}}
-                                    {{--                                                    <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                                    <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                                    <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                                    <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                                </ul>--}}
-                                    {{--                                            </li>--}}
-                                    {{--                                            <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                            <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                            <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                        </ul>--}}
-                                    {{--                                    </li>--}}
-                                    {{--                                    <li><a href="#">Smartphones & Tablets<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                    <li><a href="#">TV & Audio<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                    <li><a href="#">Gadgets<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                    <li><a href="#">Car Electronics<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                    <li><a href="#">Video Games & Consoles<i class="fas fa-chevron-right"></i></a></li>--}}
-                                    {{--                                    <li><a href="#">Accessories<i class="fas fa-chevron-right"></i></a></li>--}}
-                                </ul>
+                                {!! \App\Category::generateMenu($categories) !!}
                             </div>
 
                             <!-- Main Nav Menu -->
@@ -358,7 +312,7 @@
              data-image-src="{{ URL::to('images/shop_background.jpg') }}"></div>
         <div class="home_overlay"></div>
         <div class="home_content d-flex flex-column align-items-center justify-content-center">
-            <h2 class="home_title">Smartphones & Tablets</h2>
+            <h2 class="home_title">{{ $categoryTitle }}</h2>
         </div>
     </div>
 
@@ -390,10 +344,10 @@
                                             <li>
                                                 <input class="form-check-input icheckbox_minimal-blue" type="checkbox"
                                                        value="{{ $subProperty->id }}"
-                                                       id="check[{{ $prop->id }}][{{ $subProperty->id }}]"
-                                                       name="check[{{ $prop->id }}][{{ $subProperty->id }}]">
+                                                       id="filter[{{ $prop->id }}][{{ $subProperty->id }}]"
+                                                       name="filter[{{ $prop->id }}][{{ $subProperty->id }}]">
                                                 <label class="form-check-label"
-                                                       for="check[{{ $prop->id }}][{{ $subProperty->id }}]">{{ $subProperty->name }}</label>
+                                                       for="filter[{{ $prop->id }}][{{ $subProperty->id }}]">{{ $subProperty->name }}</label>
                                             </li>
                                         @endforeach
                                     </ul>

@@ -72,6 +72,9 @@ class CategoryController extends Controller
                 SubProperty::insert($data);
             }
         }
+        $categories = Category::all();
+
+        return response()->json($categories);
     }
 
     public static function haveSubProperties(string $subProperties): bool
@@ -196,4 +199,5 @@ class CategoryController extends Controller
 
         return view('admin.products.layouts.properties', compact('properties'))->render();
     }
+
 }

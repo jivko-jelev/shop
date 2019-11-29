@@ -51,10 +51,12 @@
                                     <label for="property_name[]" class="col-sm-2 control-label">Атрибут</label>
 
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="property_name[]" id="property_name[]" placeholder="Атрибут">
+                                        <input type="text" class="form-control" name="property_name[]" id="property_name[]"
+                                               placeholder="Атрибут">
                                         <span class="error" id="alias-error-modal"></span><br>
                                         <button class="btn btn-danger btn-block delete-property" type="button">Изтрий</button>
-                                        <button class="btn btn-primary btn-block add-property" type="button">Добави още един атрибут</button>
+                                        <button class="btn btn-primary btn-block add-property" type="button">Добави още един атрибут
+                                        </button>
                                     </div>
 
                                     <div class="col-md-6">
@@ -88,7 +90,6 @@
         $(function () {
             $('#form-category').submit(function (e) {
                 e.preventDefault();
-                console.log($('[name="title"]').val());
                 $.ajax({
                     url: '{{ route("categories.store") }}',
                     data: $('#form-category').serialize(),
@@ -103,6 +104,11 @@
                         $('.error').html('');
                         $('[name="title"]').val('');
                         $('[name="alias"]').val('');
+                        $('#parent_id').html('');
+                        $('#parent_id').append(`<option value="">Без</option>`)
+                        for (let i = 0; i < data.length; i++) {
+                            $('#parent_id').append(`<option value="${data[i]['id']}">${data[i]['title']} (${data[i]['alias']})</option>`)
+                        }
                     },
                     error: function (data) {
                         $('.error').html('');
@@ -139,8 +145,8 @@
                     "url": '{{ route('categories.ajax') }}',
                     "type": "POST",
                     data: function (d) {
-                        d.title  = $('input[name="filter[title]"]').val();
-                        d.alias  = $('input[name="filter[alias]"]').val();
+                        d.title = $('input[name="filter[title]"]').val();
+                        d.alias = $('input[name="filter[alias]"]').val();
                         d.parent = $('input[name="filter[parent]"]').val();
                     }
                 },
