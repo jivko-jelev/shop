@@ -68,7 +68,7 @@
                             </div>
                             @foreach($property->subProperties as $key => $subProperty)
                                 <div class="form-group">
-                                    <label for="property_name[]" class="col-sm-4 control-label">Податрибут #{{ $key + 1 }}</label>
+                                    <label for="subproperty[{{ $subProperty->id }}]" class="col-sm-4 control-label">Податрибут #{{ $key + 1 }}</label>
 
                                     <div class="col-sm-8">
                                         <div class="input-group">
