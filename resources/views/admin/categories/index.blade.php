@@ -52,13 +52,14 @@
                                 <form id="form-filter">
                                     <th><input type="text" class="form-control form-filter" name="filter[title]"></th>
                                     <th><input type="text" class="form-control form-filter" name="filter[alias]"></th>
-                                    <th><input type="text" class="form-control form-filter" name="filter[parent]"></th><th>
+                                    <th><input type="text" class="form-control form-filter" name="filter[parent]"></th>
+                                    <th>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary" title="Търси"><i
-                                                    class="fa fa-search"></i></button>
+                                                        class="fa fa-search"></i></button>
                                             <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary"
                                                     title="Изчисти филтъра"><i
-                                                    class="fa fa-times"></i></button>
+                                                        class="fa fa-times"></i></button>
                                         </div>
                                     </th>
                                 </form>
@@ -144,9 +145,9 @@
                     "url": '{{ route('categories.ajax') }}',
                     "type": "POST",
                     data: function (d) {
-                        d.title       = $('input[name="filter[title]"]').val();
-                        d.alias = $('input[name="filter[alias]"]').val();
-                        d.parent  = $('input[name="filter[parent]"]').val();
+                        d.title  = $('input[name="filter[title]"]').val();
+                        d.alias  = $('input[name="filter[alias]"]').val();
+                        d.parent = $('input[name="filter[parent]"]').val();
                     }
                 },
                 columns: [
@@ -200,6 +201,31 @@
             if (e.key === "Escape") {
                 $('#myModal').modal('hide');
             }
+        });
+        $(document).on('click', '.delete-category', function (e) {
+            let target = $(e.target);
+            if (target.is("i")) {
+                target = target.parent();
+            }
+
+            Lobibox.confirm({
+                msg: `Наистина ли искате да изтриете категорията: <strong>${target.data('title')}</strong>?`,
+                callback: function ($this, type) {
+                    if (type === 'yes') {
+                        $.ajax({
+                            url: `${target.data('route')}`,
+                            method: 'delete',
+                            success: function (data) {
+                                Lobibox.notify('success', {
+                                    msg: `Категорията <strong>${target.data('title')}</strong> беше успешно изтрита`
+                                });
+                                table.ajax.reload()
+                            }
+                        });
+                    }
+                }
+            });
+
         });
     </script>
 @endpush

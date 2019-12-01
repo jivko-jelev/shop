@@ -9,7 +9,6 @@ use App\ProductSubProperties;
 use App\Property;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -29,7 +28,7 @@ class ProductController extends Controller
                                ->select('products.*')
                                ->selectRaw('IFNULL(promo_price, price) AS order_price')
                                ->when($request->get('min_price'), function ($query) use ($request) {
-                                   $query->where('price', '>=', (int)$request->get('min_price'));
+                                   $query->where('price', '>=', $request->get('min_price'));
                                })
                                ->when($request->get('max_price'), function ($query) use ($request) {
                                    $query->whereRaw("IFNULL(`promo_price`, `price`) <={$request->get('max_price')}");
@@ -63,8 +62,7 @@ class ProductController extends Controller
                 $products = $products->orderBy('created_at', 'DESC');
             }
 
-            $limit = ($request->get('per-page') == 50 ||
-                      $request->get('per-page') == 100 ? $request->get('per-page') : 20);
+            $limit = in_array($request->get('per-page'), [50, 100]) ? $request->get('per-page') : 20;
 
             $prices = Product::selectRaw('MIN(price) AS min_price, MAX(IFNULL(promo_price, price)) as max_price')
                              ->where('category_id', $category->id)

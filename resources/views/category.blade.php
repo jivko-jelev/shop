@@ -7,12 +7,12 @@
     <meta name="description" content="OneTech shop project">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('styles/bootstrap4/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ URL::to('plugins/fontawesome-free-5.0.1/css/fontawesome-all.css') }}" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/fontawesome-free-5.0.1/css/fontawesome-all.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/OwlCarousel2-2.2.1/owl.carousel.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/OwlCarousel2-2.2.1/owl.theme.default.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/OwlCarousel2-2.2.1/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/jquery-ui-1.12.1.custom/jquery-ui.css') }}">
-    <link rel="stylesheet" href="{{ URL::to('plugins/iCheck/all.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/iCheck/all.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('styles/shop_styles.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('styles/responsive.css') }}">
 </head>

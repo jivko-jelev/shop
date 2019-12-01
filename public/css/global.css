@@ -74,7 +74,8 @@ table.dataTable thead .sorting:after {
 }
 
 .dataTable thead tr th:last-child {
-    min-width: 75px !important;
+    min-width: 105px !important;
+    text-align: center;
 }
 
 .dataTable thead .filter th:last-child, .filter-date {
