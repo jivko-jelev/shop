@@ -111,6 +111,7 @@
                         $('[name="alias"]').val('');
                     },
                     error: function (data) {
+                        console.log(data);
                         $('.error').html('');
                         for (let i = 0; i < Object.keys(data.responseJSON.errors).length; i++) {
                             if (Object.keys(data.responseJSON.errors)[i] !== undefined) {

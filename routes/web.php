@@ -41,6 +41,8 @@ Route::prefix('admin')
          Route::delete('categories/{category}', 'CategoryController@destroy')->name('categories.destroy');
          Route::get('categories/{category}/properties', 'CategoryController@getProperties')->name('categories.properties');
 
+         Route::get('categories/{category}/full-edit', 'CategoryController@fullEdit')->name('categories.full.edit');
+
          // Продукти
          Route::get('products', 'ProductController@indexAdmin')->name('products.index.admin');
          Route::post('products/ajax', 'ProductController@ajax')->name('products.ajax');

@@ -330,7 +330,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                {{ $title }}
+                {{ $title ?? '' }}
                 <small>Контролен Панел</small>
             </h1>
         </section>

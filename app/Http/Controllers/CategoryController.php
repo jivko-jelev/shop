@@ -51,25 +51,27 @@ class CategoryController extends Controller
         $cat->updated_at = null;
         $cat->save();
 
-        foreach ($category->property_name as $key => $property) {
-            if ($property && self::haveSubProperties($category->sub_property[$key])) {
-                $property = Property::create([
-                    'name'        => $property,
-                    'category_id' => $cat->id,
-                ]);
+        if ($category->property_name && count($category->property_name) > 0) {
+            foreach ($category->property_name as $key => $property) {
+                if ($property && self::haveSubProperties($category->sub_property[$key])) {
+                    $property = Property::create([
+                        'name'        => $property,
+                        'category_id' => $cat->id,
+                    ]);
 
-                $subProperties = explode(PHP_EOL, $category->sub_property[$key]);;
-                $data = [];
-                foreach ($subProperties as $subPropertyKey => $subProperty) {
-                    if (trim($subProperty) != '') {
-                        $data[] = [
-                            'name'        => (($subPropertyKey == count($subProperties) - 1)
-                                ? $subProperty : mb_substr($subProperty, 0, mb_strlen($subProperty) - 1)),
-                            'property_id' => $property->id,
-                        ];
+                    $subProperties = explode(PHP_EOL, $category->sub_property[$key]);;
+                    $data = [];
+                    foreach ($subProperties as $subPropertyKey => $subProperty) {
+                        if (trim($subProperty) != '') {
+                            $data[] = [
+                                'name'        => (($subPropertyKey == count($subProperties) - 1)
+                                    ? $subProperty : mb_substr($subProperty, 0, mb_strlen($subProperty) - 1)),
+                                'property_id' => $property->id,
+                            ];
+                        }
                     }
+                    SubProperty::insert($data);
                 }
-                SubProperty::insert($data);
             }
         }
         $categories = Category::all();
@@ -153,6 +155,19 @@ class CategoryController extends Controller
         return view('admin.categories.modal.category', [
             'categories'       => Category::all(),
             'current_category' => $category,
+        ])->render();
+    }
+
+    public function fullEdit(Category $category)
+    {
+        $properties = Property::where('category_id', $category->id)
+                              ->with('subProperties')
+                              ->get();
+
+        return view('admin.categories.edit', [
+            'categories' => Category::all(),
+            'category'   => $category,
+            'properties' => $properties,
         ])->render();
     }
 
