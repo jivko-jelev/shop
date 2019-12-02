@@ -43,7 +43,7 @@
                                     <option value="">Без</option>
                                     @foreach($categories as $cat)
                                         <option
-                                            value="{{ $cat->id }}" {{ $cat->id == $category->parent_id ? 'selected' :''  }}>{{ $cat->title }}
+                                                value="{{ $cat->id }}" {{ $cat->id == $category->parent_id ? 'selected' :''  }}>{{ $cat->title }}
                                             ({{ $cat->alias }})
                                         </option>
                                     @endforeach
@@ -55,12 +55,12 @@
                             <div class="property">
                                 <hr>
                                 <div class="form-group">
-                                    <label for="property_name[]" class="col-sm-4 control-label">Атрибут</label>
+                                    <label for="property[]" class="col-sm-4 control-label">Атрибут</label>
 
                                     <div class="col-sm-8">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" name="property_name[{{ $property->id }}]"
-                                                   id="property_name[{{ $property->id }}]" placeholder="Атрибут"
+                                            <input type="text" class="form-control" name="property[{{ $property->id }}]"
+                                                   id="property[{{ $property->id }}]" placeholder="Атрибут"
                                                    value="{{ $property->name }}">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-danger delete-property"
@@ -146,6 +146,21 @@
                             }
                         });
                     }
+                }
+            });
+        });
+
+        $('#submit').click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '{{ route('categories.update', $category->id) }}',
+                method: 'put',
+                data:$('#form-category').serialize(),
+                success:function (data) {
+
+                },
+                error:function (data) {
+                    console.log(data);
                 }
             });
         });

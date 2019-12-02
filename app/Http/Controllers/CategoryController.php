@@ -184,8 +184,14 @@ class CategoryController extends Controller
         $category->title     = $request->get('title');
         $category->alias     = $request->get('alias');
         $category->parent_id = $request->get('parent_id') ?? null;
-
         $category->save();
+
+        if ($request->get('property')) {
+            foreach ($request->get('property') as $key => $property) {
+                Property::where('id', $key)
+                        ->update(['name' => $property]);
+            }
+        }
 
         if ($request->ajax()) {
             return response()->json('{"message": "Категорията беше успешно редактирана."}');
