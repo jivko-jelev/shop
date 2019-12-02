@@ -75,11 +75,12 @@ class PropertiesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Property $properties
+     * @param \App\Property $properties
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Property $properties)
     {
-        //
+        $properties->delete();
     }
 }

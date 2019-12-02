@@ -75,11 +75,12 @@ class SubPropertiesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\SubProperty $subProperties
+     * @param \App\SubProperty $subProperties
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(SubProperty $subProperties)
     {
-        //
+        $subProperties->delete();
     }
 }
