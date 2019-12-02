@@ -772,8 +772,8 @@
             captureCheckboxes();
             initSlider();
             $('#page').val(1);
-            $('#order-by').val('order_price-asc');
-            $('#per-page').val('order_price-asc');
+            $('#order-by').val('newest');
+            $('#per-page').val(20);
             $('#per-page-menu .sorting_text').html($('#per-page-menu').find('.shop_sorting_button:first-child').html() + '<i class="fas fa-chevron-down"></i>');
             $('#order-menu .sorting_text').html($('#order-menu').find('.shop_sorting_button:first-child').html() + '<i class="fas fa-chevron-down"></i>');
             reloadProducts();
