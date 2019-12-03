@@ -50,7 +50,7 @@ class CategoryRequest extends FormRequest
         return [
             "title.unique"                        => "Вече съществува такава Категория със същата Главна Категория",
             'subproperty.*.required'              => 'Името на податрибута е задължително',
-            'new_subproperty.*.required'          => 'задължително',
+            'new_subproperty.*.required'          => 'Името на податрибута е задължително',
             'new_property_subproperty.*.required' => 'Името на податрибута е задължително',
             'new_property.*.required'             => 'Името на атрибута е задължително',
             'property.*.required'                 => 'Името на атрибута е задължително',
