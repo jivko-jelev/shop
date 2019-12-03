@@ -193,8 +193,40 @@ class CategoryController extends Controller
             }
         }
 
+        if ($request->get('subproperty')) {
+            $data = [];
+            foreach ($request->get('subproperty') as $key => $subProperty) {
+                SubProperty::where('id', $key)
+                           ->update(['name' => $subProperty]);
+            }
+            SubProperty::insert($data);
+        }
+
+        if ($request->get('new_subproperty')) {
+            $data = [];
+            foreach ($request->get('new_subproperty') as $key => $property) {
+                foreach ($property as $newSubproperty) {
+                    $data[] = [
+                        'name'        => $newSubproperty,
+                        'property_id' => $key,
+                    ];
+                }
+            }
+            SubProperty::insert($data);
+        }
+
         if ($request->ajax()) {
-            return response()->json('{"message": "Категорията беше успешно редактирана."}');
+            $properties = Property::where('category_id', $category->id)
+                                  ->with('subProperties')
+                                  ->get();
+
+            return response()->json([
+                'message' => 'Категорията беше успешно редактирана.',
+                'content' => view('admin.categories.edit-content', ['categories' => Category::all(),
+                                                                    'category'   => $category,
+                                                                    'properties' => $properties,
+                ])->render(),
+            ]);
         }
 
         return redirect()->back()->with('message', 'Категорията беше успешно редактирана.');

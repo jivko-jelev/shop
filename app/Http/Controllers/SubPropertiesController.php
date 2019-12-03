@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Property;
 use App\SubProperty;
 use Illuminate\Http\Request;
 
@@ -30,7 +31,7 @@ class SubPropertiesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +42,7 @@ class SubPropertiesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\SubProperty $subProperties
+     * @param \App\SubProperty $subProperties
      * @return \Illuminate\Http\Response
      */
     public function show(SubProperty $subProperties)
@@ -52,7 +53,7 @@ class SubPropertiesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\SubProperty $subProperties
+     * @param \App\SubProperty $subProperties
      * @return \Illuminate\Http\Response
      */
     public function edit(SubProperty $subProperties)
@@ -63,8 +64,8 @@ class SubPropertiesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\SubProperty         $subProperties
+     * @param \Illuminate\Http\Request $request
+     * @param \App\SubProperty         $subProperties
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, SubProperty $subProperties)
@@ -81,6 +82,11 @@ class SubPropertiesController extends Controller
      */
     public function destroy(SubProperty $subProperties)
     {
-        $subProperties->delete();
+        $isLastSubProperty = SubProperty::where('property_id', $subProperties->property_id)->limit(2)->count();
+        if ($isLastSubProperty > 1) {
+            $subProperties->delete();
+        } else {
+            return response()->json(['errors' => [0 => 'Не може да изтриете последния податрибут']], 404);
+        }
     }
 }

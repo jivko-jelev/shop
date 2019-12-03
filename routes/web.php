@@ -69,5 +69,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-//    dd(trans('constants')['newProductDays']);
+    $a=\App\SubProperty::find(1)->category();
+    dd($a);
 });

@@ -25,25 +25,29 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => [
+            'title'               => [
                 'required',
                 Rule::unique('categories')
                     ->where(function ($query) {
                         return $query->where('title', $this->request->get('title'))
                                      ->where('parent_id', $this->request->get('parent_id'));
                     })->ignore($this->category),],
-            'alias' => [
+            'alias'               => [
                 'required',
                 Rule::unique('categories')
                     ->where('alias', $this->request->get('alias'))
                     ->ignore($this->category),],
+            'subproperty.*'       => 'required',
+            'new_subproperty.*.*' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            "title.unique" => "Вече съществува такава Категория със същата Главна Категория",
+            "title.unique"               => "Вече съществува такава Категория със същата Главна Категория",
+            'subproperty.*.required'     => 'Полето за Податрибут не може да бъде без стойност',
+            'new_subproperty.*.required' => 'Полето за Податрибут не може да бъде без стойност',
         ];
     }
 }

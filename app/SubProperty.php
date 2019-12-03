@@ -12,7 +12,7 @@ class SubProperty extends Model
 
     public $timestamps = false;
 
-    public function Category()
+    public function category()
     {
         return $this->belongsTo(Property::class);
     }
