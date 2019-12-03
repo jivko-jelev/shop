@@ -38,16 +38,18 @@ class CategoryRequest extends FormRequest
                     ->where('alias', $this->request->get('alias'))
                     ->ignore($this->category),],
             'subproperty.*'       => 'required',
+            'new_subproperty.*'   => 'required',
             'new_subproperty.*.*' => 'required',
+            'new_property.*'      => 'required',
+            'property.*'          => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            "title.unique"               => "Вече съществува такава Категория със същата Главна Категория",
-            'subproperty.*.required'     => 'Полето за Податрибут не може да бъде без стойност',
-            'new_subproperty.*.required' => 'Полето за Податрибут не може да бъде без стойност',
+            "title.unique" => "Вече съществува такава Категория със същата Главна Категория",
+            'required'     => 'задължително',
         ];
     }
 }

@@ -11,54 +11,48 @@
                     <div class="form-group">
                         <label for="name" class="col-sm-4 control-label">Потребителско Име</label>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-8 error-div">
                             <input type="text" class="form-control" name="name" id="name" placeholder="Потребителско Име"
                                    value="{{ old('name', $user->name) }}" autocomplete="off">
-                            <span class="error" id="name-error"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="email" class="col-sm-4 control-label">Имейл</label>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-8 error-div">
                             <input type="text" class="form-control" name="email" id="email" placeholder="Имейл"
                                    value="{{ old('email', $user->email) }}">
-                            <span class="error" id="email-error"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="password" class="col-sm-4 control-label">Парола</label>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-8 error-div">
                             <input type="password" class="form-control" name="password" id="password" placeholder="Парола">
-                            <span class="error" id="password-error"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="password_confirmation" class="col-sm-4 control-label">Повтори
                             Паролата</label>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-8 error-div">
                             <input type="password" class="form-control" name="password_confirmation" placeholder="Повтори Паролата">
-                            <span class="error" id="password_confirmation-error"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="first_name" class="col-sm-4 control-label">Име</label>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-8 error-div">
                             <input type="text" class="form-control" name="first_name" placeholder="Име"
                                    value="{{ old('first_name', $user->first_name) }}">
-                            <span class="error" id="first_name-error"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="last_name" class="col-sm-4 control-label">Фамилия</label>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-8 error-div">
                             <input type="text" class="form-control" name="last_name" placeholder="Фамилия"
                                    value="{{ old('last_name', $user->last_name) }}">
-                            <span class="error" id="last_name-error"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -105,18 +99,7 @@
                 table.ajax.reload(null, false);
             },
             error: function (data) {
-                $('.error').html('');
-                for (let i = 0; i < Object.keys(data.responseJSON.errors).length; i++) {
-                    if (Object.keys(data.responseJSON.errors)[i] !== undefined) {
-                        let key = Object.keys(data.responseJSON.errors)[i];
-                        $('#' + key + '-error').html(data.responseJSON.errors[key]);
-                    }
-                }
-                Lobibox.notify('error', {
-                    showClass: 'rollIn',
-                    hideClass: 'rollOut',
-                    msg: 'Възникна някаква грешка при опита за промяна на данните на потребителя'
-                });
+                showErrors(data);
             }
         })
     })

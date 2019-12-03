@@ -22,14 +22,14 @@
                                 <div class="form-group">
                                     <label for="title" class="col-sm-2 control-label">Име</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 error-div">
                                         <input type="text" class="form-control" name="title" id="title" placeholder="Име">
                                         <span class="error" id="title-error"></span>
                                     </div>
 
                                     <label for="alias" class="col-sm-2 control-label">Псевдоним</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 error-div">
                                         <input type="text" class="form-control" name="alias" id="alias" placeholder="Псевдоним">
                                         <span class="error" id="alias-error"></span>
                                     </div>
@@ -37,7 +37,7 @@
 
                                 <div class="form-group">
                                     <label for="parent_id" class="col-sm-2 control-label">Главна Категория</label>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 error-div">
                                         <select class="form-control select2" id="parent_id" name="parent_id">
                                             <option value="">Без</option>
                                             @foreach($categories as $category)
@@ -50,7 +50,7 @@
                                 <div class="form-group">
                                     <label for="property_name[]" class="col-sm-2 control-label">Атрибут</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 error-div">
                                         <input type="text" class="form-control" name="property_name[]" id="property_name[]"
                                                placeholder="Атрибут">
                                         <span class="error" id="alias-error-modal"></span><br>
@@ -59,7 +59,7 @@
                                         </button>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 error-div">
                                         <textarea name="sub_property[]" class="form-control" rows="6"></textarea>
                                     </div>
                                 </div>
@@ -111,18 +111,7 @@
                         }
                     },
                     error: function (data) {
-                        $('.error').html('');
-                        for (let i = 0; i < Object.keys(data.responseJSON.errors).length; i++) {
-                            if (Object.keys(data.responseJSON.errors)[i] !== undefined) {
-                                let key = Object.keys(data.responseJSON.errors)[i];
-                                $('#' + key + '-error').html(data.responseJSON.errors[key]);
-                            }
-                        }
-                        Lobibox.notify('error', {
-                            showClass: 'rollIn',
-                            hideClass: 'rollOut',
-                            msg: 'Възникна някаква грешка при опита за запис на данните'
-                        });
+                        showErrors(data);
                     }
                 });
             })
@@ -209,7 +198,6 @@
                 '\n' +
                 '                                    <div class="col-sm-4">\n' +
                 '                                        <input type="text" class="form-control" name="property_name[]" id="property_name[]" placeholder="Атрибут">\n' +
-                '                                        <span class="error" id="alias-error-modal"></span><br>\n' +
                 '                                        <button class="btn btn-danger btn-block delete-property" type="button">Изтрий</button>\n' +
                 '                                        <button class="btn btn-primary btn-block add-property" type="button">Добави още един атрибут</button>\n' +
                 '                                    </div>\n' +

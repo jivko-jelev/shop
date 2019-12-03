@@ -15,7 +15,6 @@ class UserController extends Controller
     {
         $users        = User::select(['id', 'name', 'first_name', 'last_name', 'email', 'created_at', 'sex']);
         $recordsTotal = User::all()->count();
-        $recordsFiltered = $users->count();
 
         $ajaxGridColumnNames = [
             0 => 'name',
@@ -32,6 +31,8 @@ class UserController extends Controller
               ->whereIf('sex', $request->get('sex'))
               ->whereLikeIf('email', $request->get('email'))
               ->whereLikeIf('created_at', $request->get('created_at'));
+
+        $recordsFiltered = $users->count();
 
         $orderState = $request->get('order');
         foreach ($orderState as $singleOrderState) {

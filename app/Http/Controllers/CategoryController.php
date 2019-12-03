@@ -206,10 +206,12 @@ class CategoryController extends Controller
             $data = [];
             foreach ($request->get('new_subproperty') as $key => $property) {
                 foreach ($property as $newSubproperty) {
-                    $data[] = [
-                        'name'        => $newSubproperty,
-                        'property_id' => $key,
-                    ];
+                    if($newSubproperty!='') {
+                        $data[] = [
+                            'name'        => $newSubproperty,
+                            'property_id' => $key,
+                        ];
+                    }
                 }
             }
             SubProperty::insert($data);

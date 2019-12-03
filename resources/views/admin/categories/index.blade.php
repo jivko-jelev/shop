@@ -18,19 +18,19 @@
                     <form class="form-horizontal" id="form-create-category" autocomplete="off" method="post" action="{{ route('categories.store') }}">
                         <div class="form-group">
                             <label for="title" class="col-sm-1 control-label">Име</label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-2 error-div">
                                 <input type="text" class="form-control" name="title" id="title" placeholder="Име">
                                 <span class="error" id="title-error"></span>
                             </div>
 
                             <label for="alias" class="col-sm-1 control-label">Псевдоним</label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-2 error-div">
                                 <input type="text" class="form-control" name="alias" id="alias" placeholder="Псевдоним">
                                 <span class="error" id="alias-error"></span>
                             </div>
 
                             <label for="name" class="col-sm-1 control-label">Категория</label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-2 error-div">
                                 <select class="form-control select2" name="parent_id" id="parent_id" style="width: 100%;">
                                 </select>
                             </div>
@@ -111,19 +111,7 @@
                         $('[name="alias"]').val('');
                     },
                     error: function (data) {
-                        console.log(data);
-                        $('.error').html('');
-                        for (let i = 0; i < Object.keys(data.responseJSON.errors).length; i++) {
-                            if (Object.keys(data.responseJSON.errors)[i] !== undefined) {
-                                let key = Object.keys(data.responseJSON.errors)[i];
-                                $('#' + key + '-error').html(data.responseJSON.errors[key]);
-                            }
-                        }
-                        Lobibox.notify('error', {
-                            showClass: 'rollIn',
-                            hideClass: 'rollOut',
-                            msg: 'Възникна някаква грешка при опита за запис на данните'
-                        });
+                        showErrors(data);
                     }
                 });
             })
