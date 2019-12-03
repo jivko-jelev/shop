@@ -69,6 +69,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-    $a=\App\SubProperty::find(1)->category();
-    dd($a);
 });

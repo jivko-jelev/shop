@@ -91,6 +91,7 @@
                 @endforeach
                 <div class="modal-footer">
                     <!-- /.box-body -->
+                    <button type="button" class="btn btn-success add-property">Добави атрибут</button>
                     <button type="submit" id="submit" class="btn btn-primary pull-right">Запиши</button>
                     <!-- /.box-footer -->
                 </div>

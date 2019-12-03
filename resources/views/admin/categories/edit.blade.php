@@ -121,19 +121,18 @@
                 '                                    </div>');
         });
 
-        let newPropertySubProperty = 0;
         $(document).on('click', '.add-property-subproperty', function () {
-            newPropertySubProperty++;
+            newSubProperty++;
             $(this).closest('.property').append('<div class="form-group">\n' +
-                `                                        <label for="subproperty[${newPropertySubProperty}]" class="col-sm-4 control-label">Нов податрибут\n` +
+                `                                        <label for="subproperty[${newSubProperty}]" class="col-sm-4 control-label">Нов податрибут\n` +
                 '                                            </label>\n' +
                 '                                        <div class="col-sm-8 error-div">\n' +
                 '                                            <div class="input-group">\n' +
-                `                                                <input type="text" class="form-control" name="new_property_subproperty[${newProperty}][${newPropertySubProperty}]"\n` +
-                `                                                       id="subproperty[${newPropertySubProperty}]" placeholder="Податрибут"\n` +
+                `                                                <input type="text" class="form-control" name="new_property_subproperty[${newProperty}][${newSubProperty}]"\n` +
+                `                                                       id="subproperty[${newSubProperty}]" placeholder="Податрибут"\n` +
                 '                                                       value="">\n' +
                 '                                                <span class="input-group-btn">\n' +
-                '                                                <button type="button" class="btn btn-primary add-subproperty"\n' +
+                '                                                <button type="button" class="btn btn-primary add-property-subproperty"\n' +
                 '                                                        title="Добави податрибут">\n' +
                 '                                                    <i class="fa fa-plus" aria-hidden="true"></i>\n' +
                 '                                                </button>\n' +
@@ -152,11 +151,11 @@
         $(document).on('click', '.add-property', function () {
             newProperty++;
             newSubProperty++
-            $('.property').last().after('                    <div class="property">\n' +
+            $('#form-category').find('.modal-footer').last().before(
+                '                    <div class="property">\n' +
                 '                        <hr>\n' +
                 '                        <div class="form-group">\n' +
                 `                            <label for="new_property[${newProperty}]" class="col-sm-4 control-label">Нов атрибут</label>\n` +
-                '\n' +
                 '                            <div class="col-sm-8 error-div">\n' +
                 '                                <div class="input-group">\n' +
                 `                                    <input type="text" class="form-control" name="new_property[${newProperty}]"\n` +
