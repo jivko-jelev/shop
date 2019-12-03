@@ -121,6 +121,32 @@
                 '                                    </div>');
         });
 
+        let newPropertySubProperty = 0;
+        $(document).on('click', '.add-property-subproperty', function () {
+            newPropertySubProperty++;
+            $(this).closest('.property').append('<div class="form-group">\n' +
+                `                                        <label for="subproperty[${newPropertySubProperty}]" class="col-sm-4 control-label">Нов податрибут\n` +
+                '                                            </label>\n' +
+                '                                        <div class="col-sm-8 error-div">\n' +
+                '                                            <div class="input-group">\n' +
+                `                                                <input type="text" class="form-control" name="new_property_subproperty[${newProperty}][${newPropertySubProperty}]"\n` +
+                `                                                       id="subproperty[${newPropertySubProperty}]" placeholder="Податрибут"\n` +
+                '                                                       value="">\n' +
+                '                                                <span class="input-group-btn">\n' +
+                '                                                <button type="button" class="btn btn-primary add-subproperty"\n' +
+                '                                                        title="Добави податрибут">\n' +
+                '                                                    <i class="fa fa-plus" aria-hidden="true"></i>\n' +
+                '                                                </button>\n' +
+                '                                                <button type="button" class="btn btn-danger delete-subproperty" title="Изтрий">\n' +
+                '                                                    <i class="fa fa-minus" aria-hidden="true"></i>\n' +
+                '                                                </button>\n' +
+                '                                            </span>\n' +
+                '                                            </div>\n' +
+                '                                            <span class="error" id="alias-error-modal"></span>\n' +
+                '                                        </div>\n' +
+                '                                    </div>');
+        });
+
         let newProperty = 0;
 
         $(document).on('click', '.add-property', function () {
@@ -148,11 +174,11 @@
                 '                                            </label>\n' +
                 '                                        <div class="col-sm-8 error-div">\n' +
                 '                                            <div class="input-group">\n' +
-                `                                                <input type="text" class="form-control" name="new_subproperty[${newProperty}]"\n` +
+                `                                                <input type="text" class="form-control" name="new_property_subproperty[${newProperty}][${newProperty}]"\n` +
                 `                                                       id="subproperty[${newProperty}][${newSubProperty}]" placeholder="Податрибут"\n` +
                 '                                                       value="">\n' +
                 '                                                <span class="input-group-btn">\n' +
-                '                                                <button type="button" class="btn btn-primary add-subproperty"\n' +
+                '                                                <button type="button" class="btn btn-primary add-property-subproperty"\n' +
                 '                                                        title="Добави податрибут">\n' +
                 '                                                    <i class="fa fa-plus" aria-hidden="true"></i>\n' +
                 '                                                </button>\n' +

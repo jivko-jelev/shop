@@ -202,11 +202,31 @@ class CategoryController extends Controller
             SubProperty::insert($data);
         }
 
+        if ($request->get('new_property')) {
+            $data = [];
+            foreach ($request->get('new_property') as $property) {
+                $property = Property::create([
+                    'name'        => $property,
+                    'category_id' => $category->id,
+                ]);
+
+                foreach ($request->get('new_property_subproperty') as $subProperty) {
+                    foreach ($subProperty as $newSubproperty) {
+                        $data[] = [
+                            'name'        => $newSubproperty,
+                            'property_id' => $property->id,
+                        ];
+                    }
+                }
+            }
+            SubProperty::insert($data);
+        }
+
         if ($request->get('new_subproperty')) {
             $data = [];
             foreach ($request->get('new_subproperty') as $key => $property) {
                 foreach ($property as $newSubproperty) {
-                    if($newSubproperty!='') {
+                    if ($newSubproperty != '') {
                         $data[] = [
                             'name'        => $newSubproperty,
                             'property_id' => $key,
