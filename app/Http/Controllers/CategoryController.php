@@ -32,7 +32,8 @@ class CategoryController extends Controller
     {
         return view('admin.categories.create', [
             'categories' => Category::all(),
-            'title'      => 'Създаване на категория',
+            'route'      => route('categories.store'),
+            'method'     => 'post',
         ]);
     }
 
@@ -40,7 +41,7 @@ class CategoryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param CategoryRequest $category
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(CategoryRequest $category)
     {
@@ -51,32 +52,15 @@ class CategoryController extends Controller
         $cat->updated_at = null;
         $cat->save();
 
-        if ($category->property_name && count($category->property_name) > 0) {
-            foreach ($category->property_name as $key => $property) {
-                if ($property && self::haveSubProperties($category->sub_property[$key])) {
-                    $property = Property::create([
-                        'name'        => $property,
-                        'category_id' => $cat->id,
-                    ]);
+        $category->createProperties($cat->id);
 
-                    $subProperties = explode(PHP_EOL, $category->sub_property[$key]);;
-                    $data = [];
-                    foreach ($subProperties as $subPropertyKey => $subProperty) {
-                        if (trim($subProperty) != '') {
-                            $data[] = [
-                                'name'        => (($subPropertyKey == count($subProperties) - 1)
-                                    ? $subProperty : mb_substr($subProperty, 0, mb_strlen($subProperty) - 1)),
-                                'property_id' => $property->id,
-                            ];
-                        }
-                    }
-                    SubProperty::insert($data);
-                }
-            }
-        }
-        $categories = Category::all();
-
-        return response()->json($categories);
+        return response()->json([
+            'content' => view('admin.categories.edit-content', [
+                    'categories' => Category::all(),
+                    'route'      => route('categories.store'),
+                ]
+            )->render(),
+            'message' => 'Категорията беше успешно записана']);
     }
 
     public static function haveSubProperties(string $subProperties): bool
@@ -147,7 +131,7 @@ class CategoryController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Category $category
-     * @return Response
+     * @return array|string
      * @throws Throwable
      */
     public function edit(Category $category)
@@ -168,6 +152,8 @@ class CategoryController extends Controller
             'categories' => Category::all(),
             'category'   => $category,
             'properties' => $properties,
+            'route'      => route('categories.update', $category),
+            'method'     => 'put',
         ])->render();
     }
 
@@ -177,7 +163,8 @@ class CategoryController extends Controller
      * @param Category        $category
      * @param Request         $request
      * @param CategoryRequest $categoryRequest
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Throwable
      */
     public function update(Category $category, Request $request, CategoryRequest $categoryRequest)
     {
@@ -202,25 +189,7 @@ class CategoryController extends Controller
             SubProperty::insert($data);
         }
 
-        if ($request->get('new_property')) {
-            $data = [];
-            foreach ($request->get('new_property') as $property) {
-                $property = Property::create([
-                    'name'        => $property,
-                    'category_id' => $category->id,
-                ]);
-
-                foreach ($request->get('new_property_subproperty') as $subProperty) {
-                    foreach ($subProperty as $newSubproperty) {
-                        $data[] = [
-                            'name'        => $newSubproperty,
-                            'property_id' => $property->id,
-                        ];
-                    }
-                }
-            }
-            SubProperty::insert($data);
-        }
+        $categoryRequest->createProperties($category->id);
 
         if ($request->get('new_subproperty')) {
             $data = [];
@@ -237,21 +206,18 @@ class CategoryController extends Controller
             SubProperty::insert($data);
         }
 
-        if ($request->ajax()) {
-            $properties = Property::where('category_id', $category->id)
-                                  ->with('subProperties')
-                                  ->get();
+        $properties = Property::where('category_id', $category->id)
+                              ->with('subProperties')
+                              ->get();
 
-            return response()->json([
-                'message' => 'Категорията беше успешно редактирана.',
-                'content' => view('admin.categories.edit-content', ['categories' => Category::all(),
-                                                                    'category'   => $category,
-                                                                    'properties' => $properties,
-                ])->render(),
-            ]);
-        }
-
-        return redirect()->back()->with('message', 'Категорията беше успешно редактирана.');
+        return response()->json([
+            'message' => 'Категорията беше успешно редактирана.',
+            'content' => view('admin.categories.edit-content', ['categories' => Category::all(),
+                                                                'category'   => $category,
+                                                                'properties' => $properties,
+                                                                'route'      => route('categories.update', $category),
+            ])->render(),
+        ]);
     }
 
     /**

@@ -39,7 +39,8 @@ Route::prefix('admin')
          Route::post('categories/ajax', 'CategoryController@ajax')->name('categories.ajax');
          Route::put('categories/{category}/update', 'CategoryController@update')->name('categories.update');
          Route::delete('categories/{category}', 'CategoryController@destroy')->name('categories.destroy');
-         Route::get('categories/{category}/properties', 'CategoryController@getProperties')->name('categories.properties');
+         Route::get('categories/{category}/properties', 'CategoryController@getProperties')
+              ->name('categories.properties');
 
          Route::get('categories/{category}/full-edit', 'CategoryController@fullEdit')->name('categories.full.edit');
 
@@ -60,7 +61,8 @@ Route::prefix('admin')
 
 //         Route::resource('properties', 'PropertiesController');
          Route::delete('properties/{properties}/destroy', 'PropertiesController@destroy')->name('properties.destroy');
-         Route::delete('sub-properties/{subProperties}/destroy', 'SubPropertiesController@destroy')->name('subproperties.destroy');
+         Route::delete('sub-properties/{subProperties}/destroy', 'SubPropertiesController@destroy')
+              ->name('subproperties.destroy');
      });
 
 Auth::routes();
@@ -69,4 +71,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
+
 });

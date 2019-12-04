@@ -1,229 +1,193 @@
 @extends('admin.partials.master')
 
 @section('styles')
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{ URL::to('bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
 @endsection
 
 @section('content')
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">{{ $title }}</h3>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <!-- form start -->
-                    <form class="form-horizontal" id="form-category" autocomplete="off" method="post"
-                          action="{{ route('categories.store') }}">
-                        <div class="modal-body">
-                            <div class="box-body">
-                                <div class="form-group">
-                                    <label for="title" class="col-sm-2 control-label">Име</label>
-
-                                    <div class="col-sm-4 error-div">
-                                        <input type="text" class="form-control" name="title" id="title" placeholder="Име">
-                                        <span class="error" id="title-error"></span>
-                                    </div>
-
-                                    <label for="alias" class="col-sm-2 control-label">Псевдоним</label>
-
-                                    <div class="col-sm-4 error-div">
-                                        <input type="text" class="form-control" name="alias" id="alias" placeholder="Псевдоним">
-                                        <span class="error" id="alias-error"></span>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="parent_id" class="col-sm-2 control-label">Главна Категория</label>
-                                    <div class="col-sm-4 error-div">
-                                        <select class="form-control select2" id="parent_id" name="parent_id">
-                                            <option value="">Без</option>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->title }} ({{ $category->alias }})</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="property_name[]" class="col-sm-2 control-label">Атрибут</label>
-
-                                    <div class="col-sm-4 error-div">
-                                        <input type="text" class="form-control" name="property_name[]" id="property_name[]"
-                                               placeholder="Атрибут">
-                                        <span class="error" id="alias-error-modal"></span><br>
-                                        <button class="btn btn-danger btn-block delete-property" type="button">Изтрий</button>
-                                        <button class="btn btn-primary btn-block add-property" type="button">Добави още един атрибут
-                                        </button>
-                                    </div>
-
-                                    <div class="col-md-6 error-div">
-                                        <textarea name="sub_property[]" class="form-control" rows="6"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <!-- /.box-body -->
-                            <button type="submit" id="submit" class="btn btn-primary pull-right">Запиши</button>
-                            <!-- /.box-footer -->
-                        </div>
-                        @csrf
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" role="dialog">
+    <div class="row" id="category-data">
+        @include('admin.categories.edit-content')
     </div>
 @endsection
 
 @push('js')
-    <!-- DataTables -->
-    <script src="{{ URL::to('bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ URL::to('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
-        let table;
-        $(function () {
-            $('#form-category').submit(function (e) {
+        $(document).on('click', '.delete-property', function () {
+            let that = $(this);
+            if (that.data('saved') == 1) {
+                Lobibox.confirm({
+                    msg: `Наистина ли искате да изтриете атрибута: <strong>${$(this).data('title')}</strong>?`,
+                    callback: function ($this, type) {
+                        if (type === 'yes') {
+                            $.ajax({
+                                url: `${that.data('route')}`,
+                                method: 'delete',
+                                success: function (data) {
+                                    that.closest('.property').remove();
+                                    Lobibox.notify('success', {
+                                        msg: `Атрибутът <strong>${that.data('title')}</strong> беше успешно изтрит`
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+            } else {
+                that.closest('.property').remove();
+            }
+        });
+
+        $(document).on('click', '.delete-subproperty', function () {
+            let that = $(this);
+            if (that.data('saved') == 1) {
+                Lobibox.confirm({
+                    msg: `Наистина ли искате да изтриете податрибута: <strong>${that.data('title')}</strong>?`,
+                    callback: function ($this, type) {
+                        if (type === 'yes') {
+                            $.ajax({
+                                url: `${that.data('route')}`,
+                                method: 'delete',
+                                success: function (data) {
+                                    let parent = that.closest('.property');
+                                    that.closest('.form-group').remove();
+                                    let count = 0;
+                                    parent.find('label').each(function () {
+                                        if (count++ > 0) {
+                                            $(this).html(`Податрибут #${count - 1}`);
+                                        }
+
+                                    });
+                                    Lobibox.notify('success', {
+                                        msg: `Податрибутът <strong>${that.data('title')}</strong> беше успешно изтрит`
+                                    });
+                                },
+                                error: function (data) {
+                                    showError(data);
+                                }
+                            });
+                        }
+                    }
+                });
+            } else {
+                if (that.closest('.property').find('input').length > 2) {
+                    that.closest('.form-group').remove();
+                }
+            }
+        });
+
+        function grabSubmitButton() {
+            $('#submit').click(function (e) {
                 e.preventDefault();
                 $.ajax({
-                    url: '{{ route("categories.store") }}',
+                    url: '{{ $route }}',
+                    method: '{{ $method }}',
                     data: $('#form-category').serialize(),
-                    method: 'post',
                     success: function (data) {
-                        table.ajax.reload(null, false);
-                        Lobibox.notify('success', {
-                            showClass: 'rollIn',
-                            hideClass: 'rollOut',
-                            msg: `Категорията <strong>${$('[name="title"]').val()}</strong> беше създадена успешно`
-                        });
-                        $('.error').html('');
-                        $('[name="title"]').val('');
-                        $('[name="alias"]').val('');
-                        $('#parent_id').html('');
-                        $('#parent_id').append(`<option value="">Без</option>`)
-                        for (let i = 0; i < data.length; i++) {
-                            $('#parent_id').append(`<option value="${data[i]['id']}">${data[i]['title']} (${data[i]['alias']})</option>`)
-                        }
+                        showSuccessMessage(data.message);
+                        $('#category-data').html(data.content);
+                        grabSubmitButton();
                     },
                     error: function (data) {
                         showErrors(data);
                     }
                 });
-            })
-            table = $('#categories').DataTable({
-                paging: false,
-                lengthChange: false,
-                searching: false,
-                ordering: true,
-                info: true,
-                autoWidth: false,
-                processing: true,
-                serverSide: true,
-                orderCellsTop: true,
-                order: [0, "asc"],
-                columnDefs: [{
-                    orderable: false,
-                    targets: [3],
-                }],
-                ajax: {
-                    "url": '{{ route('categories.ajax') }}',
-                    "type": "POST",
-                    data: function (d) {
-                        d.title = $('input[name="filter[title]"]').val();
-                        d.alias = $('input[name="filter[alias]"]').val();
-                        d.parent = $('input[name="filter[parent]"]').val();
-                    }
-                },
-                columns: [
-                    {data: 'title'},
-                    {data: 'alias'},
-                    {data: 'parent_id'},
-                    {data: 'actions'},
-                ],
-                "fnDrawCallback": function (oSettings) {
-                    $('#parent_id').html('');
-                    let categoriesData = table.rows().data().sort();
-                    let o              = new Option("Без", '');
-                    $(o).html('Без');
-                    $('#parent_id').append(o);
-                    for (let i = 0; i < categoriesData.length; i++) {
-                        let o = new Option(`${categoriesData[i]['title']} (${categoriesData[i]['alias']})`, categoriesData[i]['id']);
-                        $(o).html(`${categoriesData[i]['title']} (${categoriesData[i]['alias']})`);
-                        $('#parent_id').append(o);
-                    }
-
-                    $('.a-action').click(function (e) {
-                        e.preventDefault();
-                        let link = $(this).attr('href');
-                        $.ajax({
-                            url: link,
-                            method: 'get',
-                            success: function (data) {
-                                $('#myModal').html(data);
-                            }
-                        })
-                    })
-                }
-            });
-            $('#filter').click(function () {
-                table.ajax.reload(null, true);
-            });
-            $('.form-filter').keypress(function (e) {
-                if (e.which == 13) {
-                    table.ajax.reload(null, true);
-                }
-            });
-            $('#clear').click(function () {
-                $('[name^="filter"]').val('');
-                table.ajax.reload(null, false);
-            });
-        });
-        $('#title').on('input', function () {
-            $('#alias').val($(this).val());
-        })
-        $(document).keyup(function (e) {
-            if (e.key === "Escape") {
-                $('#myModal').modal('hide');
-            }
-        });
-
-        function createNewAttribute() {
-            $('.modal-body .box-body').append('                                <div class="form-group">\n' +
-                '                                    <label for="property_name[]" class="col-sm-2 control-label">Атрибут</label>\n' +
-                '\n' +
-                '                                    <div class="col-sm-4">\n' +
-                '                                        <input type="text" class="form-control" name="property_name[]" id="property_name[]" placeholder="Атрибут">\n' +
-                '                                        <button class="btn btn-danger btn-block delete-property" type="button">Изтрий</button>\n' +
-                '                                        <button class="btn btn-primary btn-block add-property" type="button">Добави още един атрибут</button>\n' +
-                '                                    </div>\n' +
-                '                                    \n' +
-                '                                    <div class="col-md-6">\n' +
-                '                                        <textarea name="sub_property[]" class="form-control" rows="6"></textarea>\n' +
-                '                                    </div>\n' +
-                '                                </div>\n')
-
-            $('.delete-property').off();
-            $('.delete-property').click(function () {
-                $(this).closest('.form-group').remove();
-            });
-
-            $('.add-property').off();
-            $('.add-property').click(function () {
-                createNewAttribute();
             });
         }
 
-        $('.delete-property').click(function () {
-            $(this).closest('.form-group').remove();
+        grabSubmitButton();
+
+        let newSubProperty = 0;
+        $(document).on('click', '.add-subproperty', function () {
+            newSubProperty++;
+            $(this).closest('.property').append('<div class="form-group">\n' +
+                `                                        <label for="subproperty[${newSubProperty}]" class="col-sm-4 control-label">Нов податрибут\n` +
+                '                                            </label>\n' +
+                '                                        <div class="col-sm-8 error-div">\n' +
+                '                                            <div class="input-group">\n' +
+                `                                                <input type="text" class="form-control" name="new_subproperty[${$(this).closest('.property').data('id')}][${newSubProperty}]"\n` +
+                `                                                       id="subproperty[${newSubProperty}]" placeholder="Податрибут"\n` +
+                '                                                       value="">\n' +
+                '                                                <span class="input-group-btn">\n' +
+                '                                                <button type="button" class="btn btn-primary add-subproperty"\n' +
+                '                                                        title="Добави податрибут">\n' +
+                '                                                    <i class="fa fa-plus" aria-hidden="true"></i>\n' +
+                '                                                </button>\n' +
+                '                                                <button type="button" class="btn btn-danger delete-subproperty" title="Изтрий">\n' +
+                '                                                    <i class="fa fa-minus" aria-hidden="true"></i>\n' +
+                '                                                </button>\n' +
+                '                                            </span>\n' +
+                '                                            </div>\n' +
+                '                                            <span class="error" id="alias-error-modal"></span>\n' +
+                '                                        </div>\n' +
+                '                                    </div>');
         });
 
-        $('.add-property').click(function () {
-            createNewAttribute();
+        $(document).on('click', '.add-property-subproperty', function () {
+            newSubProperty++;
+            $(this).closest('.property').append('<div class="form-group">\n' +
+                `                                        <label for="subproperty[${newSubProperty}]" class="col-sm-4 control-label">Нов податрибут\n` +
+                '                                            </label>\n' +
+                '                                        <div class="col-sm-8 error-div">\n' +
+                '                                            <div class="input-group">\n' +
+                `                                                <input type="text" class="form-control" name="new_property_subproperty[${newProperty}][${newSubProperty}]"\n` +
+                `                                                       id="subproperty[${newSubProperty}]" placeholder="Податрибут"\n` +
+                '                                                       value="">\n' +
+                '                                                <span class="input-group-btn">\n' +
+                '                                                <button type="button" class="btn btn-primary add-property-subproperty"\n' +
+                '                                                        title="Добави податрибут">\n' +
+                '                                                    <i class="fa fa-plus" aria-hidden="true"></i>\n' +
+                '                                                </button>\n' +
+                '                                                <button type="button" class="btn btn-danger delete-subproperty" title="Изтрий">\n' +
+                '                                                    <i class="fa fa-minus" aria-hidden="true"></i>\n' +
+                '                                                </button>\n' +
+                '                                            </span>\n' +
+                '                                            </div>\n' +
+                '                                            <span class="error" id="alias-error-modal"></span>\n' +
+                '                                        </div>\n' +
+                '                                    </div>');
+        });
+
+        let newProperty = 0;
+
+        $(document).on('click', '.add-property', function () {
+            newProperty++;
+            newSubProperty++
+            $('#form-category').find('.modal-footer').last().before(
+                '                    <div class="property">\n' +
+                '                        <hr>\n' +
+                '                        <div class="form-group">\n' +
+                `                            <label for="new_property[${newProperty}]" class="col-sm-4 control-label">Нов атрибут</label>\n` +
+                '                            <div class="col-sm-8 error-div">\n' +
+                '                                <div class="input-group">\n' +
+                `                                    <input type="text" class="form-control" name="new_property[${newProperty}]"\n` +
+                `                                           id="new_property[${newProperty}]" placeholder="Атрибут">\n` +
+                '                                    <span class="input-group-btn">\n' +
+                '                                                <button type="button" class="btn btn-primary add-property">Добави атрибут</button>\n' +
+                '                                                <button type="button" class="btn btn-danger delete-property">\n' +
+                '                                                   Изтрий</button>\n' +
+                '                                            </span>\n' +
+                '                                </div>\n' +
+                '                            </div>\n' +
+                '                        </div>\n' +
+                '                                        <div class="form-group">\n' +
+                `                                               <label for="subproperty[${newProperty}][${newSubProperty}]" class="col-sm-4 control-label">Нов податрибут\n` +
+                '                                            </label>\n' +
+                '                                        <div class="col-sm-8 error-div">\n' +
+                '                                            <div class="input-group">\n' +
+                `                                                <input type="text" class="form-control" name="new_property_subproperty[${newProperty}][${newProperty}]"\n` +
+                `                                                       id="subproperty[${newProperty}][${newSubProperty}]" placeholder="Податрибут"\n` +
+                '                                                       value="">\n' +
+                '                                                <span class="input-group-btn">\n' +
+                '                                                <button type="button" class="btn btn-primary add-property-subproperty"\n' +
+                '                                                        title="Добави податрибут">\n' +
+                '                                                    <i class="fa fa-plus" aria-hidden="true"></i>\n' +
+                '                                                </button>\n' +
+                '                                                <button type="button" class="btn btn-danger delete-subproperty" title="Изтрий">\n' +
+                '                                                    <i class="fa fa-minus" aria-hidden="true"></i>\n' +
+                '                                                </button>\n' +
+                '                                            </span>\n' +
+                '                                            </div>\n' +
+                '                                            <span class="error" id="alias-error-modal"></span>\n' +
+                '                                        </div></div>\n');
         });
     </script>
 @endpush

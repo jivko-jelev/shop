@@ -87,6 +87,7 @@
                         grabSubmitButton();
                     },
                     error: function (data) {
+                        console.log(data);
                         showErrors(data);
                     }
                 });

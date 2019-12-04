@@ -274,3 +274,7 @@ legend {
     padding-left: 5px;
     padding-right: 5px;
 }
+
+hr{
+    border-top: 1px solid #e1e5ee;
+}
