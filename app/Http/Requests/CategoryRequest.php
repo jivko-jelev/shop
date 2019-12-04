@@ -39,7 +39,7 @@ class CategoryRequest extends FormRequest
                 Rule::unique('categories')
                     ->where('alias', $this->request->get('alias'))
                     ->ignore($this->category),],
-            'subproperty.*'                => 'required',
+            'subproperty.*.*'              => 'required',
             'new_subproperty.*.*'          => 'required',
             'new_property_subproperty.*.*' => 'required',
             'new_property.*'               => 'required',
@@ -47,50 +47,54 @@ class CategoryRequest extends FormRequest
         ];
     }
 
-//    public function withValidator($validator)
-//    {
-//        $validator->after(function ($validator) {
-//            $subProperties = SubProperty::select('sub_properties.*')
-//                                        ->join('properties', function ($join) {
-//                                            $join->on('properties.id', 'sub_properties.property_id')
-//                                                 ->where('properties.category_id', $this->category->id);
-//                                        })
-//                                        ->get();
-//
-//            $errorMessage = 'Не може да има 2 податрибута с еднакви имена, които да са към един и същи атрибут';
-//
-//            foreach ($this->request->get('subproperty') as $key => $item) {
-//                foreach ($subProperties as $subProperty) {
-//                    if ($key != $subProperty->id && $item == $subProperty->name) {
-//                        $validator->errors()
-//                                  ->add("subproperty.$subProperty->id", $errorMessage);
-//                        $validator->errors()
-//                                  ->add("subproperty.$key", $errorMessage);
-//                    }
-//                }
-//
-//                foreach ($this->request->get('subproperty') as $key1 => $subProperty) {
-//                    if ($key != $key1 && $item == $subProperty) {
-//                        $validator->errors()
-//                                  ->add("subproperty.$key1", $errorMessage);
-//                        $validator->errors()
-//                                  ->add("subproperty.$key", $errorMessage);
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $errorMessage = 'Не може да има 2 податрибута с еднакви имена, които да са към един и същи атрибут';
+
+            if ($this->request->get("new_subproperty")) {
+                foreach ($this->request->get('subproperty') as $key => $property) {
+                    foreach ($property as $key1 => $subProperty) {
+                        foreach ($property as $key2 => $item) {
+                            if ($key1 != $key2 && $item == $subProperty) {
+                                $validator->errors()
+                                          ->add("subproperty.$key.$key1", $errorMessage);
+                            }
+                        }
+                        if ($this->request->get("new_subproperty")) {
+                            foreach ($this->request->get("new_subproperty") as $key5 => $property1) {
+                                if ($key == $key5) {
+                                    foreach ($property1 as $key3 => $subProperty) {
+                                        foreach ($property1 as $key4 => $item1) {
+                                            if ($item1 == $subProperty ) {
+//                                                $validator->errors()
+//                                                          ->add("subproperty.$key.$key1", $errorMessage);
+                                                $validator->errors()
+                                                          ->add("new_subproperty.$key.$key4", $errorMessage);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+//            if ($this->request->get("new_subproperty")) {
+//                foreach ($this->request->get("new_subproperty") as $key => $property) {
+//                    foreach ($property as $key1 => $subProperty) {
+//                        foreach ($property as $key2 => $item) {
+//                            if ($key1 != $key2 && $item == $subProperty) {
+//                                $validator->errors()
+//                                          ->add("new_subproperty.$key.$key2", $errorMessage);
+//                            }
+//                        }
 //                    }
 //                }
 //            }
-//
-////                $validator->errors()->add($key, $this->request->get("new_subproperty"));
-//            foreach ($this->request->get("new_subproperty") as $key1 => $subProperty) {
-//                $validator->errors()->add($key, $key1);
-//                if ($key != $key1 && $item == $subProperty) {
-//                    $validator->errors()
-//                              ->add("subproperty.$key1", $errorMessage);
-//                    $validator->errors()
-//                              ->add("subproperty.$key", $errorMessage);
-//                }
-//            }
-//        });
-//    }
+        });
+    }
 
     public function messages()
     {

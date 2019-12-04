@@ -13,7 +13,7 @@
     <script>
         $(document).on('click', '.delete-property', function () {
             let that = $(this);
-            if (that.data('saved') == 1) {
+            if (that.data('route')) {
                 Lobibox.confirm({
                     msg: `Наистина ли искате да изтриете атрибута: <strong>${$(this).data('title')}</strong>?`,
                     callback: function ($this, type) {
@@ -38,7 +38,7 @@
 
         $(document).on('click', '.delete-subproperty', function () {
             let that = $(this);
-            if (that.data('saved') == 1) {
+            if (that.data('route')) {
                 Lobibox.confirm({
                     msg: `Наистина ли искате да изтриете податрибута: <strong>${that.data('title')}</strong>?`,
                     callback: function ($this, type) {

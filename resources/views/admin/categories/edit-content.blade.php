@@ -34,7 +34,7 @@
                             <option value="">Без</option>
                             @foreach($categories as $cat)
                                 <option
-                                    value="{{ $cat->id }}"{{ isset($category) ? ($cat->id == $category->parent_id ? 'selected' :'') :''}}>{{ $cat->title }}
+                                        value="{{ $cat->id }}"{{ isset($category) ? ($cat->id == $category->parent_id ? 'selected' :'') :''}}>{{ $cat->title }}
                                     ({{ $cat->alias }})
                                 </option>
                             @endforeach
@@ -57,7 +57,7 @@
                                         <span class="input-group-btn">
                                                 <button type="button" class="btn btn-primary add-property">Добави атрибут</button>
                                                 <button type="button" class="btn btn-danger delete-property"
-                                                        data-title="{{ $property->name }}" data-saved="1"
+                                                        data-title="{{ $property->name }}"
                                                         data-route="{{ route('properties.destroy', [$property->id]) }}">Изтрий</button>
                                             </span>
                                     </div>
@@ -65,12 +65,11 @@
                             </div>
                             @foreach($property->subProperties as $key => $subProperty)
                                 <div class="form-group">
-                                    <label for="subproperty[{{ $subProperty->id }}]" class="col-sm-4 control-label">Податрибут
-                                        #{{ $key + 1 }}</label>
+                                    <label for="subproperty[{{ $subProperty->id }}]" class="col-sm-4 control-label">Податрибут #{{ $key + 1 }}</label>
                                     <div class="col-sm-8 error-div">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" name="subproperty[{{ $subProperty->id }}]"
-                                                   id="subproperty[{{ $subProperty->id }}]" placeholder="Податрибут"
+                                            <input type="text" class="form-control" name="subproperty[{{ $property->id }}][{{ $subProperty->id }}]"
+                                                   id="subproperty[{{ $property->id }}][{{ $subProperty->id }}]" placeholder="Податрибут"
                                                    value="{{ $subProperty->name }}">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-primary add-subproperty"
@@ -78,8 +77,7 @@
                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger delete-subproperty"
-                                                        data-title="{{ $subProperty->name }}" data-saved="1"
-                                                        title="Изтрий"
+                                                        data-title="{{ $subProperty->name }}" title="Изтрий"
                                                         data-route="{{ route('subproperties.destroy', [$subProperty->id]) }}">
                                                     <i class="fa fa-minus" aria-hidden="true"></i>
                                                 </button>

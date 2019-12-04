@@ -182,9 +182,11 @@ class CategoryController extends Controller
 
         if ($request->get('subproperty')) {
             $data = [];
-            foreach ($request->get('subproperty') as $key => $subProperty) {
-                SubProperty::where('id', $key)
-                           ->update(['name' => $subProperty]);
+            foreach ($request->get('subproperty') as $key => $property) {
+                foreach ($property as $key1 => $subProperty) {
+                    SubProperty::where('id', $key1)
+                               ->update(['name' => $subProperty]);
+                }
             }
             SubProperty::insert($data);
         }
@@ -195,12 +197,10 @@ class CategoryController extends Controller
             $data = [];
             foreach ($request->get('new_subproperty') as $key => $property) {
                 foreach ($property as $newSubproperty) {
-                    if ($newSubproperty != '') {
-                        $data[] = [
-                            'name'        => $newSubproperty,
-                            'property_id' => $key,
-                        ];
-                    }
+                    $data[] = [
+                        'name'        => $newSubproperty,
+                        'property_id' => $key,
+                    ];
                 }
             }
             SubProperty::insert($data);
