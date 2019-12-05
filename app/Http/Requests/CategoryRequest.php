@@ -95,10 +95,8 @@ class CategoryRequest extends FormRequest
                                 if ($key == $key3) {
                                     foreach ($property1 as $key4 => $subProperty1) {
                                         if ($subProperty == $subProperty1) {
-                                            $validator->errors()
-                                                      ->add("subproperty.$key.$key1", $errorMessageForSubproperties);
-                                            $validator->errors()
-                                                      ->add("new_subproperty.$key.$key4", $errorMessageForSubproperties);
+                                            $validator->errors()->add("subproperty.$key.$key1", $errorMessageForSubproperties);
+                                            $validator->errors()->add("new_subproperty.$key.$key4", $errorMessageForSubproperties);
                                         }
                                     }
                                 }
@@ -121,8 +119,7 @@ class CategoryRequest extends FormRequest
                     if ($subProperty != '') {
                         foreach ($property as $key2 => $item) {
                             if ($key1 != $key2 && $item == $subProperty) {
-                                $validator->errors()
-                                          ->add("$name.$key.$key1", $errorMessage);
+                                $validator->errors()->add("$name.$key.$key1", $errorMessage);
                             }
                         }
                     }

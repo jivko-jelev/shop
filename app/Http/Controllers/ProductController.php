@@ -141,8 +141,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param ProductRequest           $productRequest
+     * @param ProductRequest $productRequest
      * @return Response
      */
     public function store(ProductRequest $productRequest)
@@ -168,8 +167,6 @@ class ProductController extends Controller
 
             ProductSubProperties::insert($productSubProperties);
         }
-
-        return redirect()->route('products.edit', [$product]);
 
         return response()->json(['url' => route('products.edit', ['product' => $product])]);
     }
