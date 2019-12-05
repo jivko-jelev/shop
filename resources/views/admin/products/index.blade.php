@@ -26,24 +26,27 @@
                             <tr class="filter">
                                 <form id="form-filter" autocomplete="off">
                                     <th><input type="text" class="form-control form-filter" name="filter[name]"></th>
-                                    <th><input type="text" class="form-control form-filter" name="filter[category_id]"></th>
+                                    <th><input type="text" class="form-control form-filter" name="filter[category]"></th>
                                     <th class="filter-date">
                                         <div class="form-group">
                                             <div class="filter-date-from">
-                                                <input type="text" class="form-control form-filter" name="filter[created_at_from]" id="datepicker-from" placeholder="От">
+                                                <input type="text" class="form-control form-filter" name="filter[created_at_from]"
+                                                       id="datepicker-from" placeholder="От">
                                             </div>
                                             <div class="filter-date-to">
-                                                <input type="text" class="form-control form-filter" name="filter[created_at_to]" id="datepicker-to" placeholder="До">
+                                                <input type="text" class="form-control form-filter" name="filter[created_at_to]"
+                                                       id="datepicker-to" placeholder="До">
                                             </div>
                                         </div>
                                     </th>
                                     <th>
                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                            <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary" title="Търси"><i
-                                                        class="fa fa-search"></i></button>
+                                            <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary"
+                                                    title="Търси"><i
+                                                    class="fa fa-search"></i></button>
                                             <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary"
                                                     title="Изчисти филтъра"><i
-                                                        class="fa fa-times"></i></button>
+                                                    class="fa fa-times"></i></button>
                                         </div>
                                     </th>
                                 </form>
@@ -99,7 +102,7 @@
                     data: function (d) {
                         d.name            = $('input[name="filter[name]"]').val();
                         d.category_id     = $('input[name="filter[category_id]"]').val();
-                        d.created_at = $('input[name="filter[created_at_from]"]').val();
+                        d.created_at_from = $('input[name="filter[created_at_from]"]').val();
                         d.created_at_to   = $('input[name="filter[created_at_to]"]').val();
                     }
                 },

@@ -50,28 +50,55 @@ class CategoryRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $errorMessage = 'Не може да има 2 податрибута с еднакви имена, които да са към един и същи атрибут';
+            $errorMessageForProperties    = 'В една категория не може да има 2 атрибута с еднакви имена';
+            $errorMessageForSubproperties = 'Към един атрибут не може да има 2 податрибута с еднакви имена';
 
-            if ($this->request->get("new_subproperty")) {
+            if ($this->request->get('property')) {
+                foreach ($this->request->get('property') as $key => $property) {
+                    foreach ($this->request->get('property') as $key1 => $property1) {
+                        if ($property != '' && $key != $key1 && $property == $property1) {
+                            $validator->errors()->add("property.$key", $errorMessageForProperties);
+                        }
+                    }
+
+                    if ($this->request->get('new_property')) {
+                        foreach ($this->request->get('new_property') as $key2 => $property2) {
+                            if ($property != '' && $property == $property2) {
+                                $validator->errors()->add("property.$key", $errorMessageForProperties);
+                                $validator->errors()->add("new_property.$key2", $errorMessageForProperties);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($this->request->get('new_property')) {
+                foreach ($this->request->get('new_property') as $key => $property) {
+                    foreach ($this->request->get('new_property') as $key1 => $property1) {
+                        if ($property != '' && $key != $key1 && $property == $property1) {
+                            $validator->errors()->add("new_property.$key", $errorMessageForProperties);
+                        }
+                    }
+                }
+            }
+
+            if ($this->request->get("subproperty")) {
                 foreach ($this->request->get('subproperty') as $key => $property) {
                     foreach ($property as $key1 => $subProperty) {
-                        foreach ($property as $key2 => $item) {
-                            if ($key1 != $key2 && $item == $subProperty) {
-                                $validator->errors()
-                                          ->add("subproperty.$key.$key1", $errorMessage);
+                        foreach ($property as $key2 => $subProperty1) {
+                            if ($key1 != $key2 && $subProperty == $subProperty1) {
+                                $validator->errors()->add("subproperty.$key.$key1", $errorMessageForSubproperties);
                             }
                         }
                         if ($this->request->get("new_subproperty")) {
-                            foreach ($this->request->get("new_subproperty") as $key5 => $property1) {
-                                if ($key == $key5) {
-                                    foreach ($property1 as $key3 => $subProperty) {
-                                        foreach ($property1 as $key4 => $item1) {
-                                            if ($item1 == $subProperty ) {
-//                                                $validator->errors()
-//                                                          ->add("subproperty.$key.$key1", $errorMessage);
-                                                $validator->errors()
-                                                          ->add("new_subproperty.$key.$key4", $errorMessage);
-                                            }
+                            foreach ($this->request->get("new_subproperty") as $key3 => $property1) {
+                                if ($key == $key3) {
+                                    foreach ($property1 as $key4 => $subProperty1) {
+                                        if ($subProperty == $subProperty1) {
+                                            $validator->errors()
+                                                      ->add("subproperty.$key.$key1", $errorMessageForSubproperties);
+                                            $validator->errors()
+                                                      ->add("new_subproperty.$key.$key4", $errorMessageForSubproperties);
                                         }
                                     }
                                 }
@@ -81,19 +108,27 @@ class CategoryRequest extends FormRequest
                 }
             }
 
-//            if ($this->request->get("new_subproperty")) {
-//                foreach ($this->request->get("new_subproperty") as $key => $property) {
-//                    foreach ($property as $key1 => $subProperty) {
-//                        foreach ($property as $key2 => $item) {
-//                            if ($key1 != $key2 && $item == $subProperty) {
-//                                $validator->errors()
-//                                          ->add("new_subproperty.$key.$key2", $errorMessage);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            $this->validateNewSubproperties($validator, 'new_subproperty', $errorMessageForSubproperties);
+            $this->validateNewSubproperties($validator, 'new_property_subproperty', $errorMessageForSubproperties);
         });
+    }
+
+    public function validateNewSubproperties($validator, string $name, $errorMessage)
+    {
+        if ($this->request->get($name)) {
+            foreach ($this->request->get($name) as $key => $property) {
+                foreach ($property as $key1 => $subProperty) {
+                    if ($subProperty != '') {
+                        foreach ($property as $key2 => $item) {
+                            if ($key1 != $key2 && $item == $subProperty) {
+                                $validator->errors()
+                                          ->add("$name.$key.$key1", $errorMessage);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public function messages()

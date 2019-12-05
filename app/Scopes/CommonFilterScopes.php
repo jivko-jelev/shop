@@ -39,7 +39,7 @@ trait CommonFilterScopes
     public function scopeWhereDateLessIf($query, $field, $value)
     {
         if ($value) {
-            $query->where($field, '<=', Carbon::createFromFormat('d-m-Y H:i:s', $value . ' 23:59:59'));
+            $query->whereDate($field, '<=', Carbon::createFromFormat('d-m-Y', $value));
         }
 
         return $query;
@@ -48,7 +48,7 @@ trait CommonFilterScopes
     public function scopeWhereDateGreaterIf($query, $field, $value)
     {
         if ($value) {
-            $query->where($field, '>=', Carbon::createFromFormat('d-m-Y H:i:s', $value . ' 00:00:00'));
+            $query->whereDate($field, '>=', Carbon::createFromFormat('d-m-Y', $value));
         }
 
         return $query;

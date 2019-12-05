@@ -41,7 +41,8 @@
                                     <th><input type="text" class="form-control form-filter" name="filter[created_at]"></th>
                                     <th>
                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                            <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary" title="Търси"><i
+                                            <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary"
+                                                    title="Търси"><i
                                                     class="fa fa-search"></i></button>
                                             <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary"
                                                     title="Изчисти филтъра"><i
@@ -168,9 +169,9 @@
             });
             $('#clear').click(function () {
                 $('[name^="filter"]').val('');
+                table.page('first');
                 table.ajax.reload(null, false);
             });
-
 
             $('select[name="users_length"]').change(function () {
                 localStorage.setItem('usersResultsPerPare', $('select[name="users_length"]').val());

@@ -83,11 +83,11 @@ class ProductController extends Controller
             }
 
             return view('category', [
-                'products'     => $products,
-                'categories'   => Category::all(),
-                'properties'   => $properties,
-                'prices'       => $prices,
-                'categoryName' => $categoryName,
+                'products'      => $products,
+                'categories'    => Category::all(),
+                'properties'    => $properties,
+                'prices'        => $prices,
+                'categoryName'  => $categoryName,
                 'categoryTitle' => $category->title,
             ]);
         } catch (\Exception $e) {
@@ -242,9 +242,9 @@ class ProductController extends Controller
         ];
 
         $products->whereLikeIf('name', $request->get('name'))
-                 ->when($request->get('category_id'), function ($query) use ($request) {
+                 ->when($request->get('category'), function ($query) use ($request) {
                      $query->whereHas('category', function ($query) use ($request) {
-                         $query->where('title', 'like', "%{$request->get('category_id')}%");
+                         $query->where('title', 'like', "%{$request->get('category')}%");
                      });
                  })
                  ->whereDateGreaterIf('created_at', $request->get('created_at_from'))

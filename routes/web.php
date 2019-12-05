@@ -1,20 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-use App\Category;
-use App\Product;
-use App\Property;
-
 Route::get('category/{category}', 'ProductController@index')->name('products.index');
 
 Route::prefix('admin')
@@ -59,7 +44,6 @@ Route::prefix('admin')
          Route::post('thumbnails', 'ThumbnailController@index')->name('thumbnails.index');
          Route::delete('pictures/{picture}', 'PictureController@destroy')->name('pictures.destroy');
 
-//         Route::resource('properties', 'PropertiesController');
          Route::delete('properties/{properties}/destroy', 'PropertiesController@destroy')->name('properties.destroy');
          Route::delete('sub-properties/{subProperties}/destroy', 'SubPropertiesController@destroy')
               ->name('subproperties.destroy');
@@ -71,5 +55,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-
 });
