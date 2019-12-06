@@ -55,7 +55,7 @@
                                                id="property[{{ $property->id }}]" placeholder="Атрибут"
                                                value="{{ $property->name }}">
                                         <span class="input-group-btn">
-                                                <button type="button" class="btn btn-primary add-property">Добави атрибут</button>
+                                                <button type="button" class="btn btn-primary add-property">Добави</button>
                                                 <button type="button" class="btn btn-danger delete-property"
                                                         data-title="{{ $property->name }}"
                                                         data-route="{{ route('properties.destroy', [$property->id]) }}">Изтрий</button>

@@ -65,11 +65,7 @@
             data: form.serialize(),
             method: 'post',
             success: function (data) {
-                Lobibox.notify('success', {
-                    showClass: 'rollIn',
-                    hideClass: 'rollOut',
-                    msg: JSON.parse(data).message
-                });
+                showSuccessMessage(data.message);
                 $('#myModal').modal('hide');
                 table.ajax.reload(null, false);
             },
@@ -88,5 +84,5 @@
                 });
             }
         })
-    })
+    });
 </script>

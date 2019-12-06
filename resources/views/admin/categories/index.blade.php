@@ -15,7 +15,8 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <!-- form start -->
-                    <form class="form-horizontal" id="form-create-category" autocomplete="off" method="post" action="{{ route('categories.store') }}">
+                    <form class="form-horizontal" id="form-create-category" autocomplete="off" method="post"
+                          action="{{ route('categories.store') }}">
                         <div class="form-group">
                             <label for="title" class="col-sm-1 control-label">Име</label>
                             <div class="col-sm-2 error-div">
@@ -55,11 +56,12 @@
                                     <th><input type="text" class="form-control form-filter" name="filter[parent]"></th>
                                     <th>
                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                            <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary" title="Търси"><i
-                                                        class="fa fa-search"></i></button>
+                                            <button type="submit" name="filter" id="filter" class="btn btn-primary btn-secondary"
+                                                    title="Търси"><i
+                                                    class="fa fa-search"></i></button>
                                             <button type="submit" name="clear" id="clear" class="btn btn-danger btn-secondary"
                                                     title="Изчисти филтъра"><i
-                                                        class="fa fa-times"></i></button>
+                                                    class="fa fa-times"></i></button>
                                         </div>
                                     </th>
                                 </form>

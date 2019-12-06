@@ -17,21 +17,20 @@
                             <div class="form-group">
                                 <label for="title" class="col-sm-2 control-label">Име</label>
 
-                                <div class="col-sm-10">
+                                <div class="col-sm-10 error-div">
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="title" id="title" placeholder="Име">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default">Запази</button>
                                         </span>
                                     </div>
-                                    <span class="error" id="title-error"></span>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="category" class="col-sm-2 control-label">Категория</label>
 
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 error-div">
                                     <select class="form-control select2" id="category" name="category">
                                         <option value="">избери</option>
                                         @foreach($categories as $category)
@@ -40,7 +39,6 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <span class="error" id="category-error"></span>
                                 </div>
 
 
@@ -53,27 +51,24 @@
                                 {{--                                </div>--}}
                                 <label for="price" class="col-sm-1 control-label">Цена</label>
 
-                                <div class="col-sm-2">
+                                <div class="col-sm-2 error-div">
                                     <div class="input-group">
                                         <input type="number" step=".01" class="form-control" name="price" id="price" placeholder="Цена">
                                     </div>
-                                    <span class="error" id="price-error"></span>
                                 </div>
 
                                 <label for="promo_price" class="col-sm-2 control-label">Промо цена</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-2 error-div">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="promo_price" id="promo_price"
+                                        <input type="number" step=".01" class="form-control" name="promo_price" id="promo_price"
                                                placeholder="Промо цена">
                                     </div>
-                                    <span class="error" id="promo_price-error"></span>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <div class="col-sm-12">
+                                <div class="col-sm-12 error-div">
                                     <textarea name="description" id="description"></textarea>
-                                    <span class="error" id="description-error"></span>
                                 </div>
                             </div>
 

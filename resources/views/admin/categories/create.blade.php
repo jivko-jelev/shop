@@ -161,7 +161,7 @@
                 `                                    <input type="text" class="form-control" name="new_property[${newProperty}]"\n` +
                 `                                           id="new_property[${newProperty}]" placeholder="Атрибут">\n` +
                 '                                    <span class="input-group-btn">\n' +
-                '                                                <button type="button" class="btn btn-primary add-property">Добави атрибут</button>\n' +
+                '                                                <button type="button" class="btn btn-primary add-property">Добави</button>\n' +
                 '                                                <button type="button" class="btn btn-danger delete-property">\n' +
                 '                                                   Изтрий</button>\n' +
                 '                                            </span>\n' +

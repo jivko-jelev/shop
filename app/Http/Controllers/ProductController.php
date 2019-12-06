@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Http\Requests\ProductRequest;
 use App\Product;
+use App\ProductPictures;
 use App\ProductSubProperties;
 use App\Property;
 use Illuminate\Http\Request;
@@ -155,6 +156,17 @@ class ProductController extends Controller
             'promo_price' => $productRequest->promo_price,
             'permalink'   => self::generatePermanlink($productRequest->title),
         ]);
+
+        if ($productRequest->picture_id) {
+            $data = [];
+            foreach ($productRequest->picture_id as $item) {
+                $data[] = [
+                    'product_id' => $product->id,
+                    'picture_id' => $item,
+                ];
+            }
+            ProductPictures::insert($data);
+        }
 
         if ($productRequest->sub_properties) {
             $productSubProperties = [];

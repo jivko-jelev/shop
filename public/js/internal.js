@@ -31,7 +31,7 @@ function showErrors(data) {
     Lobibox.notify('error', {
         showClass: 'rollIn',
         hideClass: 'rollOut',
-        msg: 'Възникна грешка при опита за промяна на данните!'
+        msg: 'Възникна грешка при опита за запис на данните!'
     });
 }
 
