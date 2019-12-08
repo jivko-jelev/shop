@@ -124,10 +124,6 @@ ul.thumbnails.image_picker_selector li {
     float: left;
 }
 
-#product-picture {
-    width: 100%;
-}
-
 .remove-picture {
     position: relative;
     top: -149px;
@@ -277,4 +273,8 @@ legend {
 
 hr{
     border-top: 1px solid #e1e5ee;
+}
+
+#product-picture img{
+    width: 100%;
 }

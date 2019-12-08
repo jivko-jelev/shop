@@ -6,14 +6,14 @@
 @section('content')
     <div class="row">
         <form action="" class="form-horizontal" id="create-product" autocomplete="off">
-            <div class="col-xs-10">
+            <div class="col-md-10">
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">{{ $title }}</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <div class="col-sm-12">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="title" class="col-sm-2 control-label">Име</label>
 
@@ -34,31 +34,21 @@
                                     <select class="form-control select2" id="category" name="category">
                                         <option value="">избери</option>
                                         @foreach($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->title }}
-                                                ({{ $category->alias }})
-                                            </option>
+                                            <option value="{{ $category->id }}">{{ $category->title }} ({{ $category->alias }})</option>
                                         @endforeach
                                     </select>
                                 </div>
 
+                                <label for="price" class="col-md-1 control-label">Цена</label>
 
-                                {{--                                <label for="title" class="col-sm-2 control-label">Пермалинк</label>--}}
-
-                                {{--                                <div class="col-sm-4">--}}
-                                {{--                                    <a href="">{{ route('products.index', 1) }}</a>--}}
-                                {{--                                    <input type="text" class="form-control" name="title" id="title" placeholder="Име">--}}
-                                {{--                                    <span class="error" id="title-error"></span>--}}
-                                {{--                                </div>--}}
-                                <label for="price" class="col-sm-1 control-label">Цена</label>
-
-                                <div class="col-sm-2 error-div">
+                                <div class="col-md-2 error-div">
                                     <div class="input-group">
                                         <input type="number" step=".01" class="form-control" name="price" id="price" placeholder="Цена">
                                     </div>
                                 </div>
 
-                                <label for="promo_price" class="col-sm-2 control-label">Промо цена</label>
-                                <div class="col-sm-2 error-div">
+                                <label for="promo_price" class="col-md-2 control-label">Промо цена</label>
+                                <div class="col-md-2 error-div">
                                     <div class="input-group">
                                         <input type="number" step=".01" class="form-control" name="promo_price" id="promo_price"
                                                placeholder="Промо цена">
@@ -88,8 +78,8 @@
                                 data-target="#select-picture-modal">
                             Избери снимка
                         </button>
-                        <a href="#" id="remove-product-picture">Премахни снимка</a>
-                        <p id="product-picture"></p>
+                        <a href="#" id="remove-product-picture">Премахни снимката</a>
+                        <p id="product-picture" class="img-responsive"></p>
                     </div>
                 </div>
                 <div class="box">

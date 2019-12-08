@@ -18,7 +18,7 @@
                             <div><a href="#" tabindex="0">{{ $product->name }}</a></div>
                         </div>
                         <div class="product_extras">
-                            <button class="product_cart_button">Add to Cart</button>
+                            <button class="product_cart_button">Виж повече</button>
                         </div>
 
                     </div>

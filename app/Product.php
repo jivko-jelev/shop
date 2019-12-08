@@ -21,6 +21,7 @@ class Product extends Model
         'permalink',
         'price',
         'promo_price',
+        'type'
     ];
 
     public function category()
