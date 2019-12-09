@@ -36,7 +36,7 @@
                                         <option value="">избери</option>
                                         @foreach($categories as $category)
                                             <option
-                                                value="{{ $category->id }}"{{ isset($product) && $category->id==$product->category_id ? ' selected' : '' }}>{{ $category->title }}
+                                                    value="{{ $category->id }}"{{ isset($product) && $category->id==$product->category_id ? ' selected' : '' }}>{{ $category->title }}
                                                 ({{ $category->alias }})
                                             </option>
                                         @endforeach
@@ -65,12 +65,25 @@
                                 <label for="category" class="col-sm-2 control-label">Тип</label>
 
                                 <div class="col-sm-3 error-div">
-                                    <select class="form-control" name="type">
+                                    <select class="form-control" name="type" id="type">
                                         @foreach(\App\Functions::getEnumValues('products', 'type') as $type)
                                             <option
-                                                value="{{ $type }}"{{ isset($product) && $type==$product->type ? ' selected' : '' }}>{{ $type }}</option>
+                                                    value="{{ $type }}"{{ isset($product) && $type==$product->type ? ' selected' : '' }}>{{ $type }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+
+                                <label for="category" class="col-sm-1 control-label">Име</label>
+
+                                <div class="col-sm-2 error-div">
+                                    <input type="text" class="form-control" name="variation" id="variation" placeholder="Име" value="" readonly>
+                                </div>
+
+                                <label for="category" class="col-sm-2 control-label">Стойности</label>
+
+                                <div class="col-sm-2 error-div">
+                                    <input type="text" class="form-control" name="product_variation" id="product_variation" placeholder="Стойности"
+                                           value="{{ $product->promo_price ?? '' }}" readonly title="Разделете всяка вариация с '|'">
                                 </div>
                             </div>
 
@@ -98,7 +111,7 @@
                         </button>
                         <a href="#" id="remove-product-picture">Премахни снимката</a>
                         <p id="product-picture" class="img-responsive">
-                            @if(isset($product) && $product->picture_id)
+                            @if(isset($product) && isset($product->picture_id))
                                 <img src="{{ $product->getThumbnail() }}">
                             @endif
                         </p>
@@ -118,14 +131,14 @@
                         <p id="product-pictures" class="product-pictures">
                             @if(isset($product))
                                 @foreach($product->pictures as $picture)
-                                    <img src="{{ $picture->getThumbnail() }}">
+                                    <img src="{{ URL::to($picture->thumbnails->where('size', 1)->first()->filename) }}">
                                 @endforeach
                             @endif
                         </p>
                     </div>
                 </div>
             </div>
-            <p type="hidden" id="picture-id" name="picture-id">
+            <p type="hidden" id="picture-id" name="picture_id">
                 @if(isset($product) && $product->picture_id)
                     <input type="hidden" name="picture_id[]" value="{{ $product->picture_id }}">
                 @endif
@@ -242,7 +255,11 @@
                 data: form.serialize(),
                 method: "{{ $method }}",
                 success: function (data) {
-                    window.location.replace(data['url']);
+                    if (data['url']) {
+                        window.location.replace(data['url']);
+                    } else if (data.message) {
+                        showSuccessMessage(data.message);
+                    }
                 },
                 error: function (data) {
                     showErrors(data);
@@ -299,7 +316,7 @@
                             pictureId.html('');
                             selectable.find('option:selected').each(function () {
                                 productPicture.append(`<img src="${$(this).data('img-src')}">`);
-                                pictureId.append(`<input type="hidden" name="picture_id[]" value="${$(this).val()}">`);
+                                pictureId.append(`<input type="hidden" name="${pictureId.attr('name')}[]" value="${$(this).val()}">`);
                             });
                         } else {
                             productPicture.html('');
@@ -366,5 +383,14 @@
                 }
             });
         });
+        $('[name="type"]').change(function () {
+            if ($(this).val() == 'Вариация') {
+                $('#variation').prop('readonly', '');
+                $('#product_variation').prop('readonly', '');
+            } else if ($(this).val() == 'Обикновен') {
+                $('#variation').prop('readonly', 'readonly');
+                $('#product_variation').prop('readonly', 'readonly');
+            }
+        })
     </script>
 @endpush

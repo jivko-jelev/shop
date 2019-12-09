@@ -14,8 +14,13 @@ class ProductPictures extends Model
         'picture_id',
     ];
 
-    public function getThumbnail(int $num = 1)
+    public function thumbnails()
     {
-        return URL::to($this->picture ? $this->picture->thumbnails->where('size', $num)[$num]->filename : "images/empty{$num}.jpg");
+        return $this->hasMany('App\Thumbnail', 'picture_id', 'picture_id');
     }
+
+//    public function getThumbnail(int $num = 1)
+//    {
+//        return URL::to($this->thumbnails->where('size', $num)[$num]->filename);
+//    }
 }

@@ -160,9 +160,9 @@ class ProductController extends Controller
             'type'        => $productRequest->type,
         ]);
 
-        if ($productRequest->picture_id) {
+        if ($productRequest->pictures_id) {
             $data = [];
-            foreach ($productRequest->picture_id as $item) {
+            foreach ($productRequest->pictures_id as $item) {
                 $data[] = [
                     'product_id' => $product->id,
                     'picture_id' => $item,
@@ -205,13 +205,15 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product = Product::with('pictures')->first();
+        $product = Product::with('pictures.thumbnails')
+                          ->find($product->id);
+
 
         return view('admin.products.create', [
             'product'    => $product,
             'title'      => 'Редактиране на продукт',
             'categories' => Category::all(),
-            'route'      => route('products.update', $product),
+            'route'      => route('products.update', $product->id),
             'method'     => 'put',
         ]);
     }
@@ -229,7 +231,22 @@ class ProductController extends Controller
         $product->name        = $productRequest->title;
         $product->category_id = $productRequest->category;
         $product->description = $productRequest->description;
+        $product->picture_id  = $productRequest->picture_id[0];
+        $product->type        = $productRequest->type;
         $product->update();
+
+        if ($productRequest->pictures_id) {
+            $data = [];
+            foreach ($productRequest->pictures_id as $item) {
+                $data[] = [
+                    'product_id' => $product->id,
+                    'picture_id' => $item,
+                ];
+            }
+            ProductPictures::insert($data);
+        }
+
+        return response()->json(['message' => 'Продуктът беше успешно обновен.']);
     }
 
     /**

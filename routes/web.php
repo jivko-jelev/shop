@@ -1,5 +1,6 @@
 <?php
 
+use App\Product;
 use Illuminate\Support\Facades\DB;
 
 Route::get('category/{category}', 'ProductController@index')->name('products.index');
@@ -57,5 +58,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-    dd(\App\Product::getTableName());
+    $product = Product::with('pictures.thumbnails')
+                      ->find(60);
+
+    dump($product);
 });
