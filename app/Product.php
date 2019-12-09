@@ -39,6 +39,11 @@ class Product extends Model
         return $this->hasMany('App\ProductSubProperties', 'product_id', 'id');
     }
 
+    public function pictures()
+    {
+        return $this->hasMany('App\ProductPictures');
+    }
+
     public function getPicture()
     {
         return URL::to($this->picture ? $this->picture->filename : 'images/empty.jpg');

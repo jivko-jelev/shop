@@ -112,7 +112,7 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
@@ -121,6 +121,8 @@ class ProductController extends Controller
         return view('admin.products.create', [
             'title'      => 'Създаване на продукт',
             'categories' => $categories,
+            'route'      => route('products.store'),
+            'method'     => 'post',
         ]);
     }
 
@@ -155,6 +157,7 @@ class ProductController extends Controller
             'price'       => $productRequest->price,
             'promo_price' => $productRequest->promo_price,
             'permalink'   => self::generatePermanlink($productRequest->title),
+            'type'        => $productRequest->type,
         ]);
 
         if ($productRequest->picture_id) {
@@ -202,10 +205,14 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('admin.products.edit', [
+        $product = Product::with('pictures')->first();
+
+        return view('admin.products.create', [
             'product'    => $product,
-            'title'      => 'Създаване на продукт',
+            'title'      => 'Редактиране на продукт',
             'categories' => Category::all(),
+            'route'      => route('products.update', $product),
+            'method'     => 'put',
         ]);
     }
 

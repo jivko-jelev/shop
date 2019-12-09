@@ -19,7 +19,8 @@
 
                                 <div class="col-sm-10 error-div">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="title" id="title" placeholder="Име">
+                                        <input type="text" class="form-control" name="title" id="title" placeholder="Име"
+                                               value="{{ $product->name ?? '' }}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default">Запази</button>
                                         </span>
@@ -34,7 +35,10 @@
                                     <select class="form-control select2" id="category" name="category">
                                         <option value="">избери</option>
                                         @foreach($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->title }} ({{ $category->alias }})</option>
+                                            <option
+                                                value="{{ $category->id }}"{{ isset($product) && $category->id==$product->category_id ? ' selected' : '' }}>{{ $category->title }}
+                                                ({{ $category->alias }})
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -43,7 +47,8 @@
 
                                 <div class="col-md-2 error-div">
                                     <div class="input-group">
-                                        <input type="number" step=".01" class="form-control" name="price" id="price" placeholder="Цена">
+                                        <input type="number" step=".01" class="form-control" name="price" id="price" placeholder="Цена"
+                                               value="{{ $product->price ?? '' }}">
                                     </div>
                                 </div>
 
@@ -51,14 +56,27 @@
                                 <div class="col-md-2 error-div">
                                     <div class="input-group">
                                         <input type="number" step=".01" class="form-control" name="promo_price" id="promo_price"
-                                               placeholder="Промо цена">
+                                               placeholder="Промо цена" value="{{ $product->promo_price ?? '' }}">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
+                                <label for="category" class="col-sm-2 control-label">Тип</label>
+
+                                <div class="col-sm-3 error-div">
+                                    <select class="form-control" name="type">
+                                        @foreach(\App\Functions::getEnumValues('products', 'type') as $type)
+                                            <option
+                                                value="{{ $type }}"{{ isset($product) && $type==$product->type ? ' selected' : '' }}>{{ $type }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <div class="col-sm-12 error-div">
-                                    <textarea name="description" id="description"></textarea>
+                                    <textarea name="description" id="description">{{ $product->description ?? '' }}</textarea>
                                 </div>
                             </div>
 
@@ -79,7 +97,11 @@
                             Избери снимка
                         </button>
                         <a href="#" id="remove-product-picture">Премахни снимката</a>
-                        <p id="product-picture" class="img-responsive"></p>
+                        <p id="product-picture" class="img-responsive">
+                            @if(isset($product) && $product->picture_id)
+                                <img src="{{ $product->getThumbnail() }}">
+                            @endif
+                        </p>
                     </div>
                 </div>
                 <div class="box">
@@ -94,11 +116,20 @@
                         </button>
                         <a href="#" id="remove-product-pictures">Премахни снимките</a>
                         <p id="product-pictures" class="product-pictures">
+                            @if(isset($product))
+                                @foreach($product->pictures as $picture)
+                                    <img src="{{ $picture->getThumbnail() }}">
+                                @endforeach
+                            @endif
                         </p>
                     </div>
                 </div>
             </div>
-            <p type="hidden" id="picture-id" name="picture-id"></p>
+            <p type="hidden" id="picture-id" name="picture-id">
+                @if(isset($product) && $product->picture_id)
+                    <input type="hidden" name="picture_id[]" value="{{ $product->picture_id }}">
+                @endif
+            </p>
             <p type="hidden" id="pictures-id" name="pictures_id"></p>
         </form>
         <!-- Modal -->
@@ -207,9 +238,9 @@
             $("textarea[name=description]").val(tinyMCE.activeEditor.getContent())
             let form = $(this);
             $.ajax({
-                url: "{{ route('products.store') }}",
+                url: "{{ $route }}",
                 data: form.serialize(),
-                method: 'post',
+                method: "{{ $method }}",
                 success: function (data) {
                     window.location.replace(data['url']);
                 },
@@ -332,7 +363,6 @@
                     $('#properties').html(data);
                 },
                 error: function (data) {
-                    console.log(data);
                 }
             });
         });

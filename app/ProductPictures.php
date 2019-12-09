@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
 
 class ProductPictures extends Model
 {
@@ -13,4 +14,8 @@ class ProductPictures extends Model
         'picture_id',
     ];
 
+    public function getThumbnail(int $num = 1)
+    {
+        return URL::to($this->picture ? $this->picture->thumbnails->where('size', $num)[$num]->filename : "images/empty{$num}.jpg");
+    }
 }

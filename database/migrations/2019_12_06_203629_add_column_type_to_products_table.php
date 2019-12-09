@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumneTypeToProductsTable extends Migration
+class AddColumnTypeToProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddColumneTypeToProductsTable extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->unsignedTinyInteger('type')->default(0)->after('category_id');
+            $table->enum('type', ['Обикновен', 'Вариация'])->after('category_id')->default('Обикновен');
         });
     }
 
