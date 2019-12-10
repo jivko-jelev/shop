@@ -1,6 +1,7 @@
 <?php
 
 use App\Product;
+use App\ProductPictures;
 use Illuminate\Support\Facades\DB;
 
 Route::get('category/{category}', 'ProductController@index')->name('products.index');
@@ -58,8 +59,15 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-    $product = Product::with('pictures.thumbnails')
-                      ->find(60);
+    $collection = collect([1, 2, 3, 4, 5]);
 
-    dump($product);
+    $multiplied = $collection->map(function ($item, $key) {
+        return $item * 2;
+    });
+
+    $multiplied = $collection->filter(function ($item, $key) {
+        return $key > 2;
+    });
+
+    dd($multiplied->all());
 });

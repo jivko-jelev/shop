@@ -8,6 +8,8 @@ use App\Product;
 use App\ProductPictures;
 use App\ProductSubProperties;
 use App\Property;
+use App\SubProperty;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -201,13 +203,16 @@ class ProductController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param \App\Product $product
-     * @return Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Product $product)
     {
-        $product = Product::with('pictures.thumbnails')
+        $product = Product::with(['pictures.thumbnails', 'subproperties'])
                           ->find($product->id);
 
+        $properties = Property::with('subProperties')
+                              ->where('category_id', $product->category_id)
+                              ->get();
 
         return view('admin.products.create', [
             'product'    => $product,
@@ -215,6 +220,7 @@ class ProductController extends Controller
             'categories' => Category::all(),
             'route'      => route('products.update', $product->id),
             'method'     => 'put',
+            'properties' => $properties,
         ]);
     }
 
@@ -224,10 +230,13 @@ class ProductController extends Controller
      *
      * @param Product        $product
      * @param ProductRequest $productRequest
-     * @return void
+     * @return JsonResponse
      */
     public function update(Product $product, ProductRequest $productRequest)
     {
+        if ($product->category_id != $productRequest->category) {
+            Property::where('product_id', $product->id)->delete();
+        }
         $product->name        = $productRequest->title;
         $product->category_id = $productRequest->category;
         $product->description = $productRequest->description;
@@ -235,15 +244,62 @@ class ProductController extends Controller
         $product->type        = $productRequest->type;
         $product->update();
 
+        if ($productRequest->sub_properties) {
+            $subproperties = ProductSubProperties::where('product_id', $product->id)->get();
+//            $data          = [];
+//            foreach ($productRequest->sub_properties as $productSubProperty) {
+//                $data[] = [
+//                    'product_id'     => $product->id,
+//                    'subproperty_id' => $productSubProperty,
+//                ];
+//            }
+//            ProductSubProperties::insert($data);
+        } else {
+            ProductSubProperties::where('product_id', $product->id)->delete();
+        }
+
+
         if ($productRequest->pictures_id) {
-            $data = [];
-            foreach ($productRequest->pictures_id as $item) {
-                $data[] = [
-                    'product_id' => $product->id,
-                    'picture_id' => $item,
-                ];
+            $pictures = ProductPictures::where('product_id', $product->id)->get();
+            if (count($pictures) > 0) {
+                $count = 0;
+                foreach ($pictures as $key => $picture) {
+                    if (++$count > count($productRequest->pictures_id)) {
+                        break;
+                    }
+                    $picture->picture_id = $productRequest->pictures_id[$key];
+                    $picture->update();
+                }
+
+                if (count($pictures) < count($productRequest->pictures_id)) {
+                    $data = [];
+                    for ($i = $count; $i < count($productRequest->pictures_id); $i++) {
+                        $data[] = [
+                            'product_id' => $product->id,
+                            'picture_id' => $productRequest->pictures_id[$i],
+                        ];
+                    }
+                    ProductPictures::insert($data);
+
+                } elseif (count($pictures) > count($productRequest->pictures_id)) {
+                    $picturesForDelete = [];
+                    for ($i = $count - 1; $i < count($pictures); $i++) {
+                        $picturesForDelete[] = $pictures[$i]->id;
+                    }
+                    ProductPictures::whereIn('id', $picturesForDelete)->delete();
+                }
+            } else {
+                $data = [];
+                foreach ($productRequest->pictures_id as $item) {
+                    $data[] = [
+                        'product_id' => $product->id,
+                        'picture_id' => $item,
+                    ];
+                }
+                ProductPictures::insert($data);
             }
-            ProductPictures::insert($data);
+        } else {
+            ProductPictures::where('product_id', $product->id)->delete();
         }
 
         return response()->json(['message' => 'Продуктът беше успешно обновен.']);

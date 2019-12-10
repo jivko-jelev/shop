@@ -24,11 +24,12 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'       => 'required',
-            'category'    => 'required',
-            'price'       => 'required|numeric|min:0.01',
-            'promo_price' => 'nullable|numeric|' . (isset($this->price) ? 'max:' . ($this->price - 0.01) : ''),
-            'variation'   => 'required_if:type,Вариация',
+            'title'             => 'required',
+            'category'          => 'required',
+            'price'             => 'required|numeric|min:0.01',
+            'promo_price'       => 'nullable|numeric|' . (isset($this->price) ? 'max:' . ($this->price - 0.01) : ''),
+            'variation'         => 'required_if:type,Вариация',
+            'product_variation' => 'required_if:type,Вариация',
         ];
     }
 
@@ -36,7 +37,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'promo_price.max' => 'Промо цената трябва да бъде по-малка от цената на продукта',
-            'variation.required_if' => 'Това поле е задължително, когато типът на продукта е Вариация',
+            'required_if'     => 'Задължително',
         ];
     }
 }

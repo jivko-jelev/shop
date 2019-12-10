@@ -14,6 +14,8 @@ class ProductPictures extends Model
         'picture_id',
     ];
 
+    public $timestamps = false;
+
     public function thumbnails()
     {
         return $this->hasMany('App\Thumbnail', 'picture_id', 'picture_id');

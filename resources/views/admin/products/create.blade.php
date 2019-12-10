@@ -36,7 +36,7 @@
                                         <option value="">избери</option>
                                         @foreach($categories as $category)
                                             <option
-                                                    value="{{ $category->id }}"{{ isset($product) && $category->id==$product->category_id ? ' selected' : '' }}>{{ $category->title }}
+                                                value="{{ $category->id }}"{{ isset($product) && $category->id==$product->category_id ? ' selected' : '' }}>{{ $category->title }}
                                                 ({{ $category->alias }})
                                             </option>
                                         @endforeach
@@ -68,7 +68,7 @@
                                     <select class="form-control" name="type" id="type">
                                         @foreach(\App\Functions::getEnumValues('products', 'type') as $type)
                                             <option
-                                                    value="{{ $type }}"{{ isset($product) && $type==$product->type ? ' selected' : '' }}>{{ $type }}</option>
+                                                value="{{ $type }}"{{ isset($product) && $type==$product->type ? ' selected' : '' }}>{{ $type }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -76,13 +76,15 @@
                                 <label for="category" class="col-sm-1 control-label">Име</label>
 
                                 <div class="col-sm-2 error-div">
-                                    <input type="text" class="form-control" name="variation" id="variation" placeholder="Име" value="" readonly>
+                                    <input type="text" class="form-control" name="variation" id="variation" placeholder="Име" value=""
+                                           readonly>
                                 </div>
 
                                 <label for="category" class="col-sm-2 control-label">Стойности</label>
 
                                 <div class="col-sm-2 error-div">
-                                    <input type="text" class="form-control" name="product_variation" id="product_variation" placeholder="Стойности"
+                                    <input type="text" class="form-control" name="product_variation" id="product_variation"
+                                           placeholder="Стойности"
                                            value="{{ $product->promo_price ?? '' }}" readonly title="Разделете всяка вариация с '|'">
                                 </div>
                             </div>
@@ -93,7 +95,11 @@
                                 </div>
                             </div>
 
-                            <div id="properties"></div>
+                            <div id="properties">
+                                @isset($product)
+                                    @include('admin.products.layouts.properties')
+                                @endisset
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -143,7 +149,13 @@
                     <input type="hidden" name="picture_id[]" value="{{ $product->picture_id }}">
                 @endif
             </p>
-            <p type="hidden" id="pictures-id" name="pictures_id"></p>
+            <p type="hidden" id="pictures-id" name="pictures_id">
+                @if(isset($product) && isset($product->pictures))
+                    @foreach($product->pictures as $pictures)
+                        <input type="hidden" name="picture_id[]" value="{{ $pictures->picture_id }}">
+                    @endforeach
+                @endif
+            </p>
         </form>
         <!-- Modal -->
         <div class="modal fade center" id="myModal" role="dialog">
@@ -273,6 +285,7 @@
                 pictureId.find('input').each(function () {
                     map.push($(this).val());
                 });
+                console.log(pictureId);
                 $.ajax({
                     method: 'post',
                     data: {picture: map},
@@ -363,6 +376,7 @@
             let picture        = $(`#product-${element}-pictures`);
             $(`#remove-product-${element}`).click(function () {
                 productPicture.html('');
+                pictureId.html('');
             });
 
             initModal();

@@ -13,7 +13,7 @@ function showErrors(data) {
             let key = Object.keys(data.responseJSON.errors)[i];
             if (key.indexOf('.') > -1) {
                 key += ']';
-                for (let j = key.length - 1; j >= 0; j--) {
+                for (let j = key.length - 3; j >= 0; j--) {
                     if (key[j] == '.') {
                         if (key.indexOf('.') < j) {
                             key = key.splice(j, 1, '][');
@@ -57,6 +57,7 @@ function showErrorMessage(message) {
 }
 
 function showSuccessMessage(message) {
+    $('.error').remove();
     Lobibox.notify('success', {
         showClass: 'rollIn',
         hideClass: 'rollOut',
