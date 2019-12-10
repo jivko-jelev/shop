@@ -59,15 +59,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('test', function () {
-    $collection = collect([1, 2, 3, 4, 5]);
 
-    $multiplied = $collection->map(function ($item, $key) {
-        return $item * 2;
-    });
-
-    $multiplied = $collection->filter(function ($item, $key) {
-        return $key > 2;
-    });
-
-    dd($multiplied->all());
 });

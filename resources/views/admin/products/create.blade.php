@@ -36,7 +36,7 @@
                                         <option value="">избери</option>
                                         @foreach($categories as $category)
                                             <option
-                                                value="{{ $category->id }}"{{ isset($product) && $category->id==$product->category_id ? ' selected' : '' }}>{{ $category->title }}
+                                                    value="{{ $category->id }}"{{ isset($product) && $category->id==$product->category_id ? ' selected' : '' }}>{{ $category->title }}
                                                 ({{ $category->alias }})
                                             </option>
                                         @endforeach
@@ -68,7 +68,7 @@
                                     <select class="form-control" name="type" id="type">
                                         @foreach(\App\Functions::getEnumValues('products', 'type') as $type)
                                             <option
-                                                value="{{ $type }}"{{ isset($product) && $type==$product->type ? ' selected' : '' }}>{{ $type }}</option>
+                                                    value="{{ $type }}"{{ isset($product) && $type==$product->type ? ' selected' : '' }}>{{ $type }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -76,8 +76,8 @@
                                 <label for="category" class="col-sm-1 control-label">Име</label>
 
                                 <div class="col-sm-2 error-div">
-                                    <input type="text" class="form-control" name="variation" id="variation" placeholder="Име" value=""
-                                           readonly>
+                                    <input type="text" class="form-control" name="variation" id="variation" placeholder="Име"
+                                           value="{{ $product->variation ? $product->variation->name : '' }}" {{ $product->variation ? '' : 'readonly' }}>
                                 </div>
 
                                 <label for="category" class="col-sm-2 control-label">Стойности</label>
@@ -85,7 +85,9 @@
                                 <div class="col-sm-2 error-div">
                                     <input type="text" class="form-control" name="product_variation" id="product_variation"
                                            placeholder="Стойности"
-                                           value="{{ $product->promo_price ?? '' }}" readonly title="Разделете всяка вариация с '|'">
+                                           value="{{ $product->variation ? implode('|', $product->variation->subVariations->pluck('name')->all()) : '' }}"
+                                           {{ $product->variation ? '' : 'readonly' }}
+                                           title="Разделете всяка вариация с '|'">
                                 </div>
                             </div>
 

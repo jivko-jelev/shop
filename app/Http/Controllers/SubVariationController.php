@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Variation;
+use App\SubVariation;
 use Illuminate\Http\Request;
 
-class VariationsController extends Controller
+class SubVariationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class VariationsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Variation $variations
+     * @param  \App\SubVariation  $subVariation
      * @return \Illuminate\Http\Response
      */
-    public function show(Variation $variations)
+    public function show(SubVariation $subVariation)
     {
         //
     }
@@ -52,10 +52,10 @@ class VariationsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Variation $variations
+     * @param  \App\SubVariation  $subVariation
      * @return \Illuminate\Http\Response
      */
-    public function edit(Variation $variations)
+    public function edit(SubVariation $subVariation)
     {
         //
     }
@@ -63,11 +63,11 @@ class VariationsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Variation           $variations
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\SubVariation  $subVariation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Variation $variations)
+    public function update(Request $request, SubVariation $subVariation)
     {
         //
     }
@@ -75,10 +75,10 @@ class VariationsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Variation $variations
+     * @param  \App\SubVariation  $subVariation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Variation $variations)
+    public function destroy(SubVariation $subVariation)
     {
         //
     }

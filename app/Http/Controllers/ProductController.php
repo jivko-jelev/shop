@@ -9,6 +9,8 @@ use App\ProductPictures;
 use App\ProductSubProperties;
 use App\Property;
 use App\SubProperty;
+use App\SubVariation;
+use App\Variation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -185,6 +187,23 @@ class ProductController extends Controller
             ProductSubProperties::insert($productSubProperties);
         }
 
+        if ($productRequest->type == 'Вариация') {
+            $variation = Variation::create([
+                'name'       => $productRequest->variation,
+                'product_id' => $product->id,
+            ]);
+
+            $subVariations = explode('|', $productRequest->product_variation);
+            $data          = [];
+            foreach ($subVariations as $subVariation) {
+                $data[] = [
+                    'name'         => $subVariation,
+                    'variation_id' => $variation->id,
+                ];
+            }
+            SubVariation::insert($data);
+        }
+
         return response()->json(['url' => route('products.edit', ['product' => $product])]);
     }
 
@@ -207,11 +226,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product = Product::with(['pictures.thumbnails', 'subproperties'])
-                          ->find($product->id);
-
-        $properties = Property::with('subProperties')
-                              ->where('category_id', $product->category_id)
+        $properties = Property::where('category_id', $product->category_id)
                               ->get();
 
         return view('admin.products.create', [
@@ -244,20 +259,17 @@ class ProductController extends Controller
         $product->type        = $productRequest->type;
         $product->update();
 
+        ProductSubProperties::where('product_id', $product->id)->delete();
         if ($productRequest->sub_properties) {
-            $subproperties = ProductSubProperties::where('product_id', $product->id)->get();
-//            $data          = [];
-//            foreach ($productRequest->sub_properties as $productSubProperty) {
-//                $data[] = [
-//                    'product_id'     => $product->id,
-//                    'subproperty_id' => $productSubProperty,
-//                ];
-//            }
-//            ProductSubProperties::insert($data);
-        } else {
-            ProductSubProperties::where('product_id', $product->id)->delete();
+            $data = [];
+            foreach ($productRequest->sub_properties as $productSubProperty) {
+                $data[] = [
+                    'product_id'     => $product->id,
+                    'subproperty_id' => $productSubProperty,
+                ];
+            }
+            ProductSubProperties::insert($data);
         }
-
 
         if ($productRequest->pictures_id) {
             $pictures = ProductPictures::where('product_id', $product->id)->get();
