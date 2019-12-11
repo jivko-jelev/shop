@@ -37,7 +37,7 @@
                         </div>
                         <div class="top_bar_contact_item">
                             <div class="top_bar_icon"><img src="{{ URL::to('images/mail.png') }}" alt=""></div>
-                            <a href="mailto:fastsales@gmail.com">{{ env('EMAIL') }}</a></div>
+                            <a href="mailto:{{ env('EMAIL') }}">{{ env('EMAIL') }}</a></div>
                         <div class="top_bar_content ml-auto">
                             <div class="top_bar_user">
                                 <div class="user_icon"><img src="{{ URL::to('images/user.svg') }}" alt=""></div>
