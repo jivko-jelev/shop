@@ -26,8 +26,8 @@ class ProductRequest extends FormRequest
         return [
             'title'             => 'required',
             'category'          => 'required',
-            'price'             => 'required|numeric|min:0.01',
-            'promo_price'       => 'nullable|numeric|min:0.01|' . (isset($this->price) ? 'max:' . ($this->price - 0.01) : ''),
+            'price'             => 'required|numeric|min:0.00',
+            'promo_price'       => 'nullable|numeric|min:0.00|' . (isset($this->price) ? 'max:' . ($this->price - 0.01) : ''),
             'variation'         => 'required_if:type,Вариация',
             'product_variation' => 'required_if:type,Вариация',
         ];
