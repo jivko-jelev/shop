@@ -105,9 +105,9 @@ class UserController extends Controller
         $user->save();
 
         if ($request->ajax()) {
-            return response()->json('{"message": "Потребителят: <strong>' . $user->name . '</strong><br>' .
+            return response()->json(['message'=> 'Потребителят: <strong>' . $user->name . '</strong><br>' .
                                     'Име: <strong>' . $user->full_name . '</strong>' .
-                                    '<br> беше успешно редактиран."}');
+                                    '<br> беше успешно редактиран.']);
         }
 
         return redirect()->back()->with('message', 'Потребителят беше успешно редактиран.');

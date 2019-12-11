@@ -33,7 +33,7 @@ class ProductController extends Controller
                                ->select('products.*')
                                ->selectRaw('IFNULL(promo_price, price) AS order_price')
                                ->when($request->get('min_price'), function ($query) use ($request) {
-                                   $query->where('price', '>=', $request->get('min_price'));
+                                   $query->whereRaw("IFNULL(`promo_price`, `price`) >={$request->get('min_price')}");
                                })
                                ->when($request->get('max_price'), function ($query) use ($request) {
                                    $query->whereRaw("IFNULL(`promo_price`, `price`) <={$request->get('max_price')}");
@@ -69,7 +69,7 @@ class ProductController extends Controller
 
             $limit = in_array($request->get('per-page'), [50, 100]) ? $request->get('per-page') : 20;
 
-            $prices = Product::selectRaw('MIN(price) AS min_price, MAX(IFNULL(promo_price, price)) as max_price')
+            $prices = Product::selectRaw('MIN(IFNULL(promo_price, price)) AS min_price, MAX(IFNULL(promo_price, price)) as max_price')
                              ->where('category_id', $category->id)
                              ->first();
 
@@ -145,6 +145,21 @@ class ProductController extends Controller
         }
     }
 
+    public function createProductSubVariations(int $variation_id, string $subvariations)
+    {
+        $subVariations = explode('|', $subvariations);
+        $data          = [];
+        foreach ($subVariations as $subVariation) {
+            if ($subVariation) {
+                $data[] = [
+                    'name'         => $subVariation,
+                    'variation_id' => $variation_id,
+                ];
+            }
+        }
+        SubVariation::insert($data);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -193,15 +208,7 @@ class ProductController extends Controller
                 'product_id' => $product->id,
             ]);
 
-            $subVariations = explode('|', $productRequest->product_variation);
-            $data          = [];
-            foreach ($subVariations as $subVariation) {
-                $data[] = [
-                    'name'         => $subVariation,
-                    'variation_id' => $variation->id,
-                ];
-            }
-            SubVariation::insert($data);
+            $this->createProductSubVariations($variation->id, $productRequest->product_variation);
         }
 
         return response()->json(['url' => route('products.edit', ['product' => $product])]);
@@ -226,7 +233,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $properties = Property::where('category_id', $product->category_id)
+        $properties = Property::with('subProperties')
+                              ->where('category_id', $product->category_id)
                               ->get();
 
         return view('admin.products.create', [
@@ -252,10 +260,33 @@ class ProductController extends Controller
         if ($product->category_id != $productRequest->category) {
             Property::where('product_id', $product->id)->delete();
         }
+
+        if ($productRequest->type == 'Вариация') {
+            $variation = Variation::where('product_id', $product->id)->first();
+
+            if ($variation) {
+                if ($productRequest->variation != $variation->name) {
+                    $variation->name = $productRequest->variation;
+                    $variation->update();
+                }
+                SubVariation::where('variation_id', $variation->id)->delete();
+                $this->createProductSubVariations($variation->id, $productRequest->product_variation);
+            } else {
+                $variation = Variation::create([
+                    'name'       => $productRequest->variation,
+                    'product_id' => $product->id,
+                ]);
+
+                $this->createProductSubVariations($variation->id, $productRequest->product_variation);
+            }
+        }
+
         $product->name        = $productRequest->title;
         $product->category_id = $productRequest->category;
         $product->description = $productRequest->description;
         $product->picture_id  = $productRequest->picture_id[0];
+        $product->price       = $productRequest->price;
+        $product->promo_price = $productRequest->promo_price;
         $product->type        = $productRequest->type;
         $product->update();
 

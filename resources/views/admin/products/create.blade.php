@@ -20,7 +20,7 @@
                                 <div class="col-sm-10 error-div">
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="title" id="title" placeholder="Име"
-                                               value="{{ $product->name ?? '' }}">
+                                               value="{{ isset($product) ? $product->name : '' }}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default">Запази</button>
                                         </span>
@@ -36,7 +36,7 @@
                                         <option value="">избери</option>
                                         @foreach($categories as $category)
                                             <option
-                                                    value="{{ $category->id }}"{{ isset($product) && $category->id==$product->category_id ? ' selected' : '' }}>{{ $category->title }}
+                                                value="{{ $category->id }}"{{ isset($product) && $category->id==$product->category_id ? ' selected' : '' }}>{{ $category->title }}
                                                 ({{ $category->alias }})
                                             </option>
                                         @endforeach
@@ -48,7 +48,7 @@
                                 <div class="col-md-2 error-div">
                                     <div class="input-group">
                                         <input type="number" step=".01" class="form-control" name="price" id="price" placeholder="Цена"
-                                               value="{{ $product->price ?? '' }}">
+                                               value="{{ isset($product) ? $product->price : '' }}">
                                     </div>
                                 </div>
 
@@ -68,32 +68,32 @@
                                     <select class="form-control" name="type" id="type">
                                         @foreach(\App\Functions::getEnumValues('products', 'type') as $type)
                                             <option
-                                                    value="{{ $type }}"{{ isset($product) && $type==$product->type ? ' selected' : '' }}>{{ $type }}</option>
+                                                value="{{ $type }}"{{ isset($product) && $type==$product->type ? ' selected' : '' }}>{{ $type }}</option>
                                         @endforeach
                                     </select>
                                 </div>
 
-                                <label for="category" class="col-sm-1 control-label">Име</label>
+                                <label for="variation" class="col-sm-1 control-label">Име</label>
 
                                 <div class="col-sm-2 error-div">
                                     <input type="text" class="form-control" name="variation" id="variation" placeholder="Име"
-                                           value="{{ $product->variation ? $product->variation->name : '' }}" {{ $product->variation ? '' : 'readonly' }}>
+                                           value="{{ (isset($product) && $product->variation) ? $product->variation->name : '' }}" {{ isset($product) && $product->variation ? '' : 'readonly' }}>
                                 </div>
 
-                                <label for="category" class="col-sm-2 control-label">Стойности</label>
+                                <label for="product_variation" class="col-sm-2 control-label">Стойности</label>
 
                                 <div class="col-sm-2 error-div">
                                     <input type="text" class="form-control" name="product_variation" id="product_variation"
-                                           placeholder="Стойности"
-                                           value="{{ $product->variation ? implode('|', $product->variation->subVariations->pluck('name')->all()) : '' }}"
-                                           {{ $product->variation ? '' : 'readonly' }}
-                                           title="Разделете всяка вариация с '|'">
+                                           placeholder="Стойности" title="Разделете всяка вариация с '|'"
+                                           value="{{ isset($product) && $product->variation ? implode('|', $product->variation->subVariations->pluck('name')->all()) : '' }}"
+                                        {{ isset($product) && $product->variation ? '' : 'readonly' }} >
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-sm-12 error-div">
-                                    <textarea name="description" id="description">{{ $product->description ?? '' }}</textarea>
+                                    <textarea name="description"
+                                              id="description">{{ isset($product) && $product->description ? $product->description : '' }}</textarea>
                                 </div>
                             </div>
 
@@ -154,7 +154,7 @@
             <p type="hidden" id="pictures-id" name="pictures_id">
                 @if(isset($product) && isset($product->pictures))
                     @foreach($product->pictures as $pictures)
-                        <input type="hidden" name="picture_id[]" value="{{ $pictures->picture_id }}">
+                        <input type="hidden" name="pictures_id[]" value="{{ $pictures->picture_id }}">
                     @endforeach
                 @endif
             </p>
@@ -262,7 +262,7 @@
 
         $('#create-product').submit(function (e) {
             e.preventDefault();
-            $("textarea[name=description]").val(tinyMCE.activeEditor.getContent())
+            $("textarea[name=description]").val(tinyMCE.activeEditor.getContent());
             let form = $(this);
             $.ajax({
                 url: "{{ $route }}",

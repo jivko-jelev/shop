@@ -14,10 +14,12 @@
     @endforeach
 </div>
 
-<script>
-    $('input[type="checkbox"]').iCheck({
-            checkboxClass: 'icheckbox_minimal-blue',
-            radioClass: 'iradio_minimal-blue',
-        }
-    );
-</script>
+@if(!isset($product))
+    <script>
+        $('input[type="checkbox"]').iCheck({
+                checkboxClass: 'icheckbox_minimal-blue',
+                radioClass: 'iradio_minimal-blue',
+            }
+        );
+    </script>
+@endif
