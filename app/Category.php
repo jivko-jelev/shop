@@ -42,12 +42,14 @@ class Category extends Model
         foreach ($categories->where('parent_id', $parent) as $category) {
             if (self::haveSubCategories($categories, $category->id)) {
                 $html .= '<li class="hassubs">';
-                $html .= '<a href="#">' . $category->title . '<i class="fas fa-chevron-right"></i></a>';
+                $html .= '<a href="' . route('products.index', $category->alias) . '">' . $category->title .
+                         '<i class="fas fa-chevron-right"></i></a>';
                 $html .= '<ul>';
                 $html .= self::getCategory($html, $categories, $category->id);
                 $html .= '</li></ul>';
             } else {
-                $html .= '<li><a href="#">' . $category->title . '<i class="fas fa-chevron-right"></i></a></li>';
+                $html .= '<li><a href="' . route('products.index', $category->alias) . '">' . $category->title .
+                         '<i class="fas fa-chevron-right"></i></a></li>';
                 $html .= '</li>';
             }
         }
