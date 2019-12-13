@@ -72,22 +72,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
-                                <label for="variation" class="col-sm-1 control-label">Име</label>
-
-                                <div class="col-sm-2 error-div">
-                                    <input type="text" class="form-control" name="variation" id="variation" placeholder="Име"
-                                           value="{{ (isset($product) && $product->variation) ? $product->variation->name : '' }}" {{ isset($product) && $product->variation ? '' : 'readonly' }}>
-                                </div>
-
-                                <label for="product_variation" class="col-sm-2 control-label">Стойности</label>
-
-                                <div class="col-sm-2 error-div">
-                                    <input type="text" class="form-control" name="product_variation" id="product_variation"
-                                           placeholder="Стойности" title="Разделете всяка вариация с '|'"
-                                           value="{{ isset($product) && $product->variation ? implode('|', $product->variation->subVariations->pluck('name')->all()) : '' }}"
-                                        {{ isset($product) && $product->variation ? '' : 'readonly' }} >
-                                </div>
                             </div>
 
                             <div class="form-group">
@@ -101,6 +85,20 @@
                                 @isset($product)
                                     @include('admin.products.layouts.properties')
                                 @endisset
+                                <hr>
+                            </div>
+                            <div class="col-md-4 my-col-md-4">
+                                <div class="box my-box" id="variations">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Вариация</h3>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        @if(isset($product) && $product->type=='Вариация')
+                                            @include('admin.products.layouts.variations')
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -269,6 +267,7 @@
                 data: form.serialize(),
                 method: "{{ $method }}",
                 success: function (data) {
+                    $('error').remove();
                     if (data['url']) {
                         window.location.replace(data['url']);
                     } else if (data.message) {
@@ -399,14 +398,67 @@
                 }
             });
         });
+        let variations    = $('#variations');
+        let numVariations = 0;
+
+        function addSubVariation() {
+            return '<div class="error-div"><div class="input-group">\n' +
+                `       <input type="text" class="form-control" name="new_subvariation[${numVariations++}]" placeholder="Стойност" value="">\n` +
+                '       <span class="input-group-btn">\n' +
+                '            <button type="button" class="btn btn-primary add-variation" title="Добави податрибут">\n' +
+                '                  <i class="fa fa-plus" aria-hidden="true"></i>\n' +
+                '            </button>\n' +
+                '            <button type="button" class="btn btn-danger delete-variation" title="Изтрий">\n' +
+                '                  <i class="fa fa-minus" aria-hidden="true"></i>\n' +
+                '            </button>\n' +
+                '       </span>\n' +
+                '</div></div>\n';
+        }
+
         $('[name="type"]').change(function () {
             if ($(this).val() == 'Вариация') {
-                $('#variation').prop('readonly', '');
-                $('#product_variation').prop('readonly', '');
+                variations.find('.box-body').html(
+                    `<div class="error-div"><input type="text" class="form-control" name="variation" placeholder="Вариация"></div>\n` +
+                    addSubVariation());
+                variations.show();
             } else if ($(this).val() == 'Обикновен') {
-                $('#variation').prop('readonly', 'readonly');
-                $('#product_variation').prop('readonly', 'readonly');
+                variations.hide();
             }
-        })
+        });
+
+        $(document).on('click', '.add-variation', function () {
+            variations.find('.box-body').append(
+                addSubVariation());
+        });
+
+        $(document).on('click', '.delete-variation', function () {
+            if (variations.find('.error-div').length > 2) {
+                if ($(this).data('route')) {
+                    let that = $(this);
+                    Lobibox.confirm({
+                        msg: `Наистина ли искате да изтриете податрибута: <strong>${that.data('title')}</strong>?`,
+                        callback: function ($this, type) {
+                            if (type === 'yes') {
+                                $.ajax({
+                                    url: `${that.data('route')}`,
+                                    method: 'delete',
+                                    success: function (data) {
+                                        that.closest('.error-div').remove();
+                                        Lobibox.notify('success', {
+                                            msg: `Податрибутът <strong>${that.data('title')}</strong> беше успешно изтрит`
+                                        });
+                                    },
+                                    error: function (data) {
+                                        showError(data);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    $(this).closest('.error-div').remove();
+                }
+            }
+        });
     </script>
 @endpush

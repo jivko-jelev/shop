@@ -8,4 +8,5 @@ class SubVariation extends Model
 {
     protected $fillable = ['name', 'variation_id'];
 
+    public $timestamps = false;
 }

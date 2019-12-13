@@ -145,10 +145,9 @@ class ProductController extends Controller
         }
     }
 
-    public function createProductSubVariations(int $variation_id, string $subvariations)
+    public function createProductSubVariations(int $variation_id, array $subVariations)
     {
-        $subVariations = explode('|', $subvariations);
-        $data          = [];
+        $data = [];
         foreach ($subVariations as $subVariation) {
             if ($subVariation) {
                 $data[] = [
@@ -208,7 +207,9 @@ class ProductController extends Controller
                 'product_id' => $product->id,
             ]);
 
-            $this->createProductSubVariations($variation->id, $productRequest->product_variation);
+            $this->createProductSubVariations($variation->id, $productRequest->get('new_subvariation'));
+        } else {
+            Variation::where('product_id', $product->id)->delete();
         }
 
         return response()->json(['url' => route('products.edit', ['product' => $product])]);
@@ -261,24 +262,20 @@ class ProductController extends Controller
             Property::where('product_id', $product->id)->delete();
         }
 
-        if ($productRequest->type == 'Вариация') {
-            $variation = Variation::where('product_id', $product->id)->first();
-
-            if ($variation) {
-                if ($productRequest->variation != $variation->name) {
-                    $variation->name = $productRequest->variation;
-                    $variation->update();
-                }
-                SubVariation::where('variation_id', $variation->id)->delete();
-                $this->createProductSubVariations($variation->id, $productRequest->product_variation);
-            } else {
-                $variation = Variation::create([
-                    'name'       => $productRequest->variation,
-                    'product_id' => $product->id,
-                ]);
-
-                $this->createProductSubVariations($variation->id, $productRequest->product_variation);
+        if ($product->type == 'Вариация' && $productRequest->type == 'Вариация') {
+            foreach ($productRequest->subvariation as $key => $subVariation) {
+                SubVariation::where('id', $key)->update(['name' => $subVariation]);
             }
+            $this->createProductSubVariations($product->variation->id, $productRequest->get('new_subvariation'));
+        } else if ($product->type == 'Вариация' && $productRequest->type != 'Вариация') {
+            Variation::where('product_id', $product->id)->delete();
+        } else if ($productRequest->type == 'Вариация' && $product->type != 'Вариация') {
+            $variation = Variation::create([
+                'name'       => $productRequest->variation,
+                'product_id' => $product->id,
+            ]);
+
+            $this->createProductSubVariations($variation->id, $productRequest->get('new_subvariation'));
         }
 
         $product->name        = $productRequest->title;

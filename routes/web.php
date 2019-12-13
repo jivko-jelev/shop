@@ -51,6 +51,8 @@ Route::prefix('admin')
          Route::delete('properties/{properties}/destroy', 'PropertiesController@destroy')->name('properties.destroy');
          Route::delete('sub-properties/{subProperties}/destroy', 'SubPropertiesController@destroy')
               ->name('subproperties.destroy');
+
+         Route::delete('subvariation/{subvariation}/destroy', 'SubVariationController@destroy')->name('subvariation.destroy');
      });
 
 Auth::routes();

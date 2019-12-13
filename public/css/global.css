@@ -271,10 +271,32 @@ legend {
     padding-right: 5px;
 }
 
-hr{
+hr {
     border-top: 1px solid #e1e5ee;
 }
 
-#product-picture img{
+#product-picture img {
     width: 100%;
+}
+
+#variations {
+    display: none;
+}
+
+.my-box {
+    border-left: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+}
+
+.my-col-md-4 {
+    padding-left: 0;
+}
+
+#variations input {
+    margin-bottom: 5px;
+}
+
+#variations .input-group-btn {
+    top: -2px;
 }

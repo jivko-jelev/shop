@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                @if(isset($category))
+                @isset($category))
                     @foreach($properties as $property)
                         <div class="property" data-id="{{ $property->id }}">
                             <hr>
@@ -88,7 +88,7 @@
                             @endforeach
                         </div>
                     @endforeach
-                @endif
+                @endisset
                 <div class="modal-footer">
                     <!-- /.box-body -->
                     <button type="button" class="btn btn-success add-property">Добави атрибут</button>
