@@ -266,7 +266,9 @@ class ProductController extends Controller
             foreach ($productRequest->subvariation as $key => $subVariation) {
                 SubVariation::where('id', $key)->update(['name' => $subVariation]);
             }
-            $this->createProductSubVariations($product->variation->id, $productRequest->get('new_subvariation'));
+            if($productRequest->get('new_subvariation')) {
+                $this->createProductSubVariations($product->variation->id, $productRequest->get('new_subvariation'));
+            }
         } else if ($product->type == 'Вариация' && $productRequest->type != 'Вариация') {
             Variation::where('product_id', $product->id)->delete();
         } else if ($productRequest->type == 'Вариация' && $product->type != 'Вариация') {
