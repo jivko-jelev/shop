@@ -11,7 +11,7 @@ class Thumbnail extends Model
 
     protected $fillable = ['filename', 'picture_id', 'size'];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public static $thumbnails = [[100, 100], [200, 200], [300, 300], [600, 600],];
 

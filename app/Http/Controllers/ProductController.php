@@ -8,7 +8,6 @@ use App\Product;
 use App\ProductPictures;
 use App\ProductSubProperties;
 use App\Property;
-use App\SubProperty;
 use App\SubVariation;
 use App\Variation;
 use Illuminate\Http\JsonResponse;
@@ -89,7 +88,6 @@ class ProductController extends Controller
 
             return view('category', [
                 'products'      => $products,
-                'categories'    => Category::all(),
                 'properties'    => $properties,
                 'prices'        => $prices,
                 'categoryName'  => $categoryName,
@@ -120,11 +118,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-
         return view('admin.products.create', [
             'title'      => 'Създаване на продукт',
-            'categories' => $categories,
             'route'      => route('products.store'),
             'method'     => 'post',
         ]);
@@ -241,7 +236,6 @@ class ProductController extends Controller
         return view('admin.products.create', [
             'product'    => $product,
             'title'      => 'Редактиране на продукт',
-            'categories' => Category::all(),
             'route'      => route('products.update', $product->id),
             'method'     => 'put',
             'properties' => $properties,

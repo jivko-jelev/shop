@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Category;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('name', function ($attribute, $value, $parameters, $validator) {
             return preg_match("/^[\p{Cyrillic}\- ]+$/u", $value);
         });
+
+        View::share('categories', Category::all());
     }
 }

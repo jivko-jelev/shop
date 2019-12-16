@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                @isset($category))
+                @isset($category)
                     @foreach($properties as $property)
                         <div class="property" data-id="{{ $property->id }}">
                             <hr>
