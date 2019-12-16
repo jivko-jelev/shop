@@ -48,9 +48,7 @@ class ProductController extends Controller
                                        });
                                    }
                                })
-                               ->whereHas('category', function ($query) use ($category) {
-                                   $query->where('id', $category->id);
-                               });
+                               ->where('category_id', $category->id);
 
             if ($request->get('order-by')) {
                 $order = explode('-', $request->get('order-by'));
