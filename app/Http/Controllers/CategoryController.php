@@ -112,7 +112,7 @@ class CategoryController extends Controller
         $categories   = $categories->get();
         $recordsTotal = $recordsFiltered = $categories->count();
 
-        $c = Category::get()->pluck('title', 'id')->toArray();
+        $c = Category::all()->pluck('title', 'id')->toArray();
         foreach ($categories as $category) {
             $category->actions = view('admin.categories.layouts.actions')->with('category', $category)->render();
             if ($category->parent_id) {

@@ -9,9 +9,7 @@ Route::get('category/{category}', 'ProductController@index')->name('products.ind
 Route::prefix('admin')
      ->middleware(['auth', 'admin'])
      ->group(function () {
-         Route::get('', function () {
-             return view('admin.dashboard', ['title' => 'Табло']);
-         })->name('dashboard');
+         Route::get('', 'DashboardController@index')->name('dashboard');
 
          // Потребители
          Route::get('users', 'UserController@index')->name('users');
@@ -52,13 +50,14 @@ Route::prefix('admin')
          Route::delete('sub-properties/{subProperties}/destroy', 'SubPropertiesController@destroy')
               ->name('subproperties.destroy');
 
-         Route::delete('subvariation/{subvariation}/destroy', 'SubVariationController@destroy')->name('subvariation.destroy');
+         Route::delete('subvariation/{subvariation}/destroy', 'SubVariationController@destroy')
+              ->name('subvariation.destroy');
      });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('test', function (){
+Route::get('test', function () {
 
 });

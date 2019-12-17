@@ -38,12 +38,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function getFullNameAttribute()
+    public function getFullNameAttribute(): string
     {
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    public function getShortNameAttribute()
+    public function getShortNameAttribute(): string
     {
         if($this->first_name && $this->last_name) {
             return mb_substr($this->first_name, 0, 1) . '. ' . $this->last_name;
@@ -54,7 +54,7 @@ class User extends Authenticatable
 
     // Ако е записан пол на потребителя връща г-н или г-жо плюс фамилията
     // а ако не е записан връща г-н/г-жа плюс фамилията
-    public function getRespectfulNameAttribute()
+    public function getRespectfulNameAttribute(): string
     {
         if($this->sex) {
             return ($this->sex == 'Male' ? 'г-н' : 'г-жа') . ' ' . $this->last_name;

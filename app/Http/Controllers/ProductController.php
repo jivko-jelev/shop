@@ -117,9 +117,9 @@ class ProductController extends Controller
     public function create()
     {
         return view('admin.products.create', [
-            'title'      => 'Създаване на продукт',
-            'route'      => route('products.store'),
-            'method'     => 'post',
+            'title'  => 'Създаване на продукт',
+            'route'  => route('products.store'),
+            'method' => 'post',
         ]);
     }
 
@@ -258,7 +258,7 @@ class ProductController extends Controller
             foreach ($productRequest->subvariation as $key => $subVariation) {
                 SubVariation::where('id', $key)->update(['name' => $subVariation]);
             }
-            if($productRequest->get('new_subvariation')) {
+            if ($productRequest->get('new_subvariation')) {
                 $this->createProductSubVariations($product->variation->id, $productRequest->get('new_subvariation'));
             }
         } else if ($product->type == 'Вариация' && $productRequest->type != 'Вариация') {
@@ -378,9 +378,12 @@ class ProductController extends Controller
             $products->orderBy($ajaxGridColumnNames[$singleOrderState['column']], $singleOrderState['dir']);
         }
 
-        $products = $products->skip($request->input('start'))
-                             ->take($request->input('length'))
-                             ->get();
+        if ($request->get('length') != -1) {
+            $products->skip($request->input('start'))
+                     ->take($request->input('length'));
+        }
+
+        $products = $products->get();
 
         foreach ($products as $product) {
             $product->actions     = view('admin.products.layouts.actions')->with('product', $product)->render();

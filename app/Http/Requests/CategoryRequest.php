@@ -111,7 +111,7 @@ class CategoryRequest extends FormRequest
         });
     }
 
-    public function validateNewSubproperties($validator, string $name, $errorMessage)
+    public function validateNewSubproperties($validator, string $name, string $errorMessage):void
     {
         if ($this->request->get($name)) {
             foreach ($this->request->get($name) as $key => $property) {

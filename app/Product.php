@@ -49,27 +49,27 @@ class Product extends Model
         return $this->hasOne('App\Variation');
     }
 
-    public function getPicture()
+    public function getPicture(): string
     {
         return URL::to($this->picture ? $this->picture->filename : 'images/empty.jpg');
     }
 
-    public function getThumbnail(int $num = 1)
+    public function getThumbnail(int $num = 1): string
     {
         return URL::to($this->picture ? $this->picture->thumbnails->where('size', $num)[$num]->filename : "images/empty{$num}.jpg");
     }
 
-    public function priceText()
+    public function priceText(): string
     {
         return $this->price . ' лв.';
     }
 
-    public function promoPriceText()
+    public function promoPriceText(): string
     {
         return $this->promo_price . ' лв.';
     }
 
-    public function discountText()
+    public function discountText(): string
     {
         return '-' . (100 - ($this->promo_price / $this->price) * 100) . '%';
     }
@@ -92,7 +92,7 @@ class Product extends Model
         return str_replace($cyr, $lat, $textcyr);
     }
 
-    public static function sanitize($string, $force_lowercase = false, $anal = false)
+    public static function sanitize(string $string, bool $force_lowercase = false, bool $anal = false): string
     {
         $strip = ["~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "=", "+", "[", "{", "]",
                   "}", "\\", "|", ";", ":", "\"", "'", "&#8216;", "&#8217;", "&#8220;", "&#8221;", "&#8211;", "&#8212;",

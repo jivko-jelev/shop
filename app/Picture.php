@@ -20,7 +20,7 @@ class Picture extends Model
         return $this->hasMany(Thumbnail::class);
     }
 
-    public static function cropImage($source, $dest, $width, $height)
+    public static function cropImage($source, $dest, $width, $height): void
     {
         $image    = Image::make($source);
         $newImage = Image::canvas($width, $height);
@@ -53,7 +53,7 @@ class Picture extends Model
         }
     }
 
-    public function generateThumbnails($source)
+    public function generateThumbnails($source): void
     {
         $path     = substr($this->filename, 0, strrpos($this->filename, '/') + 1) . 'thumbnails/';
         $filename = substr($this->filename, strrpos($this->filename, '/') + 1);

@@ -21,8 +21,4 @@ class ProductPictures extends Model
         return $this->hasMany('App\Thumbnail', 'picture_id', 'picture_id');
     }
 
-//    public function getThumbnail(int $num = 1)
-//    {
-//        return URL::to($this->thumbnails->where('size', $num)[$num]->filename);
-//    }
 }
