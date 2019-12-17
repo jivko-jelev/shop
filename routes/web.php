@@ -1,10 +1,7 @@
 <?php
 
-use App\Product;
-use App\ProductPictures;
-use Illuminate\Support\Facades\DB;
-
 Route::get('category/{category}', 'ProductController@index')->name('products.index');
+Route::get('products/{permalink}', 'ProductController@show')->name('product.show');
 
 Route::prefix('admin')
      ->middleware(['auth', 'admin'])

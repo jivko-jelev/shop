@@ -2412,3 +2412,11 @@ select option {
 #num-products-text{
     color: #000000;
 }
+
+.product_cart_button a{
+    color: #ffffff;
+}
+
+.product_cart_button{
+    padding-top: 10px;
+}

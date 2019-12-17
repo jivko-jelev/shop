@@ -31,17 +31,17 @@ $(document).ready(function () {
 
     setHeader();
 
-    initIsotope();
     initCustomDropdown();
     initPageMenu();
     initViewedSlider();
     initBrandsSlider();
-    initPriceSlider();
     initFavs();
 
     $(window).on('resize', function () {
         setHeader();
     });
+
+
 
     /*
 

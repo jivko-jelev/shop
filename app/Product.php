@@ -21,7 +21,7 @@ class Product extends Model
         'permalink',
         'price',
         'promo_price',
-        'type'
+        'type',
     ];
 
     public function category()
@@ -62,6 +62,11 @@ class Product extends Model
     public function priceText(): string
     {
         return $this->price . ' лв.';
+    }
+
+    public function realPrice()
+    {
+        return isset($this->promo_price) ? $this->promo_price . 'лв.' : $this->price . 'лв.';
     }
 
     public function promoPriceText(): string

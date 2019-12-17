@@ -214,9 +214,15 @@ class ProductController extends Controller
      * @param \App\Product $product
      * @return Response
      */
-    public function show(Product $product)
+    public function show(string $permalink)
     {
-        //
+        return view('product')->with(['product' => Product::with([
+            'pictures',
+            'pictures.thumbnails' => function ($query) {
+                $query->where('size', 1);
+            }])
+                                                          ->where('permalink', $permalink)
+                                                          ->first()]);
     }
 
     /**

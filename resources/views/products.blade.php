@@ -6,7 +6,7 @@
                 <div class="product_item is_new">
                     <div class="product_border"></div>
                     <div class="product_image d-flex flex-column align-items-center justify-content-center"><img
-                            src="{{ $product->getThumbnail() }}" alt=""></div>
+                                src="{{ $product->getThumbnail() }}" alt=""></div>
                     <div class="product_content">
                         @if($product->promo_price)
                             <div class="product_price discount">{{ $product->promoPriceText() }}
@@ -18,7 +18,9 @@
                             <div><a href="#" tabindex="0">{{ $product->name }}</a></div>
                         </div>
                         <div class="product_extras">
-                            <button class="product_cart_button">Виж повече</button>
+                            <div class="product_cart_button">
+                                <a href="{{ route('product.show', $product->permalink) }}" class="">Виж повече</a>
+                            </div>
                         </div>
 
                     </div>
