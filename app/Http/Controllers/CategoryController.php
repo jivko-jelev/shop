@@ -170,7 +170,7 @@ class CategoryController extends Controller
     {
         $category->title     = $request->get('title');
         $category->alias     = $request->get('alias');
-        $category->parent_id = $request->get('parent_id') ?? null;
+        $category->parent_id = $request->get('parent_id');
         $category->save();
 
         if ($request->get('property')) {
