@@ -9,17 +9,17 @@
                                 src="{{ $product->getThumbnail() }}" alt=""></div>
                     <div class="product_content">
                         @if($product->promo_price)
-                            <div class="product_price discount">{{ $product->promoPriceText() }}
-                                <span>{{ $product->priceText() }}</span></div>
+                            <div class="product_price discount">{!! $product->promoPriceText() !!}
+                                <span>{!! $product->priceText() !!}</span></div>
                         @else
-                            <div class="product_price">{{ $product->priceText() }}</div>
+                            <div class="product_price">{!! $product->priceText() !!}</div>
                         @endif
                         <div class="product_name">
                             <div><a href="#" tabindex="0">{{ $product->name }}</a></div>
                         </div>
                         <div class="product_extras">
                             <div class="product_cart_button">
-                                <a href="{{ route('product.show', $product->permalink) }}" class="">Виж повече</a>
+                                <a href="{{ route('product.show', $product->permalink) }}">Виж повече</a>
                             </div>
                         </div>
 

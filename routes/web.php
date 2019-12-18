@@ -56,5 +56,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('test', function () {
-
+    $x = 1200.01;
+    var_dump(($x - intval($x))*100);
+    $x = floor(($x - intval($x))*100);
+    var_dump($x);
 });

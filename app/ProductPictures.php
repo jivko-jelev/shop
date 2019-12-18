@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\URL;
 
 class ProductPictures extends Model
 {
@@ -19,6 +18,11 @@ class ProductPictures extends Model
     public function thumbnails()
     {
         return $this->hasMany('App\Thumbnail', 'picture_id', 'picture_id');
+    }
+
+    public function picture()
+    {
+        return $this->belongsTo('App\Picture', 'picture_id', 'id');
     }
 
 }

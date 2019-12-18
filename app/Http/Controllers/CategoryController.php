@@ -149,7 +149,6 @@ class CategoryController extends Controller
                               ->get();
 
         return view('admin.categories.edit', [
-            'categories' => Category::all(),
             'category'   => $category,
             'properties' => $properties,
             'route'      => route('categories.update', $category),
@@ -212,10 +211,11 @@ class CategoryController extends Controller
 
         return response()->json([
             'message' => 'Категорията беше успешно редактирана.',
-            'content' => view('admin.categories.edit-content', ['categories' => Category::all(),
-                                                                'category'   => $category,
-                                                                'properties' => $properties,
-                                                                'route'      => route('categories.update', $category),
+            'content' => view('admin.categories.edit-content', [
+                'categories' => Category::all(),
+                'category'   => $category,
+                'properties' => $properties,
+                'route'      => route('categories.update', $category),
             ])->render(),
         ]);
     }

@@ -61,7 +61,7 @@ class Product extends Model
 
     public function priceText(): string
     {
-        return $this->price . ' лв.';
+        return (int)$this->price . '<sup>' . substr($this->price, strpos($this->price, '.') + 1) . '</sup>' . ' лв.';
     }
 
     public function realPrice()
@@ -71,7 +71,11 @@ class Product extends Model
 
     public function promoPriceText(): string
     {
-        return $this->promo_price . ' лв.';
+        if (isset($this->promo_price)) {
+            return (int)$this->promo_price .
+                   '<sup>' . substr($this->promo_price, strpos($this->promo_price, '.') + 1) . '</sup>' .
+                   ' лв.';
+        }
     }
 
     public function discountText(): string

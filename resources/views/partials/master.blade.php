@@ -537,7 +537,7 @@
 <script src="{{ URL::to('plugins/Isotope/isotope.pkgd.min.js') }}"></script>
 <script src="{{ URL::to('plugins/jquery-ui-1.12.1.custom/jquery-ui.js') }}"></script>
 <script src="{{ URL::to('plugins/parallax-js-master/parallax.min.js') }}"></script>
-@stack('js')
+@yield('scripts')
 </body>
 
 </html>

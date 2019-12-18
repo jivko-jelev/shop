@@ -286,7 +286,6 @@
                 pictureId.find('input').each(function () {
                     map.push($(this).val());
                 });
-                console.log(pictureId);
                 $.ajax({
                     method: 'post',
                     data: {picture: map},

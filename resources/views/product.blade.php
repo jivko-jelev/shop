@@ -3,6 +3,20 @@
 @section('styles')
     <link rel="stylesheet" type="text/css" href="{{ URL::to('styles/product_styles.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('styles/product_responsive.css') }}">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <style type="text/css">
+        .slick-slide {
+            outline: none;
+        }
+
+        .slick-slide img {
+            width: 100%;
+        }
+
+        .slider button, .slider ul {
+            display: none !important;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -10,21 +24,31 @@
         <div class="container">
             <div class="row">
                 <!-- Images -->
-                <div class="col-lg-2 order-lg-1 order-2">
-                    @if(count($product->pictures) > 0)
-                        <ul class="image_list">
+                <div class="col-lg-5">
+                    <div class="slider slider-for">
+                        <div>
+                            <img src="{{ $product->getPicture() }}">
+                        </div>
+                        @if(count($product->pictures) > 0)
                             @foreach($product->pictures as $picture)
-                                @foreach($picture->thumbnails as $thumbnail)
-                                    <li data-image="{{ URL::to($thumbnail->filename) }}"><img src="{{ URL::to($thumbnail->filename) }}" alt=""></li>
-                                @endforeach
+                                <div>
+                                    <img src="{{ URL::to($picture->picture->filename) }}">
+                                </div>
                             @endforeach
-                        </ul>
-                    @endif
-                </div>
-
-                <!-- Selected Image -->
-                <div class="col-lg-5 order-lg-2 order-1">
-                    <div class="image_selected"><img src="{{ $product->getPicture() }}" alt=""></div>
+                        @endif
+                    </div>
+                    <div class="slider slider-nav">
+                        @if(count($product->pictures) > 0)
+                            <div>
+                                <img src="{{ $product->getPicture() }}">
+                            </div>
+                            @foreach($product->pictures as $picture)
+                                <div>
+                                    <img src="{{ URL::to($picture->picture->filename) }}">
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
 
                 <!-- Description -->
@@ -43,8 +67,10 @@
                                         <span>Quantity: </span>
                                         <input id="quantity_input" type="text" pattern="[0-9]*" value="1">
                                         <div class="quantity_buttons">
-                                            <div id="quantity_inc_button" class="quantity_inc quantity_control"><i class="fas fa-chevron-up"></i></div>
-                                            <div id="quantity_dec_button" class="quantity_dec quantity_control"><i class="fas fa-chevron-down"></i></div>
+                                            <div id="quantity_inc_button" class="quantity_inc quantity_control"><i
+                                                    class="fas fa-chevron-up"></i></div>
+                                            <div id="quantity_dec_button" class="quantity_dec quantity_control"><i
+                                                    class="fas fa-chevron-down"></i></div>
                                         </div>
                                     </div>
 
@@ -53,11 +79,11 @@
                                             <li>
                                                 <span>{{ $product->variation->name }}: </span>
                                                 <div class="color_mark_container">
-                                                    <div id="selected_color" class="color_mark"></div>
+                                                    <div id="selected_variation">избери</div>
                                                 </div>
                                                 <div class="color_dropdown_button"><i class="fas fa-chevron-down"></i></div>
 
-                                                <ul class="color_list">
+                                                <ul class="variation_list">
                                                     @foreach($product->variation->subVariations as $subVariations)
                                                         <li>{{ $subVariations->name }}</li>
                                                     @endforeach
@@ -68,9 +94,14 @@
 
                                 </div>
 
-                                <div class="product_price">{{ $product->realPrice() }}</div>
+                                @if($product->promo_price)
+                                    <div class="product_price discount">{!! $product->promoPriceText() !!}
+                                        <span>{!! $product->priceText() !!}</span></div>
+                                @else
+                                    <div class="product_price">{!! $product->priceText() !!}</div>
+                                @endif
                                 <div class="button_container">
-                                    <button type="button" class="button cart_button">Add to Cart</button>
+                                    <button type="button" class="button cart_button">Добави в количката</button>
                                     <div class="product_fav"><i class="fas fa-heart"></i></div>
                                 </div>
 
@@ -83,6 +114,24 @@
     </div>
 @endsection
 
-@push('js')
+@section('scripts')
     <script src="{{ URL::to('js/product_custom.js') }}"></script>
-@endpush
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+        $('.slider-for').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            fade: true,
+            asNavFor: '.slider-nav'
+        });
+        $('.slider-nav').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            asNavFor: '.slider-for',
+            dots: true,
+            centerMode: true,
+            focusOnSelect: true
+        });
+    </script>
+@endsection

@@ -2166,3 +2166,29 @@ select option {
 .order_info ul {
     list-style: none;
 }
+
+.product_price.discount {
+    color: #df3b3b;
+}
+
+.product_price span {
+    position: relative;
+    font-size: 75%;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.product_price span::after {
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: 1px;
+    background: #8d8d8d;
+    content: '';
+}
+
+.color_mark_container, .variation_list{
+    color: #828282;
+}

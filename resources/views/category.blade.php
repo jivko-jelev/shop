@@ -105,7 +105,7 @@
     </div>
 @endsection
 
-@push('js')
+@section('scripts')
     <script src="{{ URL::to('js/shop_custom.js') }}"></script>
     <script>
         function productStyles() {
@@ -251,5 +251,9 @@
                 reloadProducts();
             });
         });
+
+        $('.product_cart_button').click(function () {
+            window.location.href = $(this).find('a').attr('href');
+        });
     </script>
-@endpush
+@endsection
