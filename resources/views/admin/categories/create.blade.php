@@ -9,7 +9,7 @@
     </div>
 @endsection
 
-@push('js')
+@section('scripts')
     <script>
         $(document).on('click', '.delete-property', function () {
             let that = $(this);
@@ -190,4 +190,4 @@
                 '                                        </div></div>\n');
         });
     </script>
-@endpush
+@endsection

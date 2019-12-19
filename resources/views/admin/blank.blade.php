@@ -28,5 +28,5 @@
     </section>
 @endsection
 
-@push('js')
-@endpush
+@section('scripts')
+@endsection

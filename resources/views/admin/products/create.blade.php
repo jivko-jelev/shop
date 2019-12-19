@@ -218,7 +218,7 @@
     @include('admin.layouts.loading')
 @endsection
 
-@push('js')
+@section('scripts')
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script type="text/javascript">
         var editor_config = {
@@ -460,4 +460,4 @@
             }
         });
     </script>
-@endpush
+@endsection

@@ -584,6 +584,6 @@
         radioClass: 'iradio_minimal-blue'
     })
 </script>
-@stack('js')
+@yield('scripts')
 </body>
 </html>
