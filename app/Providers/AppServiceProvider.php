@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Cart;
 use App\Category;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;

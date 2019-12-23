@@ -123,6 +123,7 @@
         }
 
         productStyles();
+        initIsotope();
 
         let slider = $('#slider-range');
 

@@ -72,9 +72,7 @@ class Product extends Model
     public function promoPriceText(): string
     {
         if (isset($this->promo_price)) {
-            return (int)$this->promo_price .
-                   '<sup>' . substr($this->promo_price, strpos($this->promo_price, '.') + 1) . '</sup>' .
-                   ' лв.';
+            return (int)$this->promo_price . '<sup>' . substr($this->promo_price, strpos($this->promo_price, '.') + 1) . '</sup>' . ' лв.';
         }
     }
 

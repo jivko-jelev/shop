@@ -1,7 +1,10 @@
 <?php
 
+use App\Product;
+
 Route::get('category/{category}', 'ProductController@index')->name('products.index');
 Route::get('products/{permalink}', 'ProductController@show')->name('product.show');
+Route::post('cart/{product}', 'CartController@store')->name('carts.store');
 
 Route::prefix('admin')
      ->middleware(['auth', 'admin'])
@@ -56,8 +59,16 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('test', function () {
-    $x = 1200.01;
-    var_dump(($x - intval($x))*100);
-    $x = floor(($x - intval($x))*100);
-    var_dump($x);
+    $permalink='asdasd';
+    $p= Product::with([
+        'pictures',
+    ])
+//                        ->whereHas('pictures', function ($query) use ($permalink) {
+//                            $query->where('product_id', Product::where('permalink', $permalink)->first());
+//                        })
+                        ->where('permalink', $permalink)
+                        ->first();
+
+    dump($p);
+
 });

@@ -312,6 +312,7 @@ $(document).ready(function () {
             var colorItem = $(this);
             colorItem.on('click', function () {
                 selectedVariation.html($(this).html());
+                $('#variation').val($(this).html());
             });
         });
     }

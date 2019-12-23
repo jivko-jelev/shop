@@ -2420,3 +2420,7 @@ select option {
 .product_cart_button{
     padding-top: 10px;
 }
+
+.product_price {
+    color: #000000;
+}

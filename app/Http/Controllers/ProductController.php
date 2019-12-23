@@ -211,18 +211,18 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Product $product
+     * @param string $permalink
      * @return Response
      */
     public function show(string $permalink)
     {
-        return view('product')->with(['product' => Product::with([
-            'pictures',
-            'pictures.thumbnails' => function ($query) {
-                $query->where('size', 1);
+        return view('product')->with([
+            'product' => Product::with(['pictures' => function ($query) {
+                $query->with('picture');
             }])
-                                                          ->where('permalink', $permalink)
-                                                          ->first()]);
+                                ->where('permalink', $permalink)
+                                ->first(),
+        ]);
     }
 
     /**
