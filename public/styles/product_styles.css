@@ -2189,6 +2189,10 @@ select option {
     content: '';
 }
 
-.color_mark_container, .variation_list{
+.color_mark_container, .variation_list {
     color: #828282;
+}
+
+#variation {
+    display: none;
 }

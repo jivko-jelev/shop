@@ -1,0 +1,8 @@
+.error{
+    color: red;
+}
+
+.error-quantity{
+    margin-top: 50px !important;
+    color: red !important;
+}

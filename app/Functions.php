@@ -17,4 +17,9 @@ class Functions
         return $enum;
     }
 
+    public static function priceText($price): string
+    {
+        return (int)$price . '<sup>' . ((int)$price != $price ? substr($price, strpos($price, '.') + 1) : '00') . '</sup>' . ' лв.';
+    }
+
 }

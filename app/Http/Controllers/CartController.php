@@ -6,6 +6,7 @@ use App\Cart;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class CartController extends Controller
 {
@@ -16,7 +17,8 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
+//        $cart=Cart::where('user_id', Auth::id())
+        return view('cart');
     }
 
     /**
@@ -38,15 +40,21 @@ class CartController extends Controller
      */
     public function store(Request $request, Product $product)
     {
+        $request->validate([
+            'variation' => Rule::requiredIf($product->type == 'Вариация'),
+            'quantity'  => 'required|numeric|min:1',
+        ]);
+
         $cart = Cart::firstOrNew([
             'product_id'      => $product->id,
             'user_id'         => Auth::id(),
-            'subvariation_id' => $request->get('subvariation_id'),
+            'subvariation_id' => $request->get('variation'),
         ]);
 
-        $cart->product_id = $product->id;
-        $cart->user_id    = Auth::id();
-        $cart->quantity   += $request->get('quantity');
+        $cart->product_id      = $product->id;
+        $cart->user_id         = Auth::id();
+        $cart->quantity        += $request->get('quantity');
+        $cart->subvariation_id = $request->get('variation');
         $cart->save();
 
         return redirect()->back()->with(['message' => 'Продуктът бе добавен във Вашата количка']);

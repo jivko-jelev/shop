@@ -312,7 +312,10 @@ $(document).ready(function () {
             var colorItem = $(this);
             colorItem.on('click', function () {
                 selectedVariation.html($(this).html());
-                $('#variation').val($(this).html());
+                let that = $(this).html();
+                $('#variation').find('option').each(function () {
+                    $(this).attr('selected', $(this).text() == that);
+                });
             });
         });
     }

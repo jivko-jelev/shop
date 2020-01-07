@@ -5,6 +5,7 @@ use App\Product;
 Route::get('category/{category}', 'ProductController@index')->name('products.index');
 Route::get('products/{permalink}', 'ProductController@show')->name('product.show');
 Route::post('cart/{product}', 'CartController@store')->name('carts.store');
+Route::get('cart', 'CartController@index')->name('carts.index');
 
 Route::prefix('admin')
      ->middleware(['auth', 'admin'])
@@ -59,16 +60,35 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('test', function () {
-    $permalink='asdasd';
-    $p= Product::with([
-        'pictures',
-    ])
-//                        ->whereHas('pictures', function ($query) use ($permalink) {
-//                            $query->where('product_id', Product::where('permalink', $permalink)->first());
-//                        })
-                        ->where('permalink', $permalink)
-                        ->first();
+    $str   = 'окастря';
+    $array = [];
+    for ($i = 0; $i < mb_strlen($str); $i++) {
+        $array[] = mb_substr($str, $i, 1);
+    }
 
-    dump($p);
+
+    function depth_picker($arr, $temp_string, &$collect)
+    {
+        if ($temp_string != "")
+            $collect [] = $temp_string;
+
+        for ($i = 0, $iMax = sizeof($arr); $i < $iMax; $i++) {
+            $arrcopy = $arr;
+            $elem    = array_splice($arrcopy, $i, 1);
+            if (sizeof($arrcopy) > 0) {
+                depth_picker($arrcopy, $temp_string . " " . $elem[0], $collect);
+            } else {
+                $collect [] = $temp_string . " " . $elem[0];
+            }
+        }
+    }
+
+    $collect = [];
+    depth_picker($array, "", $collect);
+    foreach ($collect as $key => $item) {
+        if (mb_strlen($item) == 10 && mb_substr($item, 1, 1) == 'к' && mb_substr($item, 9, 1) == 'т') {
+            echo $item . '<br>';
+        }
+    };
 
 });

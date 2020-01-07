@@ -1,3 +1,7 @@
+@php
+    $cart = App\Cart::where('user_id', Auth::id())->get()
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,13 +17,13 @@
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/OwlCarousel2-2.2.1/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/jquery-ui-1.12.1.custom/jquery-ui.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::to('plugins/iCheck/all.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ URL::to('css/general.css') }}">
     @yield('styles')
 </head>
 
 <body>
 
 <div class="super_container">
-
     <!-- Header -->
 
     <header class="header">
@@ -121,12 +125,12 @@
                                         <img src="{{ URL::to('images/cart.png') }}" alt="">
                                         <div class="cart_count">
                                             <span>
-                                                {{ App\Cart::where('user_id', Auth::id())->get()->count() }}
+                                                {{ count($cart) }}
                                             </span>
                                         </div>
                                     </div>
                                     <div class="cart_content">
-                                        <div class="cart_text"><a href="#">Количка</a></div>
+                                        <div class="cart_text"><a href="{{ route('carts.index') }}">Количка</a></div>
                                         <div class="cart_price">85 лв.</div>
                                     </div>
                                 </div>

@@ -67,7 +67,7 @@
                                 <div class="clearfix" style="z-index: 1000;">
 
                                     <!-- Product Quantity -->
-                                    <div class="product_quantity clearfix">
+                                    <div class="product_quantity">
                                         <span>Quantity: </span>
                                         <input id="quantity_input" name="quantity" type="text" pattern="[0-9]*" value="1">
                                         <div class="quantity_buttons">
@@ -76,25 +76,38 @@
                                             <div id="quantity_dec_button" class="quantity_dec quantity_control"><i
                                                         class="fas fa-chevron-down"></i></div>
                                         </div>
+                                        @error('quantity')
+                                        <p class="error-quantity">задължително</p>
+                                        @enderror
                                     </div>
 
                                     @if($product->type == 'Вариация')
-                                        <ul class="product_color">
-                                            <li>
-                                                <span>{{ $product->variation->name }}: </span>
-                                                <div class="color_mark_container">
-                                                    <div id="selected_variation">избери</div>
-                                                    <input type="hidden" name="variation" id="variation">
-                                                </div>
-                                                <div class="color_dropdown_button"><i class="fas fa-chevron-down"></i></div>
+                                        <div style="display: inline-block">
+                                            <select name="variation" id="variation">
+                                                <option value="">избери</option>
+                                                @foreach($product->variation->subVariations as $subVariations)
+                                                    <option value="{{ $subVariations->id }}">{{ $subVariations->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <ul class="product_color">
+                                                <li>
+                                                    <span>{{ $product->variation->name }}: </span>
+                                                    <div class="color_mark_container">
+                                                        <div id="selected_variation">избери</div>
+                                                    </div>
+                                                    <div class="color_dropdown_button"><i class="fas fa-chevron-down"></i></div>
 
-                                                <ul class="variation_list">
-                                                    @foreach($product->variation->subVariations as $subVariations)
-                                                        <li>{{ $subVariations->name }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </li>
-                                        </ul>
+                                                    <ul class="variation_list">
+                                                        @foreach($product->variation->subVariations as $subVariations)
+                                                            <li>{{ $subVariations->name }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            @error('variation')
+                                            <p class="error">задължително</p>
+                                            @enderror
+                                        </div>
                                     @endif
 
                                 </div>
