@@ -60,7 +60,16 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('test', function () {
-    $str   = 'окастря';
+
+//    dd(DB::table('users')->distinct('created_at')->get());
+//    DB::table('users')->chunkById(1, function($users){
+//        foreach ($users as $user) {
+//            dump($user);
+//        }
+//    });
+//    dd(DB::table('users')->where('name', 'John')->value('email'));
+//
+    $str   = 'плисвам';
     $array = [];
     for ($i = 0; $i < mb_strlen($str); $i++) {
         $array[] = mb_substr($str, $i, 1);
@@ -86,7 +95,7 @@ Route::get('test', function () {
     $collect = [];
     depth_picker($array, "", $collect);
     foreach ($collect as $key => $item) {
-        if (mb_strlen($item) == 10 && mb_substr($item, 1, 1) == 'к' && mb_substr($item, 9, 1) == 'т') {
+        if (mb_strlen($item) == 5*2 && mb_substr($item, 9, 1) == 'а' && mb_substr($item, 1, 1) == 'с') {
             echo $item . '<br>';
         }
     };
